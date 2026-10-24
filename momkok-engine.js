@@ -557,6 +557,7 @@
       if (v === '20' || v === 'basic') return 'basic';
     } catch (e) {}
     const p = window.location.pathname.toLowerCase();
+    if (p.includes('report')) return 'master';
     if (p.includes('basic.html')) return 'basic';
     if (p.includes('master.html')) return 'master';
     return 'free';
@@ -2803,7 +2804,7 @@
     }
 
     const is35 = tierLabel.includes('35') || tierLabel.includes('마스터');
-    const directUrl = `https://www.momkok.co.kr?view=${is35 ? '35' : '20'}&code=5804`;
+    const directUrl = `https://www.momkok.co.kr/report.html?view=${is35 ? '35' : '20'}&code=5804`;
 
     const reportName = is35 ? '35장 마스터 바이블' : '20장 정밀 바인더';
     const summaryText = `[맘콕] 자녀 1:1 맞춤 ${reportName} 완성 안내
@@ -2905,12 +2906,13 @@ ${directUrl}`;
     // [방법 1] URL에 ?view=35 또는 ?view=20 이 있을 때: 메인 입력창을 거치지 않고 즉시 리포트 렌더링!
     const sp = new URLSearchParams(window.location.search);
     const viewParam = sp.get('view');
-    if (viewParam === '35' || viewParam === 'master' || viewParam === '20' || viewParam === 'basic') {
+    const isReportPage = window.location.pathname.toLowerCase().includes('report');
+    if (isReportPage || viewParam === '35' || viewParam === 'master' || viewParam === '20' || viewParam === 'basic') {
       window.isMasterKeyActive = true;
       const d = collectUserData();
       renderAllTierViews(d);
 
-      const is35 = (viewParam === '35' || viewParam === 'master');
+      const is35 = (viewParam === '20' || viewParam === 'basic') ? false : true;
       const freeEl = document.getElementById('tierViewFree');
       const basicEl = document.getElementById('tierViewBasic');
       const masterEl = document.getElementById('tierViewMaster');
