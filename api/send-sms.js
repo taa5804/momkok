@@ -24,7 +24,7 @@ module.exports = async function handler(req, res) {
     }
 
     const is35 = tierName.includes('35') || tierName.includes('마스터');
-    const directUrl = `https://www.momkok.co.kr?view=${is35 ? '35' : '20'}&code=${code}`;
+    const directUrl = `https://www.momkok.co.kr/report.html?view=${is35 ? '35' : '20'}&code=${code}`;
     const reportName = is35 ? '35장 마스터 바이블' : '20장 정밀 바인더';
 
     // [방법 1] 학부모용 직통 단문 안내 문구
