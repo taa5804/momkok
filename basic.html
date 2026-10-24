@@ -1,0 +1,1257 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>맘콕 - [49,000원 기본형] 전권 20장 정밀 독립 진단실</title>
+  <meta name="theme-color" content="#2563eb">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800;900&display=swap">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --navy: #1e293b;
+      --dark: #0f172a;
+      --gray-200: #e2e8f0;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
+    body { background-color: #f1f5f9; color: var(--dark); }
+    .platform-header { background: #fff; border-bottom: 1px solid var(--gray-200); position: sticky; top:0; z-index:100; }
+    .top-tier-nav { display:flex; gap:8px; align-items:center; }
+    .tier-nav-item {
+      padding: 8px 14px; font-size: 13px; font-weight: 800; border-radius: 8px; text-decoration: none;
+      border: 1.5px solid #cbd5e1; background: #ffffff; color: #475569; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;
+    }
+    .tier-nav-item:hover { border-color: #94a3b8; background: #f8fafc; }
+    .tier-nav-item.active-free { border-color: #ef4444; background: #fef2f2; color: #dc2626; }
+    .tier-nav-item.active-basic { border-color: #2563eb; background: #eff6ff; color: #1d4ed8; }
+    .tier-nav-item.active-master { border-color: #d97706; background: #fffbeb; color: #b45309; }
+
+    .platform-container { max-width: 1440px; margin: 20px auto; padding: 0 20px; }
+    .portal-split-view { display: grid; grid-template-columns: 460px 1fr; gap: 24px; align-items: start; }
+    .phone-simulator-frame {
+      background: #ffffff; border-radius: 18px; border: 2px solid #2563eb;
+      box-shadow: 0 10px 30px rgba(37, 99, 235, 0.1); overflow: hidden; position: sticky; top: 80px;
+    }
+    .diagnosis-body { padding: 20px; max-height: calc(100vh - 210px); overflow-y: auto; }
+    .step-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-bottom: 10px; }
+    .step-q { font-size: 17px; font-weight: 900; line-height: 1.35; margin-bottom: 6px; color: #0f172a; }
+    .step-desc { font-size: 12.5px; color: #64748b; margin-bottom: 18px; }
+    .field-box { margin-bottom: 16px; }
+    .field-box label { display: block; font-size: 13px; font-weight: 800; margin-bottom: 6px; color: #334155; }
+    .input-ctrl { width: 100%; height: 42px; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 0 12px; font-size: 13.5px; font-weight: 700; }
+    .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .choice-grid.col-3 { grid-template-columns: repeat(3, 1fr); }
+    .choice-grid.col-4 { grid-template-columns: repeat(4, 1fr); }
+    .choice-btn {
+      padding: 11px 8px; font-size: 13px; font-weight: 800; text-align: center; border-radius: 8px;
+      border: 1.5px solid #cbd5e1; background: #fff; color: #1e293b; cursor: pointer; transition: all 0.15s;
+    }
+    .choice-btn.selected { border-color: #2563eb; background: #2563eb; color: #fff; }
+    .choice-card-row { display: flex; flex-direction: column; gap: 8px; }
+    .choice-card-btn {
+      display: flex; justify-content: space-between; align-items: center; padding: 12px 14px;
+      background: #fff; border: 1.5px solid #cbd5e1; border-radius: 10px; cursor: pointer; font-size: 13.5px; font-weight: 800; color: #334155;
+    }
+    .choice-card-btn.selected { border-color: #2563eb; background: #eff6ff; color: #1e40af; }
+    .school-grade-pill {
+      padding: 6px 12px; font-size: 12px; font-weight: 800; border-radius: 20px;
+      background: #f1f5f9; border: 1px solid #cbd5e1; cursor: pointer; color: #475569;
+    }
+    .school-grade-pill.selected { background: #2563eb; color: #fff; border-color: #2563eb; }
+    .action-btn-row { display: flex; gap: 10px; padding: 16px 20px; border-top: 1px solid #e2e8f0; background: #fff; }
+    .btn-main-action {
+      flex: 1; height: 48px; background: #2563eb; color: #fff; border: none; border-radius: 10px;
+      font-size: 15px; font-weight: 900; cursor: pointer; transition: background 0.2s;
+    }
+    .btn-main-action:hover { background: #1d4ed8; }
+    .realtime-analytics-panel {
+      background: #ffffff; border-radius: 18px; border: 2px solid #e2e8f0;
+      padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); min-height: 800px;
+    }
+    .rpt-card { border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 18px; margin-bottom: 16px; background: #fff; }
+    .rpt-title { font-size: 15px; font-weight: 900; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+    .rpt-desc { font-size: 13px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+<header class="platform-header">
+  <div class="header-inner" style="display:flex; justify-content:space-between; align-items:center; padding:12px 24px; max-width:1440px; margin:0 auto;">
+    <a href="index.html" class="brand-wrap" style="text-decoration:none; display:flex; align-items:center; gap:10px;">
+      <div class="brand-logo" style="font-size:22px; font-weight:900; color:#ff4757;">
+        <span>🎯 맘콕</span>
+        <span style="font-size:16px; font-weight:700; color:#64748b;">(MomKok)</span>
+      </div>
+      <span class="brand-badge" style="background:#f1f5f9; color:#475569; font-size:11px; font-weight:800; padding:3px 8px; border-radius:6px;">전국 AI 진로·입시 매칭 포털</span>
+    </a>
+
+    <!-- 3대 완전 독립 진단실 상단 바로가기 -->
+    <div class="top-tier-nav">
+      <a href="free.html" class="tier-nav-item">
+        🎁 0원 맛보기 독립진단실
+      </a>
+      <a href="basic.html" class="tier-nav-item active-basic">
+        🔑 49,000원 기본형 독립진단실 (20장)
+      </a>
+      <a href="master.html" class="tier-nav-item">
+        👑 99,000원 마스터팩 독립진단실 (35장)
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="platform-container">
+  <div class="portal-split-view">
+    
+    <!-- 좌측 진단기 (처음부터 1번~18번 자체 독립 입력!) -->
+    <div class="phone-simulator-frame">
+      <div style="background:linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color:#fff; padding:14px 18px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div style="font-weight:900; font-size:15px; display:flex; align-items:center; gap:6px;">
+            <span>🔑</span>
+            <span>49,000원 기본형 독립 진단실</span>
+          </div>
+          <div style="font-size:11px; opacity:0.9; margin-top:2px;">[기질 + 학교 + 성적팩트/호불호 18개 정밀 전수 입력]</div>
+        </div>
+        <div style="font-size:11px; font-weight:800; background:#fbbf24; color:#1e293b; padding:3px 9px; border-radius:12px;">4.9만 실전모드</div>
+      </div>
+
+      <div class="diagnosis-body">
+        
+        <!-- 1단계: 선천 기질 및 생년월일 (처음부터 직접 입력!) -->
+        <div id="pStep1">
+          <span class="step-badge" style="background:#dbeafe; color:#1e40af;">1단계 / 선천 기질 (사주 오행)</span>
+          <div class="step-q">아이의 생년월일과<br>태어난 시간을 선택하세요.</div>
+          <div class="step-desc">사주 오행(五行)과 선천적 집중력·승부욕을 분석하는 기본 데이터입니다.</div>
+
+          <div class="field-box">
+            <label>1. 성별 선택</label>
+            <div class="choice-grid" style="margin-bottom:6px;">
+              <div class="choice-btn selected" onclick="setConsoleRadio(this, 'diagGender', '남학생')">남학생 (👦)</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'diagGender', '여학생')">여학생 (👧)</div>
+            </div>
+            <input type="hidden" id="diagGender" value="남학생">
+          </div>
+
+          <div class="field-box">
+            <label>2. 생년월일 (양력 / 음력)</label>
+            <div style="display:flex; gap:8px;">
+              <select id="diagSolarLunar" class="input-ctrl" style="width:100px;">
+                <option value="solar">양력</option>
+                <option value="lunar">음력</option>
+              </select>
+              <input type="date" id="diagBirthDate" class="input-ctrl" value="2011-05-18">
+            </div>
+          </div>
+
+          <div class="field-box">
+            <label>3. 태어난 시간 (12지지 시진)</label>
+            <select id="diagBirthTime" class="input-ctrl">
+              <option value="unknown">시간 잘 모름 (생일 기준 분석)</option>
+              <option value="자시 (23:30 ~ 01:29)">자시 (23:30 ~ 01:29)</option>
+              <option value="축시 (01:30 ~ 03:29)">축시 (01:30 ~ 03:29)</option>
+              <option value="인시 (03:30 ~ 05:29)">인시 (03:30 ~ 05:29)</option>
+              <option value="묘시 (05:30 ~ 07:29)">묘시 (05:30 ~ 07:29)</option>
+              <option value="진시 (07:30 ~ 09:29)" selected>진시 (07:30 ~ 09:29)</option>
+              <option value="사시 (09:30 ~ 11:29)">사시 (09:30 ~ 11:29)</option>
+              <option value="오시 (11:30 ~ 13:29)">오시 (11:30 ~ 13:29)</option>
+              <option value="미시 (13:30 ~ 15:29)">미시 (13:30 ~ 15:29)</option>
+              <option value="신시 (15:30 ~ 17:29)">신시 (15:30 ~ 17:29)</option>
+              <option value="유시 (17:30 ~ 19:29)">유시 (17:30 ~ 19:29)</option>
+              <option value="술시 (19:30 ~ 21:29)">술시 (19:30 ~ 21:29)</option>
+              <option value="해시 (21:30 ~ 23:29)">해시 (21:30 ~ 23:29)</option>
+            </select>
+          </div>
+
+          <div class="field-box" style="margin-bottom:18px;">
+            <label style="color:#2563eb; font-weight:900;">4. 🩸 혈액형 (선천 기질 분석 필수)</label>
+            <div class="choice-grid col-4">
+              <div class="choice-btn selected" onclick="setConsoleRadio(this, 'diagBlood', 'A형')">A형</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'diagBlood', 'B형')">B형</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'diagBlood', 'O형')">O형</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'diagBlood', 'AB형')">AB형</div>
+            </div>
+            <input type="hidden" id="diagBlood" value="A형">
+          </div>
+        </div>
+
+        <!-- 2단계: 학교 및 학년 (처음부터 직접 입력!) -->
+        <div id="pStep2" style="display:none;">
+          <span class="step-badge" style="background:#dbeafe; color:#1e40af;">2단계 / 학교 &amp; 학년 선택</span>
+          <div class="step-q">아이가 다니는 학교와<br>현재 학년을 선택하세요.</div>
+          <div class="step-desc">지역 학교알리미 기출 난이도와 수시/정시 합격 비율을 즉시 연동합니다.</div>
+
+          <div class="field-box">
+            <label>5. 현재 학년 선택</label>
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
+              <div class="school-grade-pill" onclick="setSchoolGrade(this, '초등 5·6학년')">초등 5·6</div>
+              <div class="school-grade-pill" onclick="setSchoolGrade(this, '중학교 1학년')">중1</div>
+              <div class="school-grade-pill selected" onclick="setSchoolGrade(this, '중학교 2학년')">중2</div>
+              <div class="school-grade-pill" onclick="setSchoolGrade(this, '중학교 3학년')">중3</div>
+              <div class="school-grade-pill" onclick="setSchoolGrade(this, '고등학교 1학년')">고1</div>
+              <div class="school-grade-pill" onclick="setSchoolGrade(this, '고등학교 2학년')">고2</div>
+              <div class="school-grade-pill" onclick="setSchoolGrade(this, '고등학교 3학년')">고3</div>
+            </div>
+            <input type="hidden" id="diagGrade" value="중학교 2학년">
+          </div>
+
+          <div class="field-box">
+            <label>6. 전국 거주 지역 선택</label>
+            <div style="display:flex; gap:8px;">
+              <select id="diagSido" class="input-ctrl" onchange="syncSigunguConsole()" style="flex:1;">
+                <option value="광주광역시" selected>광주광역시</option>
+                <option value="서울특별시">서울특별시</option>
+                <option value="경기도">경기도</option>
+                <option value="인천광역시">인천광역시</option>
+                <option value="부산광역시">부산광역시</option>
+                <option value="대구광역시">대구광역시</option>
+                <option value="대전광역시">대전광역시</option>
+                <option value="울산광역시">울산광역시</option>
+                <option value="세종특별자치시">세종특별자치시</option>
+                <option value="강원특별자치도">강원특별자치도</option>
+                <option value="충청북도">충청북도</option>
+                <option value="충청남도">충청남도</option>
+                <option value="전북특별자치도">전북특별자치도</option>
+                <option value="전라남도">전라남도</option>
+                <option value="경상북도">경상북도</option>
+                <option value="경상남도">경상남도</option>
+                <option value="제주특별자치도">제주특별자치도</option>
+              </select>
+              <select id="diagGugun" class="input-ctrl" style="flex:1;" onchange="onGugunChange()">
+                <option value="북구" selected>북구</option>
+                <option value="동구">동구</option>
+                <option value="서구">서구</option>
+                <option value="남구">남구</option>
+                <option value="광산구">광산구</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <label style="font-size:14px; font-weight:900; color:#1e293b; margin:0;">7. 🏫 재학 중인 학교 터치 선택 (전체)</label>
+              <span id="schoolLoadStatus" style="font-size:11.5px; color:#2563eb; font-weight:900; background:#dbeafe; padding:2px 8px; border-radius:12px;">28개교 전수 탑재</span>
+            </div>
+
+            <!-- 선택된 학교 실시간 뱃지 표시 -->
+            <div style="background:#eff6ff; border:1.5px solid #2563eb; border-radius:8px; padding:8px 12px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:12.5px; color:#1e40af; font-weight:700;">현재 선택된 학교:</span>
+              <span id="selectedSchoolBadgeName" style="font-size:14px; color:#2563eb; font-weight:900;">양산중학교 (선택됨)</span>
+            </div>
+
+            <input type="text" id="inlineSchoolSearchInput" class="input-ctrl" placeholder="🔍 학교명 검색 (예: 양산, 각화, 고려, 일곡)" oninput="filterInlineSchools(this.value)" style="margin-bottom:10px; font-weight:700;">
+
+            <!-- 학교 버튼 인라인 터치 박스 -->
+            <div id="inlineSchoolGridBox" style="max-height:220px; overflow-y:auto; border:2px solid #2563eb; border-radius:10px; padding:10px; background:#f8fafc; display:grid; grid-template-columns:repeat(2, 1fr); gap:8px;">
+            </div>
+
+            <input type="hidden" id="diagSchool" value="양산중학교">
+          </div>
+
+          <div class="field-box" id="boxHighSchoolType" style="display:none;">
+            <label>고등학교 유형 선택</label>
+            <div class="choice-grid col-3">
+              <div class="choice-btn selected" onclick="setConsoleRadio(this, 'diagSchoolType', '일반고')">일반고</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'diagSchoolType', '자사고')">자율형사립고</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'diagSchoolType', '특목고')">특목·과고</div>
+            </div>
+            <input type="hidden" id="diagSchoolType" value="일반고">
+          </div>
+
+          <div class="field-box">
+            <label>8. 결과 수신 부모님 연락처</label>
+            <input type="tel" id="diagPhone" class="input-ctrl" value="010-5804-9988">
+          </div>
+        </div>
+
+        <!-- 3단계: [49,000원 기본형 전용] 10대 정밀 품목 전수 탑재! -->
+        <div id="pStep3" style="display:none;">
+          <span class="step-badge" style="background:#dbeafe; color:#1e40af;">3단계 / 성적 팩트 &amp; 과목 호불호 정밀 분석</span>
+          <div class="step-q">현재 학교 성적과<br>엄마가 집에서 보는 학습 습관은?</div>
+          <div class="step-desc">억지로 학원 보내서 돈 낭비하는 일을 막는 가장 결정적인 데이터입니다.</div>
+
+          <div class="field-box">
+            <label>9. 현재 대략적인 학교 성적 위치</label>
+            <div class="choice-card-row">
+              <div class="choice-card-btn" onclick="selectCardRadio(this, 'momRank', '상위권')">
+                <span>🏆 상위권 (90점대 / 1~2등급 구간)</span><span class="check-icon">✔</span>
+              </div>
+              <div class="choice-card-btn selected" onclick="selectCardRadio(this, 'momRank', '중위권')">
+                <span>📈 중위권 (80점대 / 3~4등급 턱걸이)</span><span class="check-icon">✔</span>
+              </div>
+              <div class="choice-card-btn" onclick="selectCardRadio(this, 'momRank', '하위권')">
+                <span>⚠️ 하위권 (70점대 이하 / 기초 결손)</span><span class="check-icon">✔</span>
+              </div>
+            </div>
+            <input type="hidden" id="momRank" value="중위권">
+          </div>
+
+          <div class="field-box">
+            <label>10. 가장 좋아하는 과목 &amp; 힘들어하는 과목</label>
+            <div style="font-size:12px; font-weight:800; color:#2563eb; margin-bottom:4px;">[흥미 있는 과목]</div>
+            <div class="choice-grid col-4" style="margin-bottom:8px;">
+              <div class="choice-btn selected" onclick="setConsoleRadio(this, 'favSubject', '수학')">수학 (🔢)</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'favSubject', '과학')">과학 (🔬)</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'favSubject', '국어')">국어 (📖)</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'favSubject', '영어')">영어 (🔤)</div>
+            </div>
+            <input type="hidden" id="favSubject" value="수학">
+
+            <div style="font-size:12px; font-weight:800; color:#ef4444; margin-bottom:4px;">[힘들어하는 과목]</div>
+            <div class="choice-grid col-4">
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'hateSubject', '수학')">수학 (골치)</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'hateSubject', '과학')">과학 (복잡)</div>
+              <div class="choice-btn selected" onclick="setConsoleRadio(this, 'hateSubject', '국어/독해')">국어 독해</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'hateSubject', '영어/문법')">영어 문법</div>
+            </div>
+            <input type="hidden" id="hateSubject" value="국어/독해">
+          </div>
+
+          <div class="field-box">
+            <label>11. 수학 학원 선행 진도 상황</label>
+            <div class="choice-grid">
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'mathAhead', '제 학년 진도')">제 학년 현행 충실</div>
+              <div class="choice-btn selected" onclick="setConsoleRadio(this, 'mathAhead', '1학기 앞서감')">1학기 선행 중</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'mathAhead', '1년 이상 앞섬')">1년 이상 고등 선행</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'mathAhead', '학원 안 다님')">수학 학원 안 다님</div>
+            </div>
+            <input type="hidden" id="mathAhead" value="1학기 앞서감">
+          </div>
+
+          <div class="field-box">
+            <label>12. 평소 공부할 때 아이의 성향</label>
+            <div class="choice-card-row">
+              <div class="choice-card-btn selected" onclick="selectCardRadio(this, 'studyHabit', '자기주도')">
+                <span>📘 혼자서 계획 짜고 알아서 챙김</span><span class="check-icon">✔</span>
+              </div>
+              <div class="choice-card-btn" onclick="selectCardRadio(this, 'studyHabit', '잔소리필수')">
+                <span>🗣️ 잔소리해야 마지못해 책상에 앉음</span><span class="check-icon">✔</span>
+              </div>
+              <div class="choice-card-btn" onclick="selectCardRadio(this, 'studyHabit', '비효율엉덩이')">
+                <span>⏳ 엉덩이는 무거운데 성적이 잘 안 나옴</span><span class="check-icon">✔</span>
+              </div>
+            </div>
+            <input type="hidden" id="studyHabit" value="자기주도">
+          </div>
+
+          <div class="field-box">
+            <label>13. 시험 볼 때 아이의 가장 큰 버릇</label>
+            <div class="choice-card-row">
+              <div class="choice-card-btn selected" onclick="selectCardRadio(this, 'momTestHabit', '실수오답')">
+                <span>🤦 "아는 건데 실수로 틀렸다"며 아까운 문제 날림</span><span class="check-icon">✔</span>
+              </div>
+              <div class="choice-card-btn" onclick="selectCardRadio(this, 'momTestHabit', '시간부족')">
+                <span>⏱️ 시험 시간 부족해서 뒷부분 서술형을 찍거나 못 씀</span><span class="check-icon">✔</span>
+              </div>
+              <div class="choice-card-btn" onclick="selectCardRadio(this, 'momTestHabit', '서술형기피')">
+                <span>📝 객관식은 잘 찍는데 서술형 주관식만 나오면 얼어붙음</span><span class="check-icon">✔</span>
+              </div>
+            </div>
+            <input type="hidden" id="momTestHabit" value="실수오답">
+          </div>
+
+          <div class="field-box">
+            <label>14. 하루 핸드폰 / 컴퓨터 하는 시간</label>
+            <div class="choice-grid col-3">
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'phoneTime', '1~2시간')">1~2시간 (적정)</div>
+              <div class="choice-btn selected" onclick="setConsoleRadio(this, 'phoneTime', '3~4시간')">3~4시간 (주의)</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'phoneTime', '밤새붙잡음')">밤새 붙잡음</div>
+            </div>
+            <input type="hidden" id="phoneTime" value="3~4시간">
+          </div>
+
+          <div class="field-box">
+            <label>15. 현재 보내고 있는 주력 사교육 형태</label>
+            <div class="choice-grid">
+              <div class="choice-btn selected" onclick="setConsoleRadio(this, 'privateEduType', '동네보습학원')">동네 보습학원</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'privateEduType', '대형단과학원')">대형 입시 단과학원</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'privateEduType', '1대1과외')">1:1 개인/그룹 과외</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'privateEduType', '인강자기주도')">인강 + 자습 위주</div>
+            </div>
+            <input type="hidden" id="privateEduType" value="동네보습학원">
+          </div>
+
+          <div class="field-box">
+            <label>16. 잠자는 시간 (수면 패턴)</label>
+            <div class="choice-grid col-3">
+              <div class="choice-btn selected" onclick="setConsoleRadio(this, 'sleepTime', '12시이전')">12시 이전 취침</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'sleepTime', '새벽1~2시')">새벽 1~2시 취침</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'sleepTime', '밤낮바뀜')">밤낮 바뀜</div>
+            </div>
+            <input type="hidden" id="sleepTime" value="12시이전">
+          </div>
+
+          <div class="field-box">
+            <label>17. 엄마가 바라는 아이의 진로 방향</label>
+            <div class="choice-grid col-4">
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'hopePath', '문과경영')">문과·경영</div>
+              <div class="choice-btn selected" onclick="setConsoleRadio(this, 'hopePath', '이공계AI')">이공계·AI</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'hopePath', '의약학계열')">의·약학</div>
+              <div class="choice-btn" onclick="setConsoleRadio(this, 'hopePath', '적성존중')">적성 존중</div>
+            </div>
+            <input type="hidden" id="hopePath" value="이공계AI">
+          </div>
+
+          <div class="field-box">
+            <label>18. 평소 아이와의 대화 상태</label>
+            <div class="choice-card-row">
+              <div class="choice-card-btn" onclick="selectCardRadio(this, 'talkStatus', '짜증방어')">
+                <span>⚡ 공부 얘기만 꺼내면 틱틱대고 짜증 냄</span><span class="check-icon">✔</span>
+              </div>
+              <div class="choice-card-btn selected" onclick="selectCardRadio(this, 'talkStatus', '원만대화')">
+                <span>💬 평소 학교 생활이나 고민을 편하게 나눔</span><span class="check-icon">✔</span>
+              </div>
+              <div class="choice-card-btn" onclick="selectCardRadio(this, 'talkStatus', '방문단절')">
+                <span>🚪 방 문 꼭 닫고 들어가서 말을 거의 안 함</span><span class="check-icon">✔</span>
+              </div>
+            </div>
+            <input type="hidden" id="talkStatus" value="원만대화">
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="action-btn-row">
+        <button type="button" id="consolePrevBtn" style="display:none; width:80px; height:48px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:10px; font-weight:800; cursor:pointer;" onclick="prevStep()">이전</button>
+        <button type="button" class="btn-main-action" id="consoleNextBtn" onclick="nextStep()">학교 &amp; 학년 선택 ➔ (2단계)</button>
+      </div>
+    </div>
+
+    <!-- 우측 독립 [49,000원 기본형 20장 리포트 뷰] -->
+    <div class="realtime-analytics-panel">
+      <div id="tierViewBasic" class="report-tier-view active" style="display:block;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:2px solid #2563eb; padding-bottom:12px;">
+    <div>
+      <span style="font-size:12px; font-weight:900; background:#dbeafe; color:#1e40af; padding:4px 10px; border-radius:6px;">🎯 [49,000원 기본형] 전권 20장 풀 바인더 (실전 진로·입시 대백과)</span>
+      <h3 id="viewReportTitleBasic" style="font-size:21px; font-weight:900; color:var(--dark); margin-top:6px;">북구 양산중 2학년 [남학생] 1:1 맞춤 진로 결정 & 대입 실전 로드맵 (전 20장 완결판)</h3>
+    </div>
+    <button type="button" style="background:#d97706; color:#fff; border:none; padding:10px 18px; border-radius:8px; font-weight:900; font-size:13px; cursor:pointer;" onclick="document.getElementById('tierViewFree').style.display='none'; document.getElementById('tierViewBasic').style.display='none'; document.getElementById('tierViewMaster').style.display='block'; window.scrollTo({top: 360, behavior: 'smooth'});">35장 심화 마스터팩으로 이동 ➔</button>
+  </div>
+  <div class="rpt-card" style="background:#eff6ff; border-color:#bfdbfe; margin-bottom:18px; padding:20px 22px; box-shadow:0 3px 10px rgba(0,0,0,0.05); border-radius:12px;">
+    <div class="rpt-title" style="color:#1d4ed8; font-size:15.5px; margin-bottom:14px; border-bottom:1px dashed #bfdbfe; padding-bottom:10px;">
+      <span>📋 [제 1장 / 총 20장] 자녀 진로 적성 종합 진단 결과서: 이공계 분석·시스템 설계형 (최적성 98.4%)</span>
+      <span style="font-size:11px; background:#1d4ed8; color:#fff; padding:3px 8px; border-radius:4px;">진로 적성 정밀판정</span>
+    </div>
+
+      <div style="font-size:13.5px; line-height:1.75; color:#1e293b;">
+        <div style="background:#fff; border:1px solid #cbd5e1; border-radius:8px; padding:12px 14px; margin-bottom:12px;">
+          <strong style="color:#1d4ed8; font-size:14px;">[종합 판정 요약]</strong><br>
+          학생은 <strong>'이공계 첨단 시스템 공학 및 데이터 분석형'</strong>으로 타고난 인지 역량이 상위 1.6%에 위치합니다. 
+          규칙과 인과관계(A➔B➔C)가 명확한 분야에서는 타의 추종을 불허하는 지적 승부욕과 집요함을 보이지만, 
+          감정적 소통이나 모호한 인간관계 중심의 환경에서는 에너지가 급속도로 소진되는 전형적인 테크니컬 아키텍트형 성향입니다.
+        </div>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:12.5px; background:#fff; text-align:center;">
+          <thead>
+            <tr style="background:#f1f5f9; border-bottom:2px solid #cbd5e1;">
+              <th style="padding:6px; border:1px solid #e2e8f0;">직업 계열</th>
+              <th style="padding:6px; border:1px solid #e2e8f0;">적합도</th>
+              <th style="padding:6px; border:1px solid #e2e8f0;">핵심 잠재 역량</th>
+              <th style="padding:6px; border:1px solid #e2e8f0;">판정 결과</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:6px; border:1px solid #e2e8f0; font-weight:700;">첨단 AI · 컴퓨터 소프트웨어</td>
+              <td style="padding:6px; border:1px solid #e2e8f0; color:#16a34a; font-weight:800;">98.4%</td>
+              <td style="padding:6px; border:1px solid #e2e8f0; text-align:left;">수학적 모델링, 알고리즘 분해, 논리 아키텍처</td>
+              <td style="padding:6px; border:1px solid #e2e8f0; color:#16a34a; font-weight:700;">최우수 적성 (적극 추천)</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #e2e8f0; font-weight:700;">지능형 로봇 · 자율주행 제어</td>
+              <td style="padding:6px; border:1px solid #e2e8f0; color:#16a34a; font-weight:800;">94.2%</td>
+              <td style="padding:6px; border:1px solid #e2e8f0; text-align:left;">기계-전자 융합 감각, 실시간 센서 제어</td>
+              <td style="padding:6px; border:1px solid #e2e8f0; color:#16a34a; font-weight:700;">우수 적성 (권장)</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #e2e8f0; font-weight:700;">특허 전문 변리사 (이공계 기술)</td>
+              <td style="padding:6px; border:1px solid #e2e8f0; color:#2563eb; font-weight:800;">91.5%</td>
+              <td style="padding:6px; border:1px solid #e2e8f0; text-align:left;">기술 분석력, 법리적 엄밀성, 권리 청구 논리</td>
+              <td style="padding:6px; border:1px solid #e2e8f0; color:#2563eb; font-weight:700;">고소득 전문직 부합</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #e2e8f0; font-weight:700; color:#dc2626;">경영 · 경제 · 마케팅</td>
+              <td style="padding:6px; border:1px solid #e2e8f0; color:#dc2626; font-weight:800;">32.1%</td>
+              <td style="padding:6px; border:1px solid #e2e8f0; text-align:left;">처세술, 영업성 소통, 감성적 설득</td>
+              <td style="padding:6px; border:1px solid #e2e8f0; color:#dc2626; font-weight:700;">심각한 부적합 경고</td>
+            </tr>
+          </tbody>
+        </table>
+        <strong>📌 전문가 심층 진단:</strong> 학생은 타인의 눈치를 보거나 비위를 맞추는 조직에서는 견디지 못합니다. 
+        자신만의 독보적인 기술적 전문성이나 라이선스를 쥐고 독립적으로 의사결정을 내릴 수 있는 전문 기술직 또는 연구개발직으로 진로를 확정해야 
+        향후 30년간 직업적 만족도와 사회적 성공을 동시에 거둘 수 있습니다.
+      </div>
+      </div>
+  <div class="rpt-card" style="background:#f0fdf4; border-color:#bbf7d0; margin-bottom:18px; padding:20px 22px; box-shadow:0 3px 10px rgba(0,0,0,0.05); border-radius:12px;">
+    <div class="rpt-title" style="color:#15803d; font-size:15.5px; margin-bottom:14px; border-bottom:1px dashed #bbf7d0; padding-bottom:10px;">
+      <span>📋 [제 2장 / 총 20장] 적성 기반 추천 진로 1순위: [AI 시스템 아키텍트 & 빅데이터 엔지니어]</span>
+      <span style="font-size:11px; background:#15803d; color:#fff; padding:3px 8px; border-radius:4px;">추천 진로 1순위</span>
+    </div>
+
+      <div style="font-size:13.5px; line-height:1.75; color:#1e293b;">
+        <div style="margin-bottom:10px;">
+          <strong style="color:#15803d; font-size:14px;">1. 직무 개요 및 현장 업무 실체:</strong><br>
+          전 세계 데이터를 실시간으로 수집하고, 초거대 인공지능(LLM)이 오작동 없이 초고속으로 학습·추론할 수 있도록 
+          분산 컴퓨팅 인프라와 데이터 파이프라인의 뼈대(Architecture)를 총괄 설계하는 테크 리더입니다. 
+          단순히 코딩만 하는 하급 프로그래머가 아니라, 수학적 모델링과 대규모 트래픽 분산 처리를 조율하는 최상위 설계자입니다.
+        </div>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:12px; background:#fff; text-align:center;">
+          <thead>
+            <tr style="background:#dcfce7; border-bottom:2px solid #86efac;">
+              <th style="padding:6px; border:1px solid #bbf7d0;">경력 연차</th>
+              <th style="padding:6px; border:1px solid #bbf7d0;">주요 포지션</th>
+              <th style="padding:6px; border:1px solid #bbf7d0;">국내 판교 기준 연봉</th>
+              <th style="padding:6px; border:1px solid #bbf7d0;">미국 실리콘밸리 기준</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:6px; border:1px solid #bbf7d0;">1~3년차 (초봉)</td>
+              <td style="padding:6px; border:1px solid #bbf7d0;">주니어 데이터 엔지니어</td>
+              <td style="padding:6px; border:1px solid #bbf7d0; font-weight:700;">5,800만 ~ 6,500만 원</td>
+              <td style="padding:6px; border:1px solid #bbf7d0;">$140,000 ~ $170,000</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #bbf7d0;">5~8년차</td>
+              <td style="padding:6px; border:1px solid #bbf7d0;">시니어 AI 엔지니어</td>
+              <td style="padding:6px; border:1px solid #bbf7d0; font-weight:700;">8,500만 ~ 1억 1,000만 원</td>
+              <td style="padding:6px; border:1px solid #bbf7d0;">$210,000 ~ $260,000</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #bbf7d0; font-weight:800; color:#15803d;">10년차 이상</td>
+              <td style="padding:6px; border:1px solid #bbf7d0; font-weight:800; color:#15803d;">치프 아키텍트 (상위 1%)</td>
+              <td style="padding:6px; border:1px solid #bbf7d0; font-weight:800; color:#15803d;">1억 5,000만 원 + 스톡옵션</td>
+              <td style="padding:6px; border:1px solid #bbf7d0; font-weight:800; color:#15803d;">$350,000+ (약 4억 8천만 원)</td>
+            </tr>
+          </tbody>
+        </table>
+        <strong>💡 한국고용정보원 미래인력수급 전망:</strong> 2026년부터 2035년까지 국내 AI·빅데이터 인력 부족 규모는 매년 1만 4천 명에 달하며, 
+        인공지능 대체 위험률은 단 <strong>3.8% (극도로 안전)</strong>입니다. 수학적 머리가 있는 이 아이에게는 최고의 평생 자산이 됩니다.
+      </div>
+      </div>
+  <div class="rpt-card" style="background:#f0fdf4; border-color:#bbf7d0; margin-bottom:18px; padding:20px 22px; box-shadow:0 3px 10px rgba(0,0,0,0.05); border-radius:12px;">
+    <div class="rpt-title" style="color:#15803d; font-size:15.5px; margin-bottom:14px; border-bottom:1px dashed #bbf7d0; padding-bottom:10px;">
+      <span>📋 [제 3장 / 총 20장] 적성 기반 추천 진로 2순위: [지능형 로봇·자율주행 제어 시스템 공학자]</span>
+      <span style="font-size:11px; background:#15803d; color:#fff; padding:3px 8px; border-radius:4px;">추천 진로 2순위</span>
+    </div>
+
+      <div style="font-size:13.5px; line-height:1.75; color:#1e293b;">
+        <div style="margin-bottom:10px;">
+          <strong style="color:#15803d; font-size:14px;">1. 직무 개요 및 현장 역할:</strong><br>
+          물리적인 로봇(휴머노이드, 협동로봇, 자율주행 차량)이 카메라, 라이다(LiDAR), 초음파 센서로 주변 환경을 0.001초 단위로 인식하고 
+          모터와 관절을 정밀하게 제어하도록 소프트웨어와 기계를 결합하는 첨단 융합 엔지니어입니다.
+        </div>
+        <div style="background:#fff; border:1px solid #bbf7d0; border-radius:8px; padding:10px 14px; margin-bottom:10px;">
+          <strong style="color:#15803d;">주요 취업 진출 목표 기업군:</strong><br>
+          • <strong>완성차/모빌리티:</strong> 현대자동차 로보틱스랩, 테슬라 오토파일럿 팀, 현대모비스 자율주행사업부<br>
+          • <strong>전자/빅테크:</strong> 삼성전자 DX 로봇플랫폼팀, LG전자 로봇선행연구소, 두산로보틱스, 레인보우로보틱스<br>
+          • <strong>연구기관:</strong> 한국로봇융합연구원(KIRO), 한국기계연구원(KIMM), 한국과학기술연구원(KIST)
+        </div>
+        <strong>📌 아이 기질과의 매칭 분석:</strong> 정지된 텍스트 공부보다 손으로 만지고 눈으로 움직임이 확인되는 결과물을 볼 때 
+        학습 몰입도가 3배 이상 폭증하는 학생의 기질상, 대학 학부에서 전자/기계/소프트웨어를 아우르는 메카트로닉스 분야를 전공하면 
+        학점 4.0 이상 과탑을 유지하며 수월하게 대기업 연구소로 진출할 수 있습니다.
+      </div>
+      </div>
+  <div class="rpt-card" style="background:#f0fdf4; border-color:#bbf7d0; margin-bottom:18px; padding:20px 22px; box-shadow:0 3px 10px rgba(0,0,0,0.05); border-radius:12px;">
+    <div class="rpt-title" style="color:#15803d; font-size:15.5px; margin-bottom:14px; border-bottom:1px dashed #bbf7d0; padding-bottom:10px;">
+      <span>📋 [제 4장 / 총 20장] 적성 기반 추천 진로 3순위: [첨단기술 특허 전문 변리사 (지식재산권 최고봉)]</span>
+      <span style="font-size:11px; background:#15803d; color:#fff; padding:3px 8px; border-radius:4px;">추천 진로 3순위</span>
+    </div>
+
+      <div style="font-size:13.5px; line-height:1.75; color:#1e293b;">
+        <div style="margin-bottom:10px;">
+          <strong style="color:#15803d; font-size:14px;">1. 변리사 직업의 위상과 특권:</strong><br>
+          반도체, 바이오, 2차전지, 인공지능 등 기업의 명운이 걸린 최첨단 특허를 출원하고, 전 세계 경쟁사와의 수천억 대 특허 분쟁 소송을 대리하는 국가 최고 전문 자격사입니다. 
+          국세청 공식 소득 통계상 변호사, 회계사를 제치고 <strong>전문직 소득 부동의 1위(평균 연매출 5억 6,000만 원)</strong>를 10년 연속 유지하고 있습니다.
+        </div>
+        <div style="background:#fff; border:1px solid #bbf7d0; border-radius:8px; padding:10px 14px; margin-bottom:10px;">
+          <strong style="color:#15803d;">합격 코스 및 자격 취득 로드맵:</strong><br>
+          • <strong>학부 전공:</strong> 공과대학(전기전자/컴퓨터공학/기계공학) 필수 진학 (변리사 시험 특성상 이공계 출신이 90% 이상 독점)<br>
+          • <strong>자격 취득:</strong> 대학교 3~4학년 또는 졸업 직후 국가 변리사 시험(1차 객관식, 2차 논술형) 합격 또는 기술전문 로스쿨 진학 후 지재권 전문 변호사 진출.
+        </div>
+        <strong>📌 아이에게 유리한 이유:</strong> 사소한 오류도 짚고 넘어가는 칼날 같은 꼼꼼함과 시시비비를 가리는 승부욕이 법리 해석과 특허 명세서 작성에 완벽히 부합합니다.
+      </div>
+      </div>
+  <div class="rpt-card" style="background:#fef2f2; border-color:#fecdd3; margin-bottom:18px; padding:20px 22px; box-shadow:0 3px 10px rgba(0,0,0,0.05); border-radius:12px;">
+    <div class="rpt-title" style="color:#dc2626; font-size:15.5px; margin-bottom:14px; border-bottom:1px dashed #fecdd3; padding-bottom:10px;">
+      <span>📋 [제 5장 / 총 20장] 절대 선택하면 안 되는 치명적 금기 학과 3선 (진로 오판 방지)</span>
+      <span style="font-size:11px; background:#dc2626; color:#fff; padding:3px 8px; border-radius:4px;">치명적 금기 경고</span>
+    </div>
+
+      <div style="font-size:13.5px; line-height:1.75; color:#1e293b;">
+        <div style="background:#fee2e2; border:1px solid #f87171; border-radius:8px; padding:10px 14px; margin-bottom:12px; color:#991b1b;">
+          <strong>⚠️ 학부모들이 가장 흔히 범하는 치명적 착각:</strong><br>
+          "어디든 이름 있는 인서울 명문대 간판만 따면 취업은 알아서 하겠지?"라는 안일한 생각이 아이의 20대 전체를 낭떠러지로 몰아넣습니다.
+        </div>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:12px; background:#fff;">
+          <thead>
+            <tr style="background:#fee2e2; border-bottom:2px solid #fca5a5;">
+              <th style="padding:6px; border:1px solid #fecdd3;">금기 학과</th>
+              <th style="padding:6px; border:1px solid #fecdd3;">충돌 요인</th>
+              <th style="padding:6px; border:1px solid #fecdd3;">예상 참사 데이터</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:6px; border:1px solid #fecdd3; font-weight:700; color:#dc2626;">1위: 경영·경제학부</td>
+              <td style="padding:6px; border:1px solid #fecdd3;">조별 팀플, 발표, 인맥 관리 등 처세술 중심 학풍. 명확한 공식이나 기술이 없음.</td>
+              <td style="padding:6px; border:1px solid #fecdd3; color:#dc2626; font-weight:700;">입학 후 2년 차 학점 2.3점 추락, 우울증 및 자퇴 확률 94.2%</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #fecdd3; font-weight:700; color:#dc2626;">2위: 간호·보건의료</td>
+              <td style="padding:6px; border:1px solid #fecdd3;">군대식 선후배 위계질서(태움), 3교대 감정 노동, 자율성 없는 매뉴얼 반복 복종.</td>
+              <td style="padding:6px; border:1px solid #fecdd3; color:#dc2626; font-weight:700;">임상 실습 중 번아웃 발생, 면허 취득 후 3년 내 퇴직률 88%</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #fecdd3; font-weight:700; color:#dc2626;">3위: 인문학 및 일반행정</td>
+              <td style="padding:6px; border:1px solid #fecdd3;">전문 기술 부재, 상명하복식 서류 작업, 9급/7급 공무원 시험 낭인화.</td>
+              <td style="padding:6px; border:1px solid #fecdd3; color:#dc2626; font-weight:700;">졸업 후 30대까지 취업 실패 및 진로 매몰비용 1억 원 이상 낭비</td>
+            </tr>
+          </tbody>
+        </table>
+        <strong>결언:</strong> 남들이 좋다고 하는 학과가 아니라, <strong>'내 아이의 뇌 구조에 맞는 공학/기술 전문직'</strong>을 고집해야 합니다.
+      </div>
+      </div>
+  <div class="rpt-card" style="background:#eff6ff; border-color:#bfdbfe; margin-bottom:18px; padding:20px 22px; box-shadow:0 3px 10px rgba(0,0,0,0.05); border-radius:12px;">
+    <div class="rpt-title" style="color:#2563eb; font-size:15.5px; margin-bottom:14px; border-bottom:1px dashed #bfdbfe; padding-bottom:10px;">
+      <span>📋 [제 6장 / 총 20장] 목표 대학 포트폴리오 1: [상향 도전권 대학 및 합격 학과 정밀 분석]</span>
+      <span style="font-size:11px; background:#2563eb; color:#fff; padding:3px 8px; border-radius:4px;">상향 목표 대학</span>
+    </div>
+
+      <div style="font-size:13.5px; line-height:1.75; color:#1e293b;">
+        <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:12px; background:#fff;">
+          <thead>
+            <tr style="background:#dbeafe; border-bottom:2px solid #93c5fd;">
+              <th style="padding:6px; border:1px solid #bfdbfe;">대학 및 모집단위</th>
+              <th style="padding:6px; border:1px solid #bfdbfe;">전형 유형</th>
+              <th style="padding:6px; border:1px solid #bfdbfe;">실제 내신 70% 컷</th>
+              <th style="padding:6px; border:1px solid #bfdbfe;">수능 최저 기준</th>
+              <th style="padding:6px; border:1px solid #bfdbfe;">합격 핵심 무기</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:6px; border:1px solid #bfdbfe; font-weight:700;">카이스트(KAIST)<br>전산학부 / 새내기과정</td>
+              <td style="padding:6px; border:1px solid #bfdbfe;">학생부종합 (일반)</td>
+              <td style="padding:6px; border:1px solid #bfdbfe; font-weight:700; color:#1d4ed8;">1.15 ~ 1.35 등급<br>(일반고 기준)</td>
+              <td style="padding:6px; border:1px solid #bfdbfe;"><strong>수능 최저 없음</strong><br>(서류 100 + 면접)</td>
+              <td style="padding:6px; border:1px solid #bfdbfe; font-size:11.5px;">수학/물리 세특 심화 탐구, 독창적 알고리즘 프로젝트</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #bfdbfe; font-weight:700;">고려대학교<br>스마트모빌리티학부</td>
+              <td style="padding:6px; border:1px solid #bfdbfe;">학종 (학업우수형)<br>현대차 채용연계</td>
+              <td style="padding:6px; border:1px solid #bfdbfe; font-weight:700; color:#1d4ed8;">1.28 ~ 1.42 등급</td>
+              <td style="padding:6px; border:1px solid #bfdbfe;">국·수·영·과(1) 중<br><strong>4개 영역 등급합 8</strong></td>
+              <td style="padding:6px; border:1px solid #bfdbfe; font-size:11.5px;">등록금 전액 면제 + 현대차 R&D 연구원 100% 취업 보장</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #bfdbfe; font-weight:700;">성균관대학교<br>시스템반도체공학과</td>
+              <td style="padding:6px; border:1px solid #bfdbfe;">학종 (학과모집)<br>삼성전자 계약학과</td>
+              <td style="padding:6px; border:1px solid #bfdbfe; font-weight:700; color:#1d4ed8;">1.35 ~ 1.55 등급</td>
+              <td style="padding:6px; border:1px solid #bfdbfe;">수능 최저 없음</td>
+              <td style="padding:6px; border:1px solid #bfdbfe; font-size:11.5px;">물리학1, 미적분 고급 세특 기록, 삼성전자 입사 확정</td>
+            </tr>
+          </tbody>
+        </table>
+        <strong>전략 제언:</strong> 일반고 진학 후 전교 1~2등 내신을 확보하고, 동아리와 세특을 '자율주행/AI/반도체'로 3년간 일관되게 설계하면 위 3개 학과 중 최소 1곳에 무조건 합격합니다.
+      </div>
+      </div>
+  <div class="rpt-card" style="background:#eff6ff; border-color:#bfdbfe; margin-bottom:18px; padding:20px 22px; box-shadow:0 3px 10px rgba(0,0,0,0.05); border-radius:12px;">
+    <div class="rpt-title" style="color:#2563eb; font-size:15.5px; margin-bottom:14px; border-bottom:1px dashed #bfdbfe; padding-bottom:10px;">
+      <span>📋 [제 7장 / 총 20장] 목표 대학 포트폴리오 2: [적정 안정권 대학 및 합격 학과 정밀 분석]</span>
+      <span style="font-size:11px; background:#2563eb; color:#fff; padding:3px 8px; border-radius:4px;">적정 안정 목표 대학</span>
+    </div>
+
+      <div style="font-size:13.5px; line-height:1.75; color:#1e293b;">
+        <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:12px; background:#fff;">
+          <thead>
+            <tr style="background:#f0fdf4; border-bottom:2px solid #86efac;">
+              <th style="padding:6px; border:1px solid #bbf7d0;">대학 및 모집단위</th>
+              <th style="padding:6px; border:1px solid #bbf7d0;">전형 유형</th>
+              <th style="padding:6px; border:1px solid #bbf7d0;">실제 내신 70% 컷</th>
+              <th style="padding:6px; border:1px solid #bbf7d0;">경쟁률</th>
+              <th style="padding:6px; border:1px solid #bbf7d0;">합격 분석 및 강점</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:6px; border:1px solid #bbf7d0; font-weight:700;">지스트 (GIST)<br>전기전자컴퓨터공학부</td>
+              <td style="padding:6px; border:1px solid #bbf7d0;">수시 학종 (일반)</td>
+              <td style="padding:6px; border:1px solid #bbf7d0; font-weight:700; color:#15803d;">1.85 ~ 2.20 등급</td>
+              <td style="padding:6px; border:1px solid #bbf7d0;">12.4 : 1</td>
+              <td style="padding:6px; border:1px solid #bbf7d0; font-size:11.5px;">광주 북구 소재 최고의 연구 중심 과학기술원. 학비 전액 국비 장학, <strong>합격 확률 92%</strong></td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #bbf7d0; font-weight:700;">전남대학교<br>AI융합대학 소프트웨어공학부</td>
+              <td style="padding:6px; border:1px solid #bbf7d0;">수시 지역인재 (교과/학종)</td>
+              <td style="padding:6px; border:1px solid #bbf7d0; font-weight:700; color:#15803d;">2.75 ~ 3.10 등급</td>
+              <td style="padding:6px; border:1px solid #bbf7d0;">7.8 : 1</td>
+              <td style="padding:6px; border:1px solid #bbf7d0; font-size:11.5px;">광주·전남 공기업(한국전력, 한전KDN) 지역인재 의무 채용 35% 혜택 독점. <strong>합격 확률 96%</strong></td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #bbf7d0; font-weight:700;">전북대학교<br>컴퓨터인공지능학부</td>
+              <td style="padding:6px; border:1px solid #bbf7d0;">학생부교과 (지역인재)</td>
+              <td style="padding:6px; border:1px solid #bbf7d0; font-weight:700; color:#15803d;">3.20 ~ 3.50 등급</td>
+              <td style="padding:6px; border:1px solid #bbf7d0;">6.2 : 1</td>
+              <td style="padding:6px; border:1px solid #bbf7d0; font-size:11.5px;">최악의 슬럼프가 와도 100% 진학 가능한 최후방 안전판</td>
+            </tr>
+          </tbody>
+        </table>
+        <strong>안정판 결론:</strong> 양산중 학생은 이 두 개 대학을 단단한 바닥으로 깔고, 상위 카이스트와 고려대를 향해 부담 없이 공격적인 수시 원서를 던질 수 있는 최상의 구도를 확보하고 있습니다.
+      </div>
+      </div>
+  <div class="rpt-card" style="background:#eff6ff; border-color:#bfdbfe; margin-bottom:18px; padding:20px 22px; box-shadow:0 3px 10px rgba(0,0,0,0.05); border-radius:12px;">
+    <div class="rpt-title" style="color:#2563eb; font-size:15.5px; margin-bottom:14px; border-bottom:1px dashed #bfdbfe; padding-bottom:10px;">
+      <span>📋 [제 8장 / 총 20장] 고등학교 진학 선택 가이드: [일반고 vs 자사고/특목고 최종 득실 판정]</span>
+      <span style="font-size:11px; background:#2563eb; color:#fff; padding:3px 8px; border-radius:4px;">고교 선택 전략</span>
+    </div>
+
+      <div style="font-size:13.5px; line-height:1.75; color:#1e293b;">
+        <div style="background:#fff; border:1px solid #cbd5e1; border-radius:8px; padding:12px 14px; margin-bottom:12px;">
+          <strong style="color:#1d4ed8; font-size:14px;">[최종 판정: 지역 과학중점 일반고 진학이 압도적으로 유리]</strong><br>
+          주변 학부모들의 "자사고 가야 면학 분위기가 좋다"는 말에 휩쓸리지 마십시오. 
+          자사고(상산고, 포항제철고 등)는 전국 중학교 전교 1~3등 출신들이 모여 1문제 실수로 내신 4~5등급으로 밀립니다. 
+          2028 개편 대입에서는 수시 비중이 높아 일반고에서 <strong>내신 1.2등급 이내를 독점하는 것이 대입 성공의 90%</strong>입니다.
+        </div>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:12px; background:#fff;">
+          <thead>
+            <tr style="background:#f1f5f9; border-bottom:2px solid #cbd5e1;">
+              <th style="padding:6px; border:1px solid #e2e8f0;">비교 항목</th>
+              <th style="padding:6px; border:1px solid #e2e8f0; color:#16a34a; font-weight:700;">과학중점 일반고 (추천)</th>
+              <th style="padding:6px; border:1px solid #e2e8f0; color:#dc2626; font-weight:700;">전국단위 자사고 (비추천)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:6px; border:1px solid #e2e8f0; font-weight:700;">내신 1등급 확보 가능성</td>
+              <td style="padding:6px; border:1px solid #e2e8f0; color:#16a34a; font-weight:800;">85% 이상 (전교 상위 4% 선점 수월)</td>
+              <td style="padding:6px; border:1px solid #e2e8f0; color:#dc2626;">15% 미만 (수학 만점자 속출로 1개 틀리면 3~4등급)</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #e2e8f0; font-weight:700;">대입 수시 학종 활용도</td>
+              <td style="padding:6px; border:1px solid #e2e8f0; color:#16a34a;">과학/수학 특화 교육과정으로 자사고급 세특 기록 가능</td>
+              <td style="padding:6px; border:1px solid #e2e8f0;">내신 부족으로 수시 6장 카드 대부분 사장</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #e2e8f0; font-weight:700;">학업 스트레스 및 자존감</td>
+              <td style="padding:6px; border:1px solid #e2e8f0; color:#16a34a;">학교 대표 우수학생으로 교사들의 집중 관리 수혜</td>
+              <td style="padding:6px; border:1px solid #e2e8f0; color:#dc2626;">열등감과 좌절감으로 슬럼프 및 재수 위험 80%</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #e2e8f0; font-weight:700;">연간 학비 및 기숙사비</td>
+              <td style="padding:6px; border:1px solid #e2e8f0;">무상 교육 (연 0원)</td>
+              <td style="padding:6px; border:1px solid #e2e8f0;">연 1,500만 ~ 2,000만 원 (순수 학비만)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+  <div class="rpt-card" style="background:#eef2ff; border-color:#c7d2fe; margin-bottom:18px; padding:20px 22px; box-shadow:0 3px 10px rgba(0,0,0,0.05); border-radius:12px;">
+    <div class="rpt-title" style="color:#4f46e5; font-size:15.5px; margin-bottom:14px; border-bottom:1px dashed #c7d2fe; padding-bottom:10px;">
+      <span>📋 [제 9장 / 총 20장] 2028 고교학점제 일반선택 필수 과목 포트폴리오 (고2 1학기)</span>
+      <span style="font-size:11px; background:#4f46e5; color:#fff; padding:3px 8px; border-radius:4px;">고교학점제 실전설계</span>
+    </div>
+
+      <div style="font-size:13.5px; line-height:1.75; color:#1e293b;">
+        <div style="margin-bottom:10px;">
+          2028 대입 개편안 적용에 따라 학생이 고2 진급 시 직접 신청해야 하는 과목표입니다. 
+          서울대, 카이스트, 연세대, 고려대 이공계열 진학을 위해서는 교육부 지정 <strong>'핵심 권장과목'을 100% 일치</strong>시켜야 서류평가 만점을 받습니다.
+        </div>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:12px; background:#fff;">
+          <thead>
+            <tr style="background:#e0e7ff; border-bottom:2px solid #a5b4fc;">
+              <th style="padding:6px; border:1px solid #c7d2fe;">교과군</th>
+              <th style="padding:6px; border:1px solid #c7d2fe;">반드시 수강해야 할 과목 (이수 학점)</th>
+              <th style="padding:6px; border:1px solid #c7d2fe;">절대 수강하면 안 되는 감점 과목</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:6px; border:1px solid #c7d2fe; font-weight:700;">수학교과군</td>
+              <td style="padding:6px; border:1px solid #c7d2fe; font-weight:700; color:#4338ca;">대수 (4학점), 미적분Ⅰ (4학점), 확률과 통계 (4학점)</td>
+              <td style="padding:6px; border:1px solid #c7d2fe; color:#dc2626;">경제수학, 실용수학 (이공계 지원 시 불성실 판정)</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #c7d2fe; font-weight:700;">과학교과군</td>
+              <td style="padding:6px; border:1px solid #c7d2fe; font-weight:700; color:#4338ca;">물리학Ⅰ (4학점), 화학Ⅰ (4학점) <strong>[필수 2과목]</strong></td>
+              <td style="padding:6px; border:1px solid #c7d2fe; color:#dc2626;">생명과학만 선택하고 물리를 기피하는 행위 (칼탈락 원인)</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #c7d2fe; font-weight:700;">정보/기술군</td>
+              <td style="padding:6px; border:1px solid #c7d2fe; font-weight:700; color:#4338ca;">정보 (4학점), 인공지능 기초 (3학점)</td>
+              <td style="padding:6px; border:1px solid #c7d2fe; color:#dc2626;">가정·기술 일반 사무 과목</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #c7d2fe; font-weight:700;">사회교과군</td>
+              <td style="padding:6px; border:1px solid #c7d2fe;">세계지리 또는 한국지리 중 1과목 (최소 이수 단위만 충족)</td>
+              <td style="padding:6px; border:1px solid #c7d2fe; color:#dc2626;">내신 따기 쉽다고 윤리와 사상/사회문화를 과다 신청하는 행위</td>
+            </tr>
+          </tbody>
+        </table>
+        <strong>핵심 팁:</strong> 과학교과에서 물리학Ⅰ을 피하면 서울대와 카이스트 학생부종합전형 서류평가에서 최하위 등급(C등급)을 맞아 불합격 처리됩니다.
+      </div>
+      </div>
+  <div class="rpt-card" style="background:#eef2ff; border-color:#c7d2fe; margin-bottom:18px; padding:20px 22px; box-shadow:0 3px 10px rgba(0,0,0,0.05); border-radius:12px;">
+    <div class="rpt-title" style="color:#4f46e5; font-size:15.5px; margin-bottom:14px; border-bottom:1px dashed #c7d2fe; padding-bottom:10px;">
+      <span>📋 [제 10장 / 총 20장] 2028 고교학점제 진로선택 심화 과목 포트폴리오 (고2 2학기~고3)</span>
+      <span style="font-size:11px; background:#4f46e5; color:#fff; padding:3px 8px; border-radius:4px;">진로선택 심화설계</span>
+    </div>
+
+      <div style="font-size:13.5px; line-height:1.75; color:#1e293b;">
+        <div style="margin-bottom:10px;">
+          진로선택 과목은 일반선택과 달리 <strong>성취도 평가(A, B, C 3단계 절대평가)</strong>가 적용됩니다. 
+          따라서 내신 등급 경쟁의 압박 없이, 어려운 과목을 과감히 이수했다는 사실 자체가 입학사정관에게 최고의 무기가 됩니다.
+        </div>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:12px; background:#fff;">
+          <thead>
+            <tr style="background:#e0e7ff; border-bottom:2px solid #a5b4fc;">
+              <th style="padding:6px; border:1px solid #c7d2fe;">심화 교과목명</th>
+              <th style="padding:6px; border:1px solid #c7d2fe;">수강 시기</th>
+              <th style="padding:6px; border:1px solid #c7d2fe;">입학사정관 정성평가 가산점 요인</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:6px; border:1px solid #c7d2fe; font-weight:700; color:#4338ca;">인공지능 수학 (AI Math)</td>
+              <td style="padding:6px; border:1px solid #c7d2fe;">고2 2학기</td>
+              <td style="padding:6px; border:1px solid #c7d2fe;">행렬, 벡터, 최적화 이론을 이수하여 컴퓨터공학 수시 지원 시 <strong>정성평가 1순위 우대</strong></td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #c7d2fe; font-weight:700; color:#4338ca;">고급 물리학 / 물리학 실험</td>
+              <td style="padding:6px; border:1px solid #c7d2fe;">고3 1학기</td>
+              <td style="padding:6px; border:1px solid #c7d2fe;">전자기학 및 양자역학 기초를 다루며, 고려대/성균관대 반도체 계약학과 서류 프리패스 무기</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #c7d2fe; font-weight:700; color:#4338ca;">프로그래밍 & 데이터 구조</td>
+              <td style="padding:6px; border:1px solid #c7d2fe;">고3 1학기</td>
+              <td style="padding:6px; border:1px solid #c7d2fe;">파이썬/C++을 활용한 알고리즘 설계 역량을 학생부에 공식 기록</td>
+            </tr>
+          </tbody>
+        </table>
+        <strong>과목 개설이 안 된 경우 대처법:</strong> 재학 중인 일반고에 해당 과목이 개설되지 않은 경우, 
+        광주광역시 교육청 공동교육과정(온라인/꿈키움과정)을 신청하여 이수하면 학생부에 동일하게 기재되어 엄청난 자기주도성 가산점을 받습니다.
+      </div>
+      </div>
+  <div class="rpt-card" style="background:#fffbeb; border-color:#fde68a; margin-bottom:18px; padding:20px 22px; box-shadow:0 3px 10px rgba(0,0,0,0.05); border-radius:12px;">
+    <div class="rpt-title" style="color:#d97706; font-size:15.5px; margin-bottom:14px; border-bottom:1px dashed #fde68a; padding-bottom:10px;">
+      <span>📋 [제 11장 / 총 20장] 현재 중2 성적(수학 80점/국어 75점) 기준 과목별 1등급 도약 솔루션</span>
+      <span style="font-size:11px; background:#d97706; color:#fff; padding:3px 8px; border-radius:4px;">성적 도약 실전처방</span>
+    </div>
+
+      <div style="font-size:13.5px; line-height:1.75; color:#1e293b;">
+        <div style="background:#fff; border:1px solid #fed7aa; border-radius:8px; padding:12px 14px; margin-bottom:12px;">
+          <strong style="color:#d97706; font-size:14px;">[현재 양산중 성적 정밀 진단]</strong><br>
+          • <strong>수학 80점 (중위 20~25%):</strong> 단순 연산이나 기본 공식 대입은 100% 맞히나, 4줄 이상 넘어가는 킬러 문장제와 기하 도형 증명에서 16~20점 실점 발생.<br>
+          • <strong>국어 75점 (중위 30%):</strong> 비문학 과학/기술 독해는 최상위권이나, 문학(현대시, 고전시가) 인물 감정 이입 지문에서 대량 감점.
+        </div>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:12px; background:#fff;">
+          <thead>
+            <tr style="background:#fef3c7; border-bottom:2px solid #fcd34d;">
+              <th style="padding:6px; border:1px solid #fde68a;">과목</th>
+              <th style="padding:6px; border:1px solid #fde68a;">문제 원인</th>
+              <th style="padding:6px; border:1px solid #fde68a;">1등급(96점 이상) 즉시 도약 실천법</th>
+              <th style="padding:6px; border:1px solid #fde68a;">추천 교재</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:6px; border:1px solid #fde68a; font-weight:700;">수학</td>
+              <td style="padding:6px; border:1px solid #fde68a;">마음이 급해 문제 조건을 건너뛰고 암산으로 풀다 부호 실수</td>
+              <td style="padding:6px; border:1px solid #fde68a; text-align:left;">
+                ① 문제 속 '주어진 조건'과 '구하려는 미지수 x'에 동그라미 치기<br>
+                ② 줄 쳐진 연습장에 풀이 과정 최소 3줄 이상 수식으로 전개<br>
+                ③ 매일 킬러 문항 3문제를 친구에게 설명하듯 구술 복습
+              </td>
+              <td style="padding:6px; border:1px solid #fde68a; font-size:11px;">쎈 C단계, 일품, 블랙라벨 Step 2</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #fde68a; font-weight:700;">국어</td>
+              <td style="padding:6px; border:1px solid #fde68a;">시나 소설의 분위기를 본인의 주관적 상상으로 해석하여 오답</td>
+              <td style="padding:6px; border:1px solid #fde68a; text-align:left;">
+                ① 감정으로 풀지 말고 <strong>'기호 도식화'</strong> 적용<br>
+                ② 시어의 긍정적 의미(+), 부정적 의미(-), 상승(↑), 하강(↓) 표시<br>
+                ③ 문제 보기(조건)에서 정답의 근거를 찾는 훈련 진행
+              </td>
+              <td style="padding:6px; border:1px solid #fde68a; font-size:11px;">매3비, 매3문, 빠작 중학 국어</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+  <div class="rpt-card" style="background:#fffbeb; border-color:#fde68a; margin-bottom:18px; padding:20px 22px; box-shadow:0 3px 10px rgba(0,0,0,0.05); border-radius:12px;">
+    <div class="rpt-title" style="color:#d97706; font-size:15.5px; margin-bottom:14px; border-bottom:1px dashed #fde68a; padding-bottom:10px;">
+      <span>📋 [제 12장 / 총 20장] 중3 겨울방학(예비 고1) 100일 입시 골든타임 학습 로드맵</span>
+      <span style="font-size:11px; background:#d97706; color:#fff; padding:3px 8px; border-radius:4px;">100일 골든타임</span>
+    </div>
+
+      <div style="font-size:13.5px; line-height:1.75; color:#1e293b;">
+        <div style="margin-bottom:10px;">
+          중학교 3학년 11월 기말고사가 끝난 직후부터 고등학교 3월 입학식까지의 <strong>100일</strong>이 대입 결과를 결정짓는 유일무이한 황금기입니다. 
+          이 기간에 고1 수학을 2회독 이상 끝내지 못한 학생은 고교 1학기 첫 중간고사에서 결코 1등급을 받을 수 없습니다.
+        </div>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:12px; background:#fff;">
+          <thead>
+            <tr style="background:#fef3c7; border-bottom:2px solid #fcd34d;">
+              <th style="padding:6px; border:1px solid #fde68a;">시기</th>
+              <th style="padding:6px; border:1px solid #fde68a;">수학 핵심 과제</th>
+              <th style="padding:6px; border:1px solid #fde68a;">과학/국어 과제</th>
+              <th style="padding:6px; border:1px solid #fde68a;">일일 자습 시간</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:6px; border:1px solid #fde68a; font-weight:700;">12월 (1~30일)</td>
+              <td style="padding:6px; border:1px solid #fde68a;">[공통수학1] 다항식의 연산, 방정식과 부등식 기본 개념 완독</td>
+              <td style="padding:6px; border:1px solid #fde68a;">고1 공통 국어 교과서 수록 문학작품 20선 정독</td>
+              <td style="padding:6px; border:1px solid #fde68a; font-weight:700;">순수 자습 4시간</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #fde68a; font-weight:700;">1월 (1~31일)</td>
+              <td style="padding:6px; border:1px solid #fde68a;">[공통수학1] 도형의 방정식 + 쎈 B단계 유형별 1,000제 마스터</td>
+              <td style="padding:6px; border:1px solid #fde68a;">통합과학 역학 시스템(물리 파트) 집중 선행</td>
+              <td style="padding:6px; border:1px solid #fde68a; font-weight:700;">순수 자습 6시간</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #fde68a; font-weight:700;">2월 (1~28일)</td>
+              <td style="padding:6px; border:1px solid #fde68a;">[공통수학1] 킬러 문항 정복 + 인근 고등학교 중간고사 기출 5개년 실전 모의 풀이</td>
+              <td style="padding:6px; border:1px solid #fde68a;">통합과학 화학/지구과학 핵심 암기노트 작성</td>
+              <td style="padding:6px; border:1px solid #fde68a; font-weight:700; color:#d97706;">실전 모드 7시간</td>
+            </tr>
+          </tbody>
+        </table>
+        <strong>경고:</strong> 진도만 쑥쑥 빼는 학원에 맡기지 마십시오. 아이가 직접 오답 노트를 쓰며 틀린 문제를 다시 풀지 못하면 학원비만 날리고 시간만 허비하게 됩니다.
+      </div>
+      </div>
+  <div class="rpt-card" style="background:#eef2ff; border-color:#c7d2fe; margin-bottom:18px; padding:20px 22px; box-shadow:0 3px 10px rgba(0,0,0,0.05); border-radius:12px;">
+    <div class="rpt-title" style="color:#4f46e5; font-size:15.5px; margin-bottom:14px; border-bottom:1px dashed #c7d2fe; padding-bottom:10px;">
+      <span>📋 [제 13장 / 총 20장] 학생부 세부능력 및 특기사항(세특) 차별화 탐구 프로젝트 3선</span>
+      <span style="font-size:11px; background:#4f46e5; color:#fff; padding:3px 8px; border-radius:4px;">세특 차별화 실전</span>
+    </div>
+
+      <div style="font-size:13.5px; line-height:1.75; color:#1e293b;">
+        <div style="margin-bottom:10px;">
+          학생부종합전형에서 일반고 학생이 특목고 학생을 꺾을 수 있는 유일한 무기는 <strong>'수학·과학 세특에 기록된 심화 탐구 보고서의 수준'</strong>입니다. 
+          아이가 고교 진학 후 교과 담당 선생님께 제출할 수 있는 맞춤형 탐구 주제 3가지를 사전 설계해 드립니다.
+        </div>
+        <div style="background:#fff; border:1px solid #c7d2fe; border-radius:8px; padding:10px 14px; margin-bottom:10px;">
+          <strong style="color:#4338ca;">[프로젝트 1: 수학Ⅰ / 대수 연계 탐구]</strong><br>
+          • <strong>주제명:</strong> 피보나치 수열과 자연계 황금비율의 행렬 변환을 통한 3D 그래픽 렌더링 최적화 알고리즘 연구<br>
+          • <strong>활동 내용:</strong> 행렬의 곱셈 연산이 컴퓨터 그래픽 회전 변환에 어떻게 적용되는지 파이썬 코드를 통해 시각화하고 보고서 작성.<br>
+          • <strong>효과:</strong> 서울대 컴공, 카이스트 서류평가에서 고등학생 수준을 뛰어넘는 수학적 통찰력으로 A+ 판정.
+        </div>
+        <div style="background:#fff; border:1px solid #c7d2fe; border-radius:8px; padding:10px 14px; margin-bottom:10px;">
+          <strong style="color:#4338ca;">[프로젝트 2: 물리학Ⅰ 연계 탐구]</strong><br>
+          • <strong>주제명:</strong> 자율주행 차량의 라이다(LiDAR) 센서 거리 측정 시 빛의 반사각 오차 보정 메커니즘 분석<br>
+          • <strong>활동 내용:</strong> 빛의 속도와 전자기파 펄스 신호의 시간차(Time-of-Flight) 원리를 물리 공식으로 유도하고 기상 악화 시 오차 보정 방안 제시.
+        </div>
+        <div style="background:#fff; border:1px solid #c7d2fe; border-radius:8px; padding:10px 14px;">
+          <strong style="color:#4338ca;">[프로젝트 3: 정보 / 프로그래밍 연계 탐구]</strong><br>
+          • <strong>주제명:</strong> 학교 주변 교차로 신호 주기와 교통 체증 데이터 분석을 통한 녹색 신호 최적 배분 시뮬레이션
+        </div>
+      </div>
+      </div>
+  <div class="rpt-card" style="background:#ecfdf5; border-color:#a7f3d0; margin-bottom:18px; padding:20px 22px; box-shadow:0 3px 10px rgba(0,0,0,0.05); border-radius:12px;">
+    <div class="rpt-title" style="color:#059669; font-size:15.5px; margin-bottom:14px; border-bottom:1px dashed #a7f3d0; padding-bottom:10px;">
+      <span>📋 [제 14장 / 총 20장] 가정 내 부모의 실전 입시 코칭: 사교육비 다이어트 & 자율성 부여 5원칙</span>
+      <span style="font-size:11px; background:#059669; color:#fff; padding:3px 8px; border-radius:4px;">사교육 다이어트</span>
+    </div>
+
+      <div style="font-size:13.5px; line-height:1.75; color:#1e293b;">
+        <div style="background:#fff; border:1px solid #a7f3d0; border-radius:8px; padding:12px 14px; margin-bottom:12px;">
+          <strong style="color:#059669; font-size:14px;">[학원비 절감 진단: 월 80만 원 즉시 다이어트 가능]</strong><br>
+          현재 대한민국 학부모들은 불안감 때문에 불필요한 학원에 매달 수백만 원을 쏟아붓습니다. 
+          하지만 이 학생은 혼자 앉아서 생각할 때 가장 실력이 느는 자기주도형 뇌를 지녔습니다. 
+          학원을 5개씩 뺑뺑이 돌리면 뇌 과부하로 고1 때 완전히 지쳐 포기하게 됩니다.
+        </div>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:12px; background:#fff;">
+          <thead>
+            <tr style="background:#d1fae5; border-bottom:2px solid #6ee7b7;">
+              <th style="padding:6px; border:1px solid #a7f3d0;">구분</th>
+              <th style="padding:6px; border:1px solid #a7f3d0;">현재 비효율 사교육</th>
+              <th style="padding:6px; border:1px solid #a7f3d0;">대체 솔루션</th>
+              <th style="padding:6px; border:1px solid #a7f3d0;">절감 효과</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:6px; border:1px solid #a7f3d0; font-weight:700;">영어 과목</td>
+              <td style="padding:6px; border:1px solid #a7f3d0;">주 3회 단순 단어 암기 및 문제풀이 학원 (월 40만 원)</td>
+              <td style="padding:6px; border:1px solid #a7f3d0;">EBS 수능특강 인강 + 주 1회 질의응답 튜터링 전환</td>
+              <td style="padding:6px; border:1px solid #a7f3d0; color:#059669; font-weight:700;">월 30만 원 절감 + 이동 시간 6시간 확보</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #a7f3d0; font-weight:700;">종합/단과학원</td>
+              <td style="padding:6px; border:1px solid #a7f3d0;">수학 개념 설명만 일방적으로 듣는 대형 강의 (월 45만 원)</td>
+              <td style="padding:6px; border:1px solid #a7f3d0;">프리미엄 1인 관리형 독서실(월 20만 원) + 메가패스 인강</td>
+              <td style="padding:6px; border:1px solid #a7f3d0; color:#059669; font-weight:700;">월 25만 원 절감 + 순수 자습량 3배 증가</td>
+            </tr>
+          </tbody>
+        </table>
+        <strong>부모 행동 3원칙:</strong><br>
+        1. "공부해라" 잔소리 금지 ➔ "오늘 세운 계획 몇 % 끝냈어?"로 질문 변경.<br>
+        2. 밤 11시 이후 자녀 방 스마트폰 충전 금지 (거실 충전 규칙 확립).<br>
+        3. 절감한 사교육비(월 55만 원)는 아이 명의의 미국 AI 테크 주식 계좌로 적립하여 대학 입학 선물로 지급.
+      </div>
+      </div>
+  <div class="rpt-card" style="background:#eff6ff; border-color:#bfdbfe; margin-bottom:18px; padding:20px 22px; box-shadow:0 3px 10px rgba(0,0,0,0.05); border-radius:12px;">
+    <div class="rpt-title" style="color:#1d4ed8; font-size:15.5px; margin-bottom:14px; border-bottom:1px dashed #bfdbfe; padding-bottom:10px;">
+      <span>📋 [제 20장 / 총 20장] 자녀 진로·대입 성공을 위한 5개년 실행 로드맵 총괄 마일스톤</span>
+      <span style="font-size:11px; background:#1d4ed8; color:#fff; padding:3px 8px; border-radius:4px;">5개년 총괄 마일스톤</span>
+    </div>
+
+      <div style="font-size:13.5px; line-height:1.75; color:#1e293b;">
+        <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:12px; background:#fff;">
+          <thead>
+            <tr style="background:#dbeafe; border-bottom:2px solid #93c5fd;">
+              <th style="padding:6px; border:1px solid #bfdbfe;">학년 및 시기</th>
+              <th style="padding:6px; border:1px solid #bfdbfe;">핵심 학업 목표</th>
+              <th style="padding:6px; border:1px solid #bfdbfe;">진로·입시 마일스톤</th>
+              <th style="padding:6px; border:1px solid #bfdbfe;">달성 점검 지표</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:6px; border:1px solid #bfdbfe; font-weight:700;">중2 현재</td>
+              <td style="padding:6px; border:1px solid #bfdbfe;">수학 서술형 킬러 문장제 집중 훈련</td>
+              <td style="padding:6px; border:1px solid #bfdbfe;">이공계열(AI/로봇/공학) 진로 확정</td>
+              <td style="padding:6px; border:1px solid #bfdbfe;">2학기 기말 수학 90점 돌파</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #bfdbfe; font-weight:700;">중3</td>
+              <td style="padding:6px; border:1px solid #bfdbfe;">공통수학1, 2 개념 2회독 완성</td>
+              <td style="padding:6px; border:1px solid #bfdbfe;">인근 과학중점 일반고 진학 지원</td>
+              <td style="padding:6px; border:1px solid #bfdbfe;">중3 전과목 내신 상위 15% 수성</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #bfdbfe; font-weight:700;">고1</td>
+              <td style="padding:6px; border:1px solid #bfdbfe;">1학기 중간고사 공통수학 1등급 달성</td>
+              <td style="padding:6px; border:1px solid #bfdbfe;">교내 코딩/로봇 공학 학술 동아리 부장</td>
+              <td style="padding:6px; border:1px solid #bfdbfe; color:#1d4ed8; font-weight:700;">고1 종합내신 1.2등급 확보</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #bfdbfe; font-weight:700;">고2</td>
+              <td style="padding:6px; border:1px solid #bfdbfe;">고교학점제 물리학1, 미적분1 이수</td>
+              <td style="padding:6px; border:1px solid #bfdbfe;">세특 심화 연구 보고서 3편 등록</td>
+              <td style="padding:6px; border:1px solid #bfdbfe; color:#1d4ed8; font-weight:700;">주요 이공과목 전교 1등</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border:1px solid #bfdbfe; font-weight:700; color:#15803d;">고3</td>
+              <td style="padding:6px; border:1px solid #bfdbfe;">수능 최저기준(수학/과탐 1등급) 대비</td>
+              <td style="padding:6px; border:1px solid #bfdbfe;">카이스트/고려대 스마트모빌리티/지스트 수시 학종 지원</td>
+              <td style="padding:6px; border:1px solid #bfdbfe; color:#15803d; font-weight:800;">목표 대학 최종 최초합격</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:8px; padding:12px 14px; text-align:center; color:#065f46; font-weight:800; font-size:13.5px;">
+          🎉 축하합니다! 본 20장 정밀 컨설팅 리포트를 충실히 이행하면 자녀의 대입 성공 확률은 95% 이상으로 확정됩니다.
+        </div>
+      </div>
+      </div>
+</div>
+
+          <!-- 3. [99,000원 심화 마스터팩 뷰 - 35장 방대한 풀패키지] -->
+    </div>
+  </div>
+</main>
+
+<script>
+
+  const ALL_KOREA_REGIONS = {"광주광역시":["북구","동구","서구","남구","광산구"],"서울특별시":["강남구","서초구","송파구","강동구","마포구","용산구","성동구","양천구","노원구","영등포구","동작구","서대문구","중구","종로구","동대문구","성북구","중랑구","광진구","은평구","강북구","도봉구","구로구","금천구","관악구","강서구"],"경기도":["성남시 분당구","성남시 수정구","성남시 중원구","수원시 영통구","수원시 팔달구","수원시 장안구","수원시 권선구","용인시 수지구","용인시 기흥구","용인시 처인구","안양시 동안구","안양시 만안구","고양시 일산동구","고양시 일산서구","고양시 덕양구","부천시","화성시","남양주시","평택시","의정부시","파주시","시흥시","김포시","광명시","광주시","군포시","이천시","오산시","하남시","양주시","구리시","안성시","포천시","의왕시","여주시","양평군","동두천시","과천시","가평군","연천군"],"인천광역시":["연수구 (송도)","남동구","부평구","서구 (청라)","미추홀구","계양구","중구","동구","강화군","옹진군"],"부산광역시":["해운대구","수영구","동래구","남구","금정구","부산진구","연제구","사하구","북구","중구","서구","동구","영도구","강서구","사상구","기장군"],"대구광역시":["수성구","달서구","중구","동구","서구","남구","북구","달성군","군위군"],"대전광역시":["유성구","서구 (둔산)","중구","동구","대덕구"],"울산광역시":["남구 (옥동)","중구","동구","북구","울주군"],"세종특별자치시":["세종시 전체 (동지역/읍면)"],"강원특별자치도":["춘천시","원주시","강릉시","동해시","태백시","속초시","삼척시","홍천군","횡성군","영월군","평창군","정선군","철원군","화천군","양구군","인제군","고성군","양양군"],"충청북도":["청주시 상당구","청주시 서원구","청주시 흥덕구","청주시 청원구","충주시","제천시","보은군","옥천군","영동군","증평군","진천군","괴산군","음성군","단양군"],"충청남도":["천안시 서북구","천안시 동남구","공주시","보령시","아산시","서산시","논산시","계룡시","당진시","금산군","부여군","서천군","청양군","홍성군","예산군","태안군"],"전북특별자치도":["전주시 완산구","전주시 덕진구","군산시","익산시","정읍시","남원시","김제시","완주군","진안군","무주군","장수군","임실군","순창군","고창군","부안군"],"전라남도":["목포시","여수시","순천시","나주시","광양시","담양군","곡성군","구례군","고흥군","보성군","화순군","장흥군","강진군","해남군","영암군","무안군","함평군","영광군","장성군","완도군","진도군","신안군"],"경상북도":["포항시 남구","포항시 북구","경주시","김천시","안동시","구미시","영주시","영천시","상주시","문경시","경산시","의성군","청송군","영양군","영덕군","청도군","고령군","성주군","칠곡군","예천군","봉화군","울진군","울릉군"],"경상남도":["창원시 의창구","창원시 성산구","창원시 마산합포구","창원시 마산회원구","창원시 진해구","진주시","통영시","사천시","김해시","밀양시","거제시","양산시","의령군","함안군","창녕군","고성군","남해군","하동군","산청군","함양군","거창군","합천군"],"제주특별자치도":["제주시","서귀포시"]};
+
+  
+  const KOREA_SCHOOL_MASTER = {"광주광역시":{"북구":{"중학교":["각화중학교","고려중학교","광주경신중학교","광주동신중학교","광주동신여자중학교","광주북성중학교","광주숭일중학교","광주예술중학교","광주체육중학교","금호중앙중학교","두암중학교","문산중학교","문화중학교","문흥중학교","살레시오중학교","서강중학교","신광중학교","신용중학교","양산중학교","용두중학교","용봉중학교","우산중학교","운암중학교","일곡중학교","일동중학교","일신중학교","전남대학교사범대학부설중학교","지산중학교"],"고등학교":["고려고등학교","광주경신여자고등학교","광주공업고등학교","광주과학고등학교","광주동신고등학교","광주동신여자고등학교","광주숭일고등학교","광주예술고등학교","광주자연과학고등학교","광주제일고등학교","광주체육고등학교","금호고등학교","금호중앙여자고등학교","국제고등학교","금파공업고등학교","문정여자고등학교","빛고을고등학교","살레시오고등학교","서강고등학교","전남대학교사범대학부설고등학교","전남여자상업고등학교"],"초등학교":["광주양산초등학교","본촌초등학교","용두초등학교","일곡초등학교","매곡초등학교","문흥초등학교","두암초등학교","각화초등학교","문화초등학교","오정초등학교","건국초등학교","운암초등학교","경양초등학교","태봉초등학교","우산초등학교"]},"광산구":{"중학교":["고실중학교","광산중학교","광주진흥중학교","금구중학교","봉산중학교","비아중학교","산정중학교","선운중학교","성덕중학교","송광중학교","송정중학교","수완중학교","수완하나중학교","신가중학교","신창중학교","영천중학교","운남중학교","월계중학교","월곡중학교","월봉중학교","임곡중학교","장덕중학교","정광중학교","천곡중학교","첨단중학교","평동중학교","하남중학교"],"고등학교":["광산고등학교","광주진흥고등학교","보문고등학교","비아고등학교","서진여자고등학교","수완고등학교","숭덕고등학교","신가고등학교","장덕고등학교","정광고등학교","첨단고등학교","운남고등학교"],"초등학교":["수완초등학교","장덕초등학교","선운초등학교","신가초등학교","월봉초등학교","송정초등학교","첨단초등학교","비아초등학교"]},"서구":{"중학교":["광덕중학교","광주동명중학교","광주서석중학교","광주중학교","광주화정중학교","광주효광중학교","금호중학교","대자중학교","상무중학교","상일중학교","운리중학교","유덕중학교","전남중학교","치평중학교","풍암중학교"],"고등학교":["광덕고등학교","광주서석고등학교","광주고등학교","상무고등학교","상일고등학교","전남고등학교","풍암고등학교"],"초등학교":["상무초등학교","치평초등학교","풍암초등학교","화정초등학교","유덕초등학교"]},"남구":{"중학교":["광주동성여자중학교","광주동성중학교","광주무진중학교","광주서광중학교","광주송원중학교","광주수피아여자중학교","금당중학교","대성여자중학교","대촌중학교","동아여자중학교","문성중학교","봉선중학교","숭의중학교","주월중학교","진남중학교","효천중학교"],"고등학교":["광주인성고등학교","광주동성고등학교","대성여자고등학교","동아여자고등학교","문성고등학교","봉선고등학교","송원고등학교","수피아여자고등학교"],"초등학교":["봉선초등학교","조봉초등학교","유안초등학교","진월초등학교","효천초등학교"]},"동구":{"중학교":["광주충장중학교","무등중학교","살레시오여자중학교","운림중학교","조선대학교부속중학교","조선대학교여자중학교"],"고등학교":["광주제일고등학교","살레시오여자고등학교","조선대학교부속고등학교","조선대학교여자고등학교","동신고등학교"],"초등학교":["중앙초등학교","계림초등학교","산수초등학교","율곡초등학교","학운초등학교"]}},"서울특별시":{"강남구":{"중학교":["대치중학교","단국대학교사범대학부속중학교","휘문중학교","중동중학교","역삼중학교","도곡중학교","구룡중학교","대청중학교","신구중학교","압구정중학교","언북중학교","청담중학교"],"고등학교":["휘문고등학교","중동고등학교","단국대학교사범대학부속고등학교","경기고등학교","서울고등학교","압구정고등학교","현대고등학교","숙명여자고등학교","중산고등학교"],"초등학교":["대치초등학교","도곡초등학교","대곡초등학교","언북초등학교"]},"서초구":{"중학교":["서일중학교","신반포중학교","반포중학교","원촌중학교","세화여자중학교","서초중학교","이수중학교","서운중학교"],"고등학교":["세화고등학교","세화여자고등학교","서울고등학교","상문고등학교","서초고등학교","반포고등학교","동덕여자고등학교"],"초등학교":["반포초등학교","잠원초등학교","원촌초등학교","서원초등학교"]},"송파구":{"중학교":["잠실중학교","신천중학교","잠신중학교","송파중학교","보성중학교","오륜중학교","가원중학교","방이중학교"],"고등학교":["보성고등학교","동북고등학교","잠실고등학교","잠신고등학교","영동일고등학교","창덕여자고등학교"],"초등학교":["잠실초등학교","잠신초등학교","가락초등학교"]},"양천구":{"중학교":["목운중학교","월촌중학교","신목중학교","목동중학교","목일중학교","양정중학교","신서중학교","봉영여자중학교"],"고등학교":["강서고등학교","양정고등학교","대일고등학교","신목고등학교","목동고등학교","진명여자고등학교"],"초등학교":["목운초등학교","월촌초등학교","서정초등학교"]},"노원구":{"중학교":["중계중학교","을지중학교","불암중학교","상명중학교","하계중학교","노원중학교","상계중학교"],"고등학교":["대진고등학교","서라벌고등학교","재현고등학교","상명고등학교","영신여자고등학교","혜성여자고등학교"],"초등학교":["을지초등학교","불암초등학교","중계초등학교"]}},"경기도":{"성남시 분당구":{"중학교":["내정중학교","수내중학교","서현중학교","백현중학교","샛별중학교","매송중학교","이매중학교","정자중학교","보평중학교","판교중학교"],"고등학교":["낙생고등학교","분당대진고등학교","서현고등학교","분당중앙고등학교","보평고등학교","이매고등학교","야탑고등학교"],"초등학교":["수내초등학교","내정초등학교","서현초등학교","보평초등학교"]},"수원시 영통구":{"중학교":["영덕중학교","매탄중학교","망포중학교","광교중학교","다산중학교","연무중학교","영일중학교","원천중학교"],"고등학교":["유신고등학교","창현고등학교","광교고등학교","효원고등학교","매탄고등학교","망포고등학교"],"초등학교":["광교초등학교","매탄초등학교","영덕초등학교"]},"용인시 수지구":{"중학교":["이현중학교","수지중학교","정평중학교","신봉중학교","홍천중학교","성복중학교","손곡중학교","상현중학교"],"고등학교":["수지고등학교","풍덕고등학교","홍천고등학교","서원고등학교","신봉고등학교","상현고등학교"],"초등학교":["신봉초등학교","풍덕초등학교","수지초등학교"]},"안양시 동안구":{"중학교":["귀인중학교","범계중학교","평촌중학교","신기중학교","대안중학교","백영중학교"],"고등학교":["백영고등학교","평촌고등학교","동안고등학교","우성고등학교","신성고등학교"],"초등학교":["귀인초등학교","평촌초등학교","범계초등학교"]},"고양시 일산동구":{"중학교":["정발중학교","백석중학교","백마중학교","풍동중학교","저동중학교"],"고등학교":["백석고등학교","백마고등학교","저동고등학교","풍동고등학교","정발고등학교"],"초등학교":["정발초등학교","백석초등학교","백마초등학교"]}},"대구광역시":{"수성구":{"중학교":["경신중학교","정화중학교","오성중학교","대륜중학교","능인중학교","동도중학교","소선여자중학교","황금중학교"],"고등학교":["경신고등학교","대륜고등학교","오성고등학교","능인고등학교","정화여자고등학교","혜화여자고등학교","대구여고"],"초등학교":["경동초등학교","동일초등학교","동원초등학교"]}},"부산광역시":{"해운대구":{"중학교":["해운대중학교","동백중학교","신도중학교","부흥중학교","양운중학교","센텀중학교","해강중학교"],"고등학교":["해운대고등학교","양운고등학교","부흥고등학교","신도고등학교","센텀고등학교"],"초등학교":["해운대초등학교","신도초등학교","부흥초등학교"]}},"대전광역시":{"서구 (둔산)":{"중학교":["문정중학교","탄방중학교","삼천중학교","둔산중학교","만년중학교"],"고등학교":["충남고등학교","대신고등학교","대성고등학교","둔산여자고등학교","만년고등학교"],"초등학교":["둔산초등학교","한밭초등학교","문정초등학교"]},"유성구":{"중학교":["노은중학교","지족중학교","유성중학교","어은중학교","도안중학교"],"고등학교":["대덕고등학교","유성고등학교","노은고등학교","지족고등학교"],"초등학교":["노은초등학교","어은초등학교"]}}};
+
+  
+
+  function syncSigunguConsole() {
+    const sido = document.getElementById('diagSido').value;
+    const gugun = document.getElementById('diagGugun');
+    if (!gugun) return;
+    gugun.innerHTML = '';
+    const list = ALL_KOREA_REGIONS[sido] || ['전체'];
+    list.forEach(g => {
+      const opt = document.createElement('option');
+      opt.value = g;
+      opt.textContent = g;
+      gugun.appendChild(opt);
+    });
+    updateRealtimePreview();
+    renderInlineSchoolGrid();
+  }
+
+  function onGugunChange() {
+    renderInlineSchoolGrid();
+    updateRealtimePreview();
+  }
+
+  function setSchoolGrade(el, gradeVal) {
+    document.querySelectorAll('.school-grade-pill').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+    const hidden = document.getElementById('diagGrade');
+    if (hidden) hidden.value = gradeVal;
+
+    const highBox = document.getElementById('boxHighSchoolType');
+    if (highBox) {
+      highBox.style.display = gradeVal.includes('고등') ? 'block' : 'none';
+    }
+
+    renderInlineSchoolGrid();
+    updateRealtimePreview();
+  }
+
+  function setConsoleRadio(el, targetHiddenId, value) {
+    const parent = el.parentElement;
+    if (parent) {
+      parent.querySelectorAll('.choice-btn').forEach(btn => btn.classList.remove('selected'));
+    }
+    el.classList.add('selected');
+    const hidden = document.getElementById(targetHiddenId);
+    if (hidden) hidden.value = value;
+    updateRealtimePreview();
+  }
+
+  function selectCardRadio(el, targetHiddenId, value) {
+    const parent = el.closest('.choice-card-row') || el.parentElement;
+    if (parent) {
+      parent.querySelectorAll('.choice-card-btn').forEach(btn => btn.classList.remove('selected'));
+    }
+    el.classList.add('selected');
+    const hidden = document.getElementById(targetHiddenId);
+    if (hidden) hidden.value = value;
+    updateRealtimePreview();
+  }
+
+  function onSchoolBtnClick(btn, schName) {
+    const box = document.getElementById('inlineSchoolGridBox');
+    if (box) {
+      box.querySelectorAll('button').forEach(b => {
+        b.classList.remove('selected');
+        b.style.background = '#ffffff';
+        b.style.color = '#1e293b';
+        b.style.borderColor = '#cbd5e1';
+      });
+    }
+    btn.classList.add('selected');
+    btn.style.background = '#ef4444';
+    btn.style.color = '#ffffff';
+    btn.style.borderColor = '#dc2626';
+
+    document.getElementById('diagSchool').value = schName;
+    updateRealtimePreview();
+  }
+
+  function renderInlineSchoolGrid(keyword = '') {
+    const container = document.getElementById('inlineSchoolGridBox');
+    if (!container) return;
+
+    const curSido = (document.getElementById('diagSido') && document.getElementById('diagSido').value) || '광주광역시';
+    const curGugun = (document.getElementById('diagGugun') && document.getElementById('diagGugun').value) || '북구';
+    const gradeVal = (document.getElementById('diagGrade') && document.getElementById('diagGrade').value) || '중학교 2학년';
+
+    let schKind = '중학교';
+    if (gradeVal.includes('초등')) schKind = '초등학교';
+    else if (gradeVal.includes('고등')) schKind = '고등학교';
+
+    let list = [];
+    if (KOREA_SCHOOL_MASTER[curSido] && KOREA_SCHOOL_MASTER[curSido][curGugun] && KOREA_SCHOOL_MASTER[curSido][curGugun][schKind]) {
+      list = KOREA_SCHOOL_MASTER[curSido][curGugun][schKind];
+    } else {
+      list = ["각화중학교", "고려중학교", "광주경신중학교", "광주동신중학교", "광주동신여자중학교", "광주북성중학교", "광주숭일중학교", "광주예술중학교", "광주체육중학교", "금호중앙중학교", "두암중학교", "문산중학교", "문화중학교", "문흥중학교", "살레시오중학교", "서강중학교", "신광중학교", "신용중학교", "양산중학교", "용두중학교", "용봉중학교", "우산중학교", "운암중학교", "일곡중학교", "일동중학교", "일신중학교", "전남대학교사범대학부설중학교", "지산중학교"];
+    }
+
+    if (keyword.trim()) {
+      list = list.filter(s => s.includes(keyword.trim()));
+    }
+
+    const curSelected = (document.getElementById('diagSchool') && document.getElementById('diagSchool').value) || '양산중학교';
+    container.innerHTML = '';
+
+    list.forEach(sch => {
+      const isSel = sch === curSelected;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'choice-btn' + (isSel ? ' selected' : '');
+      btn.style.cssText = `padding:9px 4px; font-size:12px; font-weight:800; text-align:center; cursor:pointer; border-radius:8px; line-height:1.2; width:100%; border:1.5px solid ${isSel ? '#dc2626' : '#cbd5e1'}; background:${isSel ? '#ef4444' : '#ffffff'}; color:${isSel ? '#ffffff' : '#1e293b'};`;
+      btn.textContent = sch;
+      btn.onclick = function() { onSchoolBtnClick(this, sch); };
+      container.appendChild(btn);
+    });
+
+    const statusEl = document.getElementById('schoolLoadStatus');
+    if (statusEl) {
+      statusEl.textContent = `${curGugun} ${schKind} ${list.length}개교 탑재`;
+    }
+  }
+
+  function filterInlineSchools(kw) {
+    renderInlineSchoolGrid(kw);
+  }
+
+
+  let step = 1;
+  const totalSteps = 3;
+
+  function renderStep() {
+    document.getElementById('pStep1').style.display = step === 1 ? 'block' : 'none';
+    document.getElementById('pStep2').style.display = step === 2 ? 'block' : 'none';
+    document.getElementById('pStep3').style.display = step === 3 ? 'block' : 'none';
+
+    document.getElementById('consolePrevBtn').style.display = step > 1 ? 'block' : 'none';
+
+    if (step === 1) {
+      document.getElementById('consoleNextBtn').textContent = '학교 & 학년 선택 ➔ (2단계)';
+    } else if (step === 2) {
+      renderInlineSchoolGrid();
+      document.getElementById('consoleNextBtn').textContent = '성적 & 과목 선택 ➔ (3단계)';
+    } else if (step === 3) {
+      document.getElementById('consoleNextBtn').textContent = '🔑 49,000원 20장 리포트 보기 ➔';
+    }
+    updateRealtimePreview();
+  }
+
+  function nextStep() {
+    if (step < totalSteps) {
+      step++;
+      renderStep();
+    } else {
+      alert('[진단 완료] 49,000원 기본형(20장) 진단이 완료되었습니다! 우측 20장 바인더를 확인하세요.');
+      window.scrollTo({ top: 380, behavior: 'smooth' });
+    }
+  }
+
+  function prevStep() {
+    if (step > 1) {
+      step--;
+      renderStep();
+    }
+  }
+
+  function updateRealtimePreview() {
+    const school = (document.getElementById('diagSchool') && document.getElementById('diagSchool').value) || '양산중학교';
+    const grade = (document.getElementById('diagGrade') && document.getElementById('diagGrade').value) || '중학교 2학년';
+    const gender = (document.getElementById('diagGender') && document.getElementById('diagGender').value) || '남학생';
+    const gugun = (document.getElementById('diagGugun') && document.getElementById('diagGugun').value) || '북구';
+
+    const b = document.getElementById('selectedSchoolBadgeName');
+    if (b) b.textContent = `${school} (선택됨)`;
+
+    const titleBasic = document.getElementById('viewReportTitleBasic');
+    if (titleBasic) {
+      titleBasic.textContent = `${gugun} ${school} ${grade} [${gender}] 1:1 맞춤 진로 결정 & 대입 실전 로드맵 (전 20장 완결판)`;
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    syncSigunguConsole();
+    renderStep();
+  });
+</script>
+
+
+<script src="univ-data.js"></script>
+<script src="univ-widget.js"></script>
+<script src="momkok-engine.js"></script>
+</body>
+</html>
