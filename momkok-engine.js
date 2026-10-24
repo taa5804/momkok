@@ -2753,24 +2753,49 @@
       d.careerGoal, d.bottleneck, d.energy, d.blood, d.style
     );
 
-    const phone = (d.phone || '010-2286-4150').trim();
+    const cleanPhone = String(d.phone || '010-2286-4150').replace(/\D/g, '');
     const summaryText = d.mode === 'CAREER'
-      ? `[맘콕 ${tierLabel} 진단서]\n▶대상: ${d.school}(${d.majorDetail}) ${d.gender}\n▶기질: ${d.blood}·${d.energy}\n▶스펙점수: ${carEval.totalSpecScore}점\n▶냉정기업수준: ${carEval.actualCompanyTier}\n▶1순위산업: ${carEval.topIndustries[0].name}\n▶추천직무: ${carEval.bestRoles[0]}`
-      : `[맘콕 ${tierLabel} 진단서]\n▶대상: ${d.sido} ${d.sigun} ${d.school} ${d.grade}\n▶기질: ${d.blood}·${d.energy}\n▶학교특성: ${schoolAnal.tierTitle}\n▶전국환산등급: 약 ${admEval.realGrade}등급\n▶실제가능대학: ${admEval.actualUnivTier}\n▶취약보완: ${d.hateSubj}`;
+      ? `[맘콕 ${tierLabel} 진단 요약서]
+▶대상: ${d.school}(${d.majorDetail}) ${d.gender}
+▶기질: ${d.blood}형·${d.energy}
+▶스펙점수: ${carEval.totalSpecScore}점
+▶기업수준: ${carEval.actualCompanyTier}
+▶1순위산업: ${carEval.topIndustries[0].name}
+▶추천직무: ${carEval.bestRoles[0]}
+▶풀버전 열람: https://momkok.co.kr`
+      : `[맘콕 ${tierLabel} 진단 요약서]
+▶대상: ${d.sido} ${d.sigun} ${d.school} ${d.grade} (${d.gender})
+▶기질: ${d.blood}형·${d.energy}
+▶학교특성: ${schoolAnal.tierTitle}
+▶전국환산등급: 약 ${admEval.realGrade}등급
+▶목표대학 가능성: ${admEval.actualUnivTier}
+▶취약과목: ${d.hateSubj}
+▶풀버전 35장 열람: https://momkok.co.kr`;
 
     try {
-      const res = await fetch('https://www.wooriapt.app/api/send-sms', {
+      const endpoint = (window.location.protocol.startsWith('http'))
+        ? '/api/send-sms'
+        : 'https://momkok.co.kr/api/send-sms';
+
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ to: phone, text: summaryText })
+        body: JSON.stringify({
+          phone: cleanPhone,
+          message: summaryText,
+          content: summaryText,
+          tierName: tierLabel
+        })
       });
-      if (res.ok) {
-        alert(`✅ [${phone}] 번호로 '${tierLabel}' 핵심 진단 결과 요약 문자가 발송되었습니다!`);
+      const resData = await res.json().catch(() => ({}));
+      if (res.ok && resData.ok) {
+        alert(`🎉 [문자 발송 성공!]\n\n학부모님 휴대폰 [${d.phone || cleanPhone}]으로 '${tierLabel}' 핵심 진단 요약본 문자가 1초 만에 정상 발송되었습니다!`);
       } else {
-        alert(`📲 [${phone}] 요약 문자 전송 완료:\n\n${summaryText}`);
+        throw new Error(resData.message || ('발송 실패 (코드 ' + res.status + ')'));
       }
     } catch (e) {
-      alert(`📲 [${phone}] 진단 요약본 생성 완료:\n\n${summaryText}`);
+      console.warn('SMS send notice:', e);
+      alert(`⚠️ 문자 발송 안내:\n${e.message}\n\n[생성된 요약본 미리보기]\n${summaryText}`);
     }
   };
 
