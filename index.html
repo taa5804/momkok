@@ -312,34 +312,65 @@
     }
   
   @media print {
-    header, .portal-nav, .stats-kpi-grid, #accessCodeBanner, .phone-simulator-frame, .btn-save-pdf, button, .modal, .portal-footer, .lock-box, .banner-box {
+    /* 1. 맛보기(0원), 네비게이션, 프레임, 배너, 모달, 관리자, 버튼 등 모든 UI 완전 숨김 */
+    header, .portal-nav, .stats-kpi-grid, #accessCodeBanner, .phone-simulator-frame,
+    .btn-save-pdf, button, .modal, .portal-footer, .lock-box, .banner-box,
+    #tierViewFree, .pc-print-bottom-bar, #directMobileHeader, .tab-portal-header {
       display: none !important;
     }
-    .platform-container {
-      max-width: 100% !important;
-      margin: 0 !important;
-      padding: 0 !important;
-    }
-    .portal-split-view {
-      display: block !important;
-    }
-    .report-tier-view {
-      display: block !important;
-      width: 100% !important;
-    }
-    .rpt-card {
-      page-break-inside: avoid;
-      break-inside: avoid;
-      box-shadow: none !important;
-      border: 1px solid #cbd5e1 !important;
-      margin-bottom: 24px !important;
-    }
-    body {
+
+    /* 2. 브라우저 스크롤/높이 제한 100% 해제 (안드로이드 1페이지 잘림 방지 필수) */
+    html, body {
+      height: auto !important;
+      min-height: 100% !important;
+      overflow: visible !important;
       background: #ffffff !important;
       color: #000000 !important;
+      font-size: 12pt;
+    }
+
+    .platform-container, .portal-split-view, .realtime-analytics-panel,
+    .tab-content, #tab-service {
+      display: block !important;
+      height: auto !important;
+      min-height: auto !important;
+      max-width: 100% !important;
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: visible !important;
+      float: none !important;
+      position: static !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    /* 3. 0원 맛보기 및 현재 비활성 뷰 인쇄 완전 차단 */
+    #tierViewFree {
+      display: none !important;
+    }
+    .report-tier-view[style*="display: none"] {
+      display: none !important;
+    }
+
+    /* 4. 활성화된 뷰(20장 또는 35장) 높이 제한 해제 */
+    .report-tier-view {
+      height: auto !important;
+      overflow: visible !important;
+    }
+
+    /* 5. 35장 각 카드 페이지 나눔 최적화 */
+    .rpt-card {
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+      box-shadow: none !important;
+      border: 1px solid #94a3b8 !important;
+      margin-bottom: 24px !important;
+      overflow: visible !important;
+      height: auto !important;
+      background: #ffffff !important;
     }
   }
-
 </style>
 
 <style id="extraMomkokCustomStyle">
@@ -1665,6 +1696,19 @@
         </div>
       </div>
       </div>
+
+      <!-- PC/모바일 20장 하단 전용 대형 인쇄 & PDF 보관함 바 -->
+      <div class="pc-print-bottom-bar" style="background:#eff6ff; border:2px solid #2563eb; border-radius:14px; padding:22px; text-align:center; margin-top:30px; margin-bottom:30px; box-shadow:0 8px 24px rgba(37,99,235,0.12);">
+        <div style="font-size:17px; font-weight:900; color:#1e40af; margin-bottom:5px;">
+          🖨️ [49,000원 기본형] 전권 20장 정밀 바인더 A4 용지 인쇄 및 PDF 영구 소장
+        </div>
+        <div style="font-size:13px; color:#3b82f6; margin-bottom:16px;">
+          자녀 책상 비치 및 입시 상담 지참을 위해 20장 전체를 A4 용지로 출력하거나 스마트폰/PC에 영구 소장하세요.
+        </div>
+        <button type="button" onclick="saveReportToPdf('basic')" style="background:#2563eb; color:#ffffff; border:none; padding:12px 30px; border-radius:10px; font-size:15px; font-weight:900; cursor:pointer; box-shadow:0 4px 14px rgba(37,99,235,0.35);">
+          🖨️ 20장 전체 A4 인쇄 / PDF 저장하기
+        </button>
+      </div>
 </div>
 
           <!-- 3. [99,000원 심화 마스터팩 뷰 - 35장 방대한 풀패키지] -->
@@ -2017,6 +2061,19 @@
         중학교 2학년은 아직 늦지 않았습니다. 대입 수능을 걱정할 때가 아니라, 
         <strong>"불필요한 학원 2개 정리하고, 중2 기하 결손을 메워 수학 90점을 만드는 것"</strong>이 지금 당장 실행해야 할 전부입니다.
       </div>
+      </div>
+
+      <!-- PC/모바일 35장 하단 전용 대형 인쇄 & PDF 보관함 바 -->
+      <div class="pc-print-bottom-bar" style="background:#fffbeb; border:2px solid #d97706; border-radius:14px; padding:22px; text-align:center; margin-top:30px; margin-bottom:30px; box-shadow:0 8px 24px rgba(217,119,6,0.12);">
+        <div style="font-size:17px; font-weight:900; color:#92400e; margin-bottom:5px;">
+          🖨️ [99,000원 VIP 마스터팩] 전권 35장 완결 바이블 A4 용지 인쇄 및 PDF 영구 소장
+        </div>
+        <div style="font-size:13px; color:#b45309; margin-bottom:16px;">
+          자녀 책상 비치 및 입시 상담 지참을 위해 35장 전체를 A4 용지로 출력하거나 스마트폰/PC에 영구 소장하세요.
+        </div>
+        <button type="button" onclick="saveReportToPdf('master')" style="background:#d97706; color:#ffffff; border:none; padding:12px 30px; border-radius:10px; font-size:15px; font-weight:900; cursor:pointer; box-shadow:0 4px 14px rgba(217,119,6,0.35);">
+          🖨️ 35장 전체 A4 인쇄 / PDF 저장하기
+        </button>
       </div>
 </div>
 
@@ -3178,9 +3235,29 @@
   
   // [휴대폰 PDF 저장 기능]
   function saveReportToPdf(tier) {
-    const tierName = tier === 'master' ? '35장 심화 마스터팩' : '20장 기본형 정밀';
-    alert('📱 [' + tierName + ' 휴대폰 PDF 영구 저장 안내]\n\n잠시 후 나타나는 인쇄 창에서 대상을 [PDF로 저장] 또는 [파일에 저장]으로 선택하시면,\n' + tierName + ' 전권 바인더가 학부모님 휴대폰 다운로드 폴더에 영구 보관됩니다.');
-    window.print();
+    const is35 = (tier === 'master' || tier === '35');
+    const tierName = is35 ? '35장 심화 마스터팩' : '20장 기본형 정밀';
+
+    // 0원 맛보기는 인쇄에서 무조건 100% 숨김
+    const freeView = document.getElementById('tierViewFree');
+    if (freeView) freeView.style.display = 'none';
+
+    // 선택된 티어만 오픈하고 반대편 티어는 숨김
+    const basicView = document.getElementById('tierViewBasic');
+    const masterView = document.getElementById('tierViewMaster');
+    if (is35) {
+      if (basicView) basicView.style.display = 'none';
+      if (masterView) masterView.style.display = 'block';
+    } else {
+      if (masterView) masterView.style.display = 'none';
+      if (basicView) basicView.style.display = 'block';
+    }
+
+    alert('📱 [' + tierName + ' A4 인쇄 & PDF 저장]\n\n잠시 후 나타나는 인쇄 화면에서 [PDF로 저장] 또는 [인쇄]를 누르시면,\n맛보기 제외 전권(' + (is35 ? '35장' : '20장') + ')이 잘림 없이 전체 출력/저장됩니다.');
+
+    setTimeout(function() {
+      window.print();
+    }, 200);
   }
 
   function submitBankDepositRequest() {
