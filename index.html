@@ -2087,7 +2087,7 @@
 <script>
   window.unlockedTier = 'free';
   window.isTierUnlocked = function(tier) {
-    return (window.unlockedTier === tier || window.unlockedTier === 'master');
+    return (window.isMasterKeyActive || window.unlockedTier === tier || window.unlockedTier === 'master');
   };
 
   window.openDepositModal = function(tier) {
@@ -2978,7 +2978,7 @@
       return;
     }
     // 알림번호로 이미 인증된 경우 즉시 리포트 열람
-    if (unlockedTier === tier || unlockedTier === 'master') {
+    if (window.isMasterKeyActive || unlockedTier === tier || unlockedTier === 'master') {
       showSpecificTierReport(tier);
       return;
     }
@@ -3048,10 +3048,26 @@
   // [공통 알림번호 판별 및 열람 처리]
   function processAccessCode(code) {
     if (!code) {
-      alert('문자로 받으신 알림번호(예: 7894)를 입력해 주세요.');
+      alert('알림번호를 입력해 주세요.');
       return;
     }
     closeAccessCodeModal();
+
+    // 👑 [대표님 단독 만능키: 5804] 모든 유료 등급(20장, 35장) 전면 프리패스 개방!
+    if (code === '5804') {
+      window.unlockedTier = 'master';
+      window.isMasterKeyActive = true;
+      if (typeof window.activateMomkokTier === 'function') {
+        window.activateMomkokTier('master', false);
+      } else {
+        showSpecificTierReport('master');
+      }
+      alert('👑 [대표님 만능키(5804) 가동 완료!]
+
+49,000원 기본형(20장)과 99,000원 VIP 마스터팩(35장)이 모두 전면 개방되었습니다!
+이제 모든 리포트를 자유롭게 열람하실 수 있습니다.');
+      return;
+    }
 
     // 99로 시작하거나 master, vip인 경우 35장 마스터팩 오픈
     if (code.startsWith('99') || code.toLowerCase().includes('master') || code.toLowerCase().includes('vip')) {
