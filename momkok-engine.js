@@ -2419,7 +2419,7 @@
           </div>
         </div>
         <div style="display:flex; gap:6px; flex-wrap:wrap;">
-          <button type="button" onclick="sendMomkokReportSms('49,000원 정밀 기본형 20장')" style="background:#059669; color:#fff; border:none; padding:10px 14px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer;">
+          <button type="button" onclick="sendMomkokReportSms('49,000원 정밀 기본형 20장', '${d.phone}')" style="background:#059669; color:#fff; border:none; padding:10px 14px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer;">
             📲 휴대전화(${d.phone})로 20장 요약본 발송
           </button>
           <button type="button" style="background:#b45309; color:#fff; border:none; padding:10px 16px; border-radius:8px; font-weight:900; font-size:12.5px; cursor:pointer;" onclick="activateMomkokTier('master', true);">
@@ -2428,6 +2428,18 @@
         </div>
       </div>
       ${cardsHTML}
+      <!-- PC/모바일 하단 대형 인쇄 & PDF 보관함 바 -->
+      <div class="pc-print-bottom-bar" style="background:#eff6ff; border:2px solid #2563eb; border-radius:14px; padding:22px; text-align:center; margin-top:30px; margin-bottom:30px; box-shadow:0 8px 24px rgba(37,99,235,0.12);">
+        <div style="font-size:17px; font-weight:900; color:#1e40af; margin-bottom:5px;">
+          🖨️ [49,000원 기본형] 전권 20장 정밀 바인더 A4 용지 인쇄 및 PDF 영구 소장
+        </div>
+        <div style="font-size:13px; color:#3b82f6; margin-bottom:16px;">
+          자녀 책상 비치 및 입시 상담 지참을 위해 20장 전체를 A4 용지로 출력하거나 스마트폰/PC에 영구 소장하세요.
+        </div>
+        <button type="button" onclick="saveReportToPdf('basic')" style="background:#2563eb; color:#ffffff; border:none; padding:12px 30px; border-radius:10px; font-size:15px; font-weight:900; cursor:pointer; box-shadow:0 4px 14px rgba(37,99,235,0.35);">
+          🖨️ 20장 전체 A4 인쇄 / PDF 저장하기
+        </button>
+      </div>
     `;
   }
 
@@ -2460,11 +2472,23 @@
             생년월일: ${d.birthYear}.${d.birthMonth}.${d.birthDay} · 혈액형: <strong>${d.blood}</strong> · 성향: <strong>${d.energy}</strong> · 집중시간: <strong>${d.dailyHours}</strong>
           </div>
         </div>
-        <button type="button" onclick="sendMomkokReportSms('99,000원 VIP 마스터팩 35장')" style="background:#059669; color:#fff; border:none; padding:10px 16px; border-radius:8px; font-weight:800; font-size:12.5px; cursor:pointer;">
+        <button type="button" onclick="sendMomkokReportSms('99,000원 VIP 마스터팩 35장', '${d.phone}')" style="background:#059669; color:#fff; border:none; padding:10px 16px; border-radius:8px; font-weight:800; font-size:12.5px; cursor:pointer;">
           📲 휴대전화(${d.phone})로 35장 마스터 요약본 발송
         </button>
       </div>
       ${cardsHTML}
+      <!-- PC/모바일 하단 대형 인쇄 & PDF 보관함 바 -->
+      <div class="pc-print-bottom-bar" style="background:#fffbeb; border:2px solid #d97706; border-radius:14px; padding:22px; text-align:center; margin-top:30px; margin-bottom:30px; box-shadow:0 8px 24px rgba(217,119,6,0.12);">
+        <div style="font-size:17px; font-weight:900; color:#92400e; margin-bottom:5px;">
+          🖨️ [99,000원 VIP 마스터팩] 전권 35장 완결 바이블 A4 용지 인쇄 및 PDF 영구 소장
+        </div>
+        <div style="font-size:13px; color:#b45309; margin-bottom:16px;">
+          자녀 책상 비치 및 입시 상담 지참을 위해 35장 전체를 A4 용지로 출력하거나 스마트폰/PC에 영구 소장하세요.
+        </div>
+        <button type="button" onclick="saveReportToPdf('master')" style="background:#d97706; color:#ffffff; border:none; padding:12px 30px; border-radius:10px; font-size:15px; font-weight:900; cursor:pointer; box-shadow:0 4px 14px rgba(217,119,6,0.35);">
+          🖨️ 35장 전체 A4 인쇄 / PDF 저장하기
+        </button>
+      </div>
     `;
   }
 
@@ -2743,7 +2767,7 @@
     }
   };
 
-  window.sendMomkokReportSms = async function (tierLabel) {
+  window.sendMomkokReportSms = async function (tierLabel, targetPhone) {
     const d = collectUserData();
     const tempAnal = getTemperamentDeepAnalysis(d.blood, d.energy, d.style, d.dailyHours, d.birthYear, d.birthMonth);
     const schoolAnal = analyzeSchoolSpecificDifficulty(d.sido, d.sigun, d.school, d.schoolLevel);
@@ -2753,7 +2777,15 @@
       d.careerGoal, d.bottleneck, d.energy, d.blood, d.style
     );
 
-    const cleanPhone = String(d.phone || '010-2286-4150').replace(/\D/g, '');
+    // 버튼에 적혀있는 그 번호(targetPhone)를 1순위로 정확히 사용!
+    const rawPhone = (targetPhone || d.phone || '010-2286-4150').trim();
+    const cleanPhone = rawPhone.replace(/\D/g, '');
+
+    if (!cleanPhone || cleanPhone.length < 10) {
+      alert('⚠️ 휴대폰 번호가 올바르지 않습니다: ' + rawPhone);
+      return;
+    }
+
     const is35 = tierLabel.includes('35') || tierLabel.includes('마스터');
     const directUrl = `https://momkok.co.kr?view=${is35 ? '35' : '20'}&code=5804`;
 
@@ -2802,7 +2834,7 @@
       });
       const resData = await res.json().catch(() => ({}));
       if (res.ok && resData.ok) {
-        alert(`🎉 [문자 발송 성공!]\n\n학부모님 휴대폰 [${d.phone || cleanPhone}]으로 '${tierLabel}' 핵심 진단 요약본 문자가 1초 만에 정상 발송되었습니다!`);
+        alert(`🎉 [문자 발송 성공!]\n\n버튼에 표시된 휴대폰 [${rawPhone}] 번호로 '${tierLabel}' 직통 리포트 링크 문자가 1초 만에 정상 발송되었습니다!`);
       } else {
         throw new Error(resData.message || ('발송 실패 (코드 ' + res.status + ')'));
       }
