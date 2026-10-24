@@ -799,6 +799,7 @@
   }
 
   function mountCompactUnivBox() {
+    if (window.location.search.includes('view=')) return;
     const phoneFrame = document.querySelector('#tab-service .phone-simulator-frame') || document.querySelector('.phone-simulator-frame');
     if (!phoneFrame || !phoneFrame.parentNode) return;
 
