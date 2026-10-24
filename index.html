@@ -577,7 +577,7 @@
     </div>
 
     <!-- [눈에 가장 잘 띄는 알림번호 리포트 열람 배너 바] -->
-    <div style="background:linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%); color:#ffffff; border-radius:14px; padding:18px 24px; margin-bottom:22px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; box-shadow:0 10px 25px -5px rgba(37,99,235,0.3); border:1.5px solid #60a5fa;">
+    <div id="accessCodeBanner" style="background:linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%); color:#ffffff; border-radius:14px; padding:18px 24px; margin-bottom:22px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; box-shadow:0 10px 25px -5px rgba(37,99,235,0.3); border:1.5px solid #60a5fa;">
       <div style="display:flex; align-items:center; gap:14px;">
         <span style="font-size:28px; background:rgba(255,255,255,0.2); padding:6px 12px; border-radius:12px;">🔑</span>
         <div>
@@ -3208,6 +3208,103 @@
 
     alert('🎉 [입금 신청이 접수되었습니다!]\n\n• 입금 계좌: KB국민은행 626402-01-239069 송해석\n• 입금 금액: ' + priceText + '\n\n입금 확인 즉시 등록하신 휴대폰(' + phone + ')으로 알림번호가 발송됩니다.\n\n※ 테스트용 즉시 발급 알림번호: [' + sampleCode + ']\n화면 상단의 알림번호 입력란에 위 번호를 넣으시면 바로 리포트가 열립니다.');
   }
+
+  // [문자 링크 클릭 시 메인화면 완전 스킵 & 20장/35장 리포트 직통 뷰어]
+  function handleDirectReportView() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const view = params.get('view');
+      const code = params.get('code') || params.get('c') || '5804';
+      if (!view) return;
+
+      console.log('Direct report viewer activated for view:', view, 'code:', code);
+
+      // 메인화면의 불필요 요소 100% 감춤 (메인화면 완전 스킵)
+      const toHide = [
+        'header', '.portal-nav', '.stats-kpi-grid', '#accessCodeBanner',
+        '.phone-simulator-frame', '.portal-footer'
+      ];
+      toHide.forEach(sel => {
+        const el = document.querySelector(sel);
+        if (el) el.style.setProperty('display', 'none', 'important');
+      });
+
+      const splitView = document.querySelector('.portal-split-view');
+      if (splitView) {
+        splitView.style.display = 'block';
+        splitView.style.maxWidth = '920px';
+        splitView.style.margin = '0 auto';
+        splitView.style.padding = '8px';
+      }
+
+      const container = document.querySelector('.platform-container');
+      if (container) {
+        container.style.maxWidth = '100%';
+        container.style.padding = '8px';
+      }
+
+      // 2회 열람 제한 카운트 (만능키 5804 제외)
+      if (code && code !== '5804') {
+        const usageKey = 'momkok_code_usage_' + code;
+        let usedCount = parseInt(localStorage.getItem(usageKey) || '0', 10);
+        if (usedCount >= 2) {
+          alert('⛔ [알림번호 열람 횟수 만료 (총 2회 소진)]\n\n해당 알림번호는 [자녀 2명(첫째+둘째) 총 2회 진단·열람 혜택]이 모두 소진되었습니다.\n\n(※ 이미 휴대폰에 저장해 두신 PDF 파일은 영구 보관됩니다.)');
+          return;
+        }
+        usedCount += 1;
+        localStorage.setItem(usageKey, usedCount.toString());
+      }
+
+      window.isMasterKeyActive = true;
+      const is35 = (view === '35' || view === 'master');
+      const freeView = document.getElementById('tierViewFree');
+      const basicView = document.getElementById('tierViewBasic');
+      const masterView = document.getElementById('tierViewMaster');
+
+      if (freeView) freeView.style.display = 'none';
+
+      if (is35) {
+        window.unlockedTier = 'master';
+        if (basicView) basicView.style.display = 'none';
+        if (masterView) masterView.style.display = 'block';
+      } else {
+        window.unlockedTier = 'basic';
+        if (masterView) masterView.style.display = 'none';
+        if (basicView) basicView.style.display = 'block';
+      }
+
+      // 모바일 최상단 직통 헤더 바 삽입
+      if (!document.getElementById('directMobileHeader')) {
+        const directHeader = document.createElement('div');
+        directHeader.id = 'directMobileHeader';
+        directHeader.style.cssText = 'background:linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color:#ffffff; padding:16px 20px; border-radius:12px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; box-shadow:0 4px 14px rgba(0,0,0,0.15);';
+        directHeader.innerHTML = '<div>' +
+          '<div style="font-size:11.5px; color:#93c5fd; font-weight:700;">맘콕(MomKok) 자녀 1:1 맞춤 모바일 바인더</div>' +
+          '<div style="font-size:16px; font-weight:900; margin-top:2px;">' + (is35 ? '👑 [전권 35장 완결] VIP 대입·학습 마스터 바이블' : '🎯 [전권 20장 완결] 실전 진로·입시 정밀 바인더') + '</div>' +
+          '</div>' +
+          '<button type="button" onclick="saveReportToPdf(\'' + (is35 ? 'master' : 'basic') + '\')" class="btn-save-pdf" style="background:#fbbf24; color:#0f172a; border:none; padding:10px 18px; border-radius:8px; font-weight:900; font-size:13px; cursor:pointer; box-shadow:0 2px 8px rgba(251,191,36,0.4);">' +
+          '📥 내 휴대폰에 PDF 영구 저장하기' +
+          '</button>';
+
+        const targetSection = document.getElementById('tab-service');
+        if (targetSection) {
+          targetSection.prepend(directHeader);
+        }
+      }
+
+      window.scrollTo(0, 0);
+    } catch (err) {
+      console.warn('Direct view error:', err);
+    }
+  }
+
+  // 페이지 로드 시 직통 열람 파라미터 자동 검사
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', handleDirectReportView);
+  } else {
+    setTimeout(handleDirectReportView, 100);
+  }
+
 </script>
 
 </body>
