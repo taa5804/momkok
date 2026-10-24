@@ -670,7 +670,6 @@
               <button type="button" class="mk-pill ${state.univType === '4년제' ? 'active' : ''}" data-utype="${state.univType === '4년제' ? '전체' : '4년제'}">🎓 4년제만</button>
               <button type="button" class="mk-pill ${state.univType === '전문대학' ? 'active' : ''}" data-utype="${state.univType === '전문대학' ? '전체' : '전문대학'}">🛠️ 전문대만</button>
             </div>
-            <input type="text" id="mkCompactSearch" class="mk-quick-search" value="${state.keyword.replace(/"/g, '&quot;')}" placeholder="🔍 대학명 또는 지역 빠른 검색 (예: 서울대, 전남대, 조선대)">
           </div>
 
           <div class="mk-split-finder">
