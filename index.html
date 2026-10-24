@@ -9,7 +9,48 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800;900&display=swap">
 
+  <script>
+    (function() {
+      try {
+        var sp = new URLSearchParams(window.location.search);
+        var v = sp.get('view');
+        if (v === '35' || v === '20' || v === 'master' || v === 'basic') {
+          document.documentElement.classList.add('direct-report-mode');
+        }
+      } catch (e) {}
+    })();
+  </script>
   <style>
+    /* [방법 1] 문자 링크 클릭 시 메인화면(질문지, 배너, 대학목록 등) 0.1초도 없이 100% 원천 차단 */
+    html.direct-report-mode header,
+    html.direct-report-mode .portal-nav,
+    html.direct-report-mode .stats-kpi-grid,
+    html.direct-report-mode #accessCodeBanner,
+    html.direct-report-mode .phone-simulator-frame,
+    html.direct-report-mode .mk-left-col-wrapper,
+    html.direct-report-mode #momkokCompactUnivMount,
+    html.direct-report-mode .mk-univ-box,
+    html.direct-report-mode #momkokUnivMount,
+    html.direct-report-mode #mkUnivContainer,
+    html.direct-report-mode .portal-footer,
+    html.direct-report-mode #tab-admin,
+    html.direct-report-mode #tab-dbmaster,
+    html.direct-report-mode #tab-univmatch,
+    html.direct-report-mode #tierViewFree {
+      display: none !important;
+    }
+    html.direct-report-mode .portal-split-view {
+      display: block !important;
+      max-width: 920px !important;
+      margin: 0 auto !important;
+      padding: 10px 8px !important;
+    }
+    html.direct-report-mode .platform-container {
+      max-width: 100% !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
     :root {
       --primary: #ff4757;
       --primary-dark: #ee5253;
@@ -3019,8 +3060,8 @@
 
 
 <script src="univ-data.js"></script>
-<script src="univ-widget.js?v=20261024_03"></script>
-<script src="momkok-engine.js?v=20261024_03"></script>
+<script src="univ-widget.js?v=20261024_06"></script>
+<script src="momkok-engine.js?v=20261024_06"></script>
 
   <!-- 관리자 전용 보안 로그인 모달 -->
   <div id="adminAuthModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.75); z-index:999999; backdrop-filter:blur(6px); align-items:center; justify-content:center;">
