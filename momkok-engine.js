@@ -2794,13 +2794,25 @@
     if (btnBasic) {
       btnBasic.onclick = function (e) {
         e.preventDefault();
-        window.activateMomkokTier('basic', true);
+        if (typeof window.isTierUnlocked === 'function' && window.isTierUnlocked('basic')) {
+          window.activateMomkokTier('basic', true);
+        } else if (typeof window.openDepositModal === 'function') {
+          window.openDepositModal('basic');
+        } else {
+          window.activateMomkokTier('basic', true);
+        }
       };
     }
     if (btnMaster) {
       btnMaster.onclick = function (e) {
         e.preventDefault();
-        window.activateMomkokTier('master', true);
+        if (typeof window.isTierUnlocked === 'function' && window.isTierUnlocked('master')) {
+          window.activateMomkokTier('master', true);
+        } else if (typeof window.openDepositModal === 'function') {
+          window.openDepositModal('master');
+        } else {
+          window.activateMomkokTier('master', true);
+        }
       };
     }
 
