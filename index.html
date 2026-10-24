@@ -894,10 +894,10 @@
           <button type="button" class="tier-tab-btn active" id="btnTierFree" onclick="showSpecificTierReport('free')" style="cursor:pointer; outline:none;">
             🎁 0원 맛보기 독립진단실 (5개 영역)
           </button>
-          <button type="button" class="tier-tab-btn" id="btnTierBasic" onclick="showSpecificTierReport('basic')" style="cursor:pointer; outline:none;">
+          <button type="button" class="tier-tab-btn" id="btnTierBasic" onclick="onTierTabClick('basic')" style="cursor:pointer; outline:none;">
             🔑 49,000원 기본형 독립진단실 (20장)
           </button>
-          <button type="button" class="tier-tab-btn gold" id="btnTierMaster" onclick="showSpecificTierReport('master')" style="cursor:pointer; outline:none;">
+          <button type="button" class="tier-tab-btn gold" id="btnTierMaster" onclick="onTierTabClick('master')" style="cursor:pointer; outline:none;">
             👑 99,000원 마스터팩 독립진단실 (35장)
           </button>
         </div>
@@ -2805,6 +2805,12 @@
             <input type="text" id="payDepositorPhone" placeholder="010-XXXX-XXXX" style="width:100%; height:38px; border:1px solid #cbd5e1; border-radius:8px; padding:0 10px; font-size:13px; box-sizing:border-box;">
           </div>
         </div>
+        <div style="margin-top:10px; background:#f1f5f9; padding:8px 12px; border-radius:8px;">
+          <label style="font-size:12px; font-weight:700; color:#334155; display:flex; align-items:center; gap:6px; cursor:pointer;">
+            <input type="checkbox" id="payCashReceiptCheck" checked style="width:15px; height:15px; accent-color:#2563eb;">
+            <span>🧾 현금영수증 자동 발행 신청 (입력하신 휴대폰 번호로 소득공제)</span>
+          </label>
+        </div>
       </div>
 
       <div style="display:flex; gap:10px;">
@@ -2938,6 +2944,48 @@
   }
 
   // [알림번호를 통한 리포트 자동 전환 로직]
+  let unlockedTier = 'free'; // 'free', 'basic', 'master'
+
+  function onTierTabClick(tier) {
+    if (tier === 'free') {
+      showSpecificTierReport('free');
+      return;
+    }
+    // 알림번호로 이미 인증된 경우 즉시 리포트 열람
+    if (unlockedTier === tier || unlockedTier === 'master') {
+      showSpecificTierReport(tier);
+      return;
+    }
+    // 미결제 상태인 경우 국민은행 송해석 입금 계좌 안내창 팝업
+    openDepositModal(tier);
+  }
+
+  function openDepositModal(tier) {
+    const modal = document.getElementById('paymentModal');
+    const title = document.getElementById('payModalTitle');
+    const price = document.getElementById('payItemPrice');
+    const badge = document.getElementById('payModalBadge');
+    const btn = document.getElementById('payConfirmBtn');
+
+    if (tier === 'basic') {
+      if (title) title.textContent = '49,000원 기본형(20장) 정밀 리포트 신청';
+      if (price) price.textContent = '49,000원 (VAT 포함)';
+      if (badge) badge.textContent = '공식 계좌 입금 안내 (기본형 20장)';
+      if (btn) btn.textContent = '49,000원 입금 신청 및 알림번호 요청 ➔';
+    } else if (tier === 'master') {
+      if (title) title.textContent = '99,000원 VIP 마스터팩(35장) 신청';
+      if (price) price.textContent = '99,000원 (VAT 포함)';
+      if (badge) badge.textContent = '공식 계좌 입금 안내 (마스터팩 35장)';
+      if (btn) btn.textContent = '99,000원 입금 신청 및 알림번호 요청 ➔';
+    }
+    if (modal) modal.style.display = 'flex';
+  }
+
+  function closePayModal() {
+    const modal = document.getElementById('paymentModal');
+    if (modal) modal.style.display = 'none';
+  }
+
   function showSpecificTierReport(tier) {
     const f = document.getElementById('tierViewFree');
     const b = document.getElementById('tierViewBasic');
@@ -2981,10 +3029,12 @@
 
     // 99로 시작하거나 master, vip인 경우 35장 마스터팩 오픈
     if (code.startsWith('99') || code.toLowerCase().includes('master') || code.toLowerCase().includes('vip')) {
+      unlockedTier = 'master';
       showSpecificTierReport('master');
       alert('🎉 [인증 완료] 알림번호 확인! 99,000원 VIP 마스터팩 풀 35장 컨설팅 바인더가 열렸습니다.');
     } else {
       // 그 외 알림번호 (예: 7894)는 20장 기본형 오픈
+      unlockedTier = 'basic';
       showSpecificTierReport('basic');
       alert('🎉 [인증 완료] 알림번호 확인! 49,000원 기본형 전권 20장 정밀 바인더가 열렸습니다.');
     }
