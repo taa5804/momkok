@@ -26,7 +26,7 @@ module.exports = async function handler(req, res) {
     const messageText = customBody || 
 `[맘콕] 입금 확인 및 심층 리포트 열람번호 안내
 
-학부모님의 입금이 확인되었습니다.
+학부모님의 입금이 정상 확인되었습니다.
 
 ■ 열람 알림번호: [ ${code} ]
 ■ 결제 상품: ${tierName}
@@ -35,39 +35,73 @@ module.exports = async function handler(req, res) {
 맘콕 상단 파란색 배너의 [알림번호 입력란]에 위 번호를 넣으시면 35장 정밀 분석 바인더가 즉시 열람됩니다.
 감사합니다.`;
 
-    // ClawOps Config
+    // 1차 엔진: ClawOps REST API (070-5276-7712)
     const CLAWOPS_ACCOUNT_ID = process.env.CLAWOPS_ACCOUNT_ID || "ACUfJGlcU6IkNZxuxn";
     const CLAWOPS_API_KEY = process.env.CLAWOPS_API_KEY || "sk_vuT1vZJtqWMHdjROjqAi1x7XpGGpjSY2";
     const CLAWOPS_FROM_NUMBER = process.env.CLAWOPS_FROM_NUMBER || "07052767712";
 
-    const clawRes = await fetch(`https://api.claw-ops.com/v1/accounts/${CLAWOPS_ACCOUNT_ID}/messages`, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${CLAWOPS_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        To: phone,
-        From: CLAWOPS_FROM_NUMBER,
-        Body: messageText
-      })
-    });
+    let clawSuccess = false;
+    let clawData = null;
 
-    const clawData = await clawRes.json().catch(() => ({}));
+    try {
+      const clawRes = await fetch(`https://api.claw-ops.com/v1/accounts/${CLAWOPS_ACCOUNT_ID}/messages`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${CLAWOPS_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          To: phone,
+          From: CLAWOPS_FROM_NUMBER,
+          Body: messageText
+        })
+      });
 
-    if (!clawRes.ok) {
-      return res.status(clawRes.status || 500).json({
-        ok: false,
-        message: "클로옵스 문자 발송 실패",
-        error: clawData
+      clawData = await clawRes.json().catch(() => ({}));
+      if (clawRes.ok && clawData.messageId) {
+        clawSuccess = true;
+      }
+    } catch (e) {
+      console.warn("ClawOps primary failed:", e.message);
+    }
+
+    if (clawSuccess) {
+      return res.status(200).json({
+        ok: true,
+        engine: "ClawOps",
+        message: "클로옵스 문자 발송 요청 완료",
+        messageId: clawData.messageId
       });
     }
 
-    return res.status(200).json({
-      ok: true,
-      message: "클로옵스 문자 발송 요청 완료",
-      messageId: clawData.messageId,
-      status: clawData.status
+    // 2차 백업 엔진: NCP SENS 게이트웨이 (무장애 즉시 발송)
+    console.log("ClawOps fallback to NCP SENS Gateway for", phone);
+    const ncpRes = await fetch("https://www.wooriapt.app/api/send-sms", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        phone: phone,
+        content: messageText,
+        type: "LMS",
+        subject: "[맘콕] 입금 확인 및 열람번호 안내"
+      })
+    });
+
+    const ncpData = await ncpRes.json().catch(() => ({}));
+    if (ncpRes.ok && (ncpData.ok || ncpData.result)) {
+      return res.status(200).json({
+        ok: true,
+        engine: "NCP_SENS_BACKUP",
+        message: "문자 발송 완료 (안심 게이트웨이 연동)",
+        detail: ncpData
+      });
+    }
+
+    return res.status(500).json({
+      ok: false,
+      message: "문자 발송 처리에 실패했습니다.",
+      clawError: clawData,
+      ncpError: ncpData
     });
   } catch (err) {
     return res.status(500).json({
