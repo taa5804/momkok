@@ -17,7 +17,7 @@ module.exports = async function handler(req, res) {
     const phone = String(body.phone || body.to || "").replace(/\D/g, "");
     const code = String(body.code || "7894").trim();
     const tierName = String(body.tierName || body.productName || "심화 마스터팩 (35장 방대)").trim();
-    const customBody = body.message || body.customBody || body.body;
+    const customBody = body.message || body.customBody || body.body || body.content || body.text;
 
     if (!phone || phone.length < 10) {
       return res.status(400).json({ ok: false, message: "올바른 수신 휴대폰번호를 입력해 주세요." });
