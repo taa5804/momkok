@@ -312,10 +312,13 @@
     }
   
   @media print {
-    /* 1. 맛보기(0원), 네비게이션, 프레임, 배너, 모달, 관리자, 버튼 등 모든 UI 완전 숨김 */
+    /* 1. 맛보기(0원), 관리자 탭(운영본부, 관제탑, 대학특성 등), 네비게이션, 프레임, 배너, 모달, 버튼 등 모든 부가 UI 완전 숨김 */
     header, .portal-nav, .stats-kpi-grid, #accessCodeBanner, .phone-simulator-frame,
     .btn-save-pdf, button, .modal, .portal-footer, .lock-box, .banner-box,
-    #tierViewFree, .pc-print-bottom-bar, #directMobileHeader, .tab-portal-header {
+    #tierViewFree, .pc-print-bottom-bar, #directMobileHeader, .tab-portal-header,
+    #tab-admin, #tab-dbmaster, #tab-univmatch, #mkUnivContainer,
+    .tab-content:not(#tab-service),
+    section:not(#tab-service) {
       display: none !important;
     }
 
@@ -330,7 +333,7 @@
     }
 
     .platform-container, .portal-split-view, .realtime-analytics-panel,
-    .tab-content, #tab-service {
+    #tab-service {
       display: block !important;
       height: auto !important;
       min-height: auto !important;
