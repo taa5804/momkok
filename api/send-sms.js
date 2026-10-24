@@ -23,17 +23,22 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ ok: false, message: "올바른 수신 휴대폰번호를 입력해 주세요." });
     }
 
+    const is35 = tierName.includes('35') || tierName.includes('마스터');
+    const directUrl = `https://momkok.co.kr?view=${is35 ? '35' : '20'}&code=${code}`;
+
     const messageText = customBody || 
-`[맘콕] 입금 확인 및 심층 리포트 열람번호 안내
+`[맘콕] 입금 확인 및 심층 리포트 직통 열람 안내
 
 학부모님의 입금이 정상 확인되었습니다.
 
 ■ 열람 알림번호: [ ${code} ]
 ■ 결제 상품: ${tierName}
-■ 다자녀 혜택: 결제 1회로 자녀 2명(첫째+둘째) 총 2회 진단·열람 가능
-■ 바로가기: https://momkok.co.kr
+■ 다자녀 혜택: 결제 1회로 자녀 2명(첫째+둘째) 총 2회 열람 가능
 
-맘콕 상단 파란색 배너의 [알림번호 입력란]에 위 번호를 넣으시면 리포트가 열리며, 상단 [📥 휴대폰 PDF 저장]을 누르시면 학부모님 휴대폰 파일로 영구 보관됩니다.
+▼ ${is35 ? '35장' : '20장'} 모바일 바인더 바로보기 (원클릭 직통)
+👉 ${directUrl}
+
+(※ 위 링크를 누르시면 메인화면 없이 오직 자녀의 리포트 본문만 즉시 열리며, 상단 [📥 휴대폰 PDF 저장]을 누르시면 학부모님 휴대폰 파일로 영구 보관됩니다.)
 감사합니다.`;
 
     // 1차 엔진: ClawOps REST API (070-5276-7712)
