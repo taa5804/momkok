@@ -2754,23 +2754,36 @@
     );
 
     const cleanPhone = String(d.phone || '010-2286-4150').replace(/\D/g, '');
+    const is35 = tierLabel.includes('35') || tierLabel.includes('마스터');
+    const directUrl = `https://momkok.co.kr?view=${is35 ? '35' : '20'}&code=5804`;
+
     const summaryText = d.mode === 'CAREER'
-      ? `[맘콕 ${tierLabel} 진단 요약서]
+      ? `[맘콕 ${tierLabel} 직통 모바일 바인더]
+
+학부모님의 진단 리포트가 준비되었습니다.
+
 ▶대상: ${d.school}(${d.majorDetail}) ${d.gender}
 ▶기질: ${d.blood}형·${d.energy}
 ▶스펙점수: ${carEval.totalSpecScore}점
-▶기업수준: ${carEval.actualCompanyTier}
 ▶1순위산업: ${carEval.topIndustries[0].name}
-▶추천직무: ${carEval.bestRoles[0]}
-▶풀버전 열람: https://momkok.co.kr`
-      : `[맘콕 ${tierLabel} 진단 요약서]
+
+▼ ${is35 ? '35장' : '20장'} 모바일 바이블 바로보기 (터치)
+👉 ${directUrl}
+
+(※ 링크 터치 시 메인화면 없이 오직 자녀의 ${is35 ? '35장' : '20장'} 리포트 본문만 직통으로 열리며, 휴대폰 PDF 저장이 가능합니다.)`
+      : `[맘콕 ${tierLabel} 직통 모바일 바인더]
+
+학부모님의 진단 리포트가 준비되었습니다.
+
 ▶대상: ${d.sido} ${d.sigun} ${d.school} ${d.grade} (${d.gender})
 ▶기질: ${d.blood}형·${d.energy}
-▶학교특성: ${schoolAnal.tierTitle}
-▶전국환산등급: 약 ${admEval.realGrade}등급
-▶목표대학 가능성: ${admEval.actualUnivTier}
-▶취약과목: ${d.hateSubj}
-▶풀버전 35장 열람: https://momkok.co.kr`;
+▶전국환산: 약 ${admEval.realGrade}등급 (${admEval.actualUnivTier})
+▶취약보완: ${d.hateSubj}
+
+▼ ${is35 ? '35장' : '20장'} 모바일 바이블 바로보기 (터치)
+👉 ${directUrl}
+
+(※ 링크 터치 시 메인화면 없이 오직 자녀의 ${is35 ? '35장' : '20장'} 리포트 본문만 직통으로 열리며, 휴대폰 PDF 저장이 가능합니다.)`;
 
     try {
       const endpoint = (window.location.protocol.startsWith('http'))
