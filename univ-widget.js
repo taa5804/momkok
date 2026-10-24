@@ -187,6 +187,11 @@
         gap: 18px;
         width: 100%;
       }
+      @media print {
+        .mk-left-col-wrapper, #momkokCompactUnivMount, .mk-univ-box, #momkokUnivMount {
+          display: none !important;
+        }
+      }
       .mk-left-col-wrapper .phone-simulator-frame {
         position: static !important;
       }
