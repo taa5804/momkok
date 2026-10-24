@@ -2436,9 +2436,14 @@
         <div style="font-size:13px; color:#3b82f6; margin-bottom:16px;">
           자녀 책상 비치 및 입시 상담 지참을 위해 20장 전체를 A4 용지로 출력하거나 스마트폰/PC에 영구 소장하세요.
         </div>
-        <button type="button" onclick="saveReportToPdf('basic')" style="background:#2563eb; color:#ffffff; border:none; padding:12px 30px; border-radius:10px; font-size:15px; font-weight:900; cursor:pointer; box-shadow:0 4px 14px rgba(37,99,235,0.35);">
-          🖨️ 20장 전체 A4 인쇄 / PDF 저장하기
-        </button>
+        <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <button type="button" onclick="saveReportToPdf('basic')" style="background:#2563eb; color:#ffffff; border:none; padding:12px 28px; border-radius:10px; font-size:15px; font-weight:900; cursor:pointer; box-shadow:0 4px 14px rgba(37,99,235,0.35);">
+            🖨️ 20장 전체 A4 인쇄 / PDF 저장하기
+          </button>
+          <button type="button" onclick="sendMomkokReportSms('49,000원 정밀 기본형 20장', '${d.phone}')" style="background:#059669; color:#fff; border:none; padding:12px 24px; border-radius:10px; font-size:14px; font-weight:800; cursor:pointer; box-shadow:0 4px 14px rgba(5,150,105,0.3);">
+            📲 휴대전화(${d.phone})로 20장 요약본 발송
+          </button>
+        </div>
       </div>
     `;
   }
@@ -2485,9 +2490,14 @@
         <div style="font-size:13px; color:#b45309; margin-bottom:16px;">
           자녀 책상 비치 및 입시 상담 지참을 위해 35장 전체를 A4 용지로 출력하거나 스마트폰/PC에 영구 소장하세요.
         </div>
-        <button type="button" onclick="saveReportToPdf('master')" style="background:#d97706; color:#ffffff; border:none; padding:12px 30px; border-radius:10px; font-size:15px; font-weight:900; cursor:pointer; box-shadow:0 4px 14px rgba(217,119,6,0.35);">
-          🖨️ 35장 전체 A4 인쇄 / PDF 저장하기
-        </button>
+        <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <button type="button" onclick="saveReportToPdf('master')" style="background:#d97706; color:#ffffff; border:none; padding:12px 28px; border-radius:10px; font-size:15px; font-weight:900; cursor:pointer; box-shadow:0 4px 14px rgba(217,119,6,0.35);">
+            🖨️ 35장 전체 A4 인쇄 / PDF 저장하기
+          </button>
+          <button type="button" onclick="sendMomkokReportSms('99,000원 VIP 마스터팩 35장', '${d.phone}')" style="background:#059669; color:#fff; border:none; padding:12px 24px; border-radius:10px; font-size:14px; font-weight:800; cursor:pointer; box-shadow:0 4px 14px rgba(5,150,105,0.3);">
+            📲 휴대전화(${d.phone})로 35장 마스터 요약본 발송
+          </button>
+        </div>
       </div>
     `;
   }
@@ -2787,7 +2797,7 @@
     }
 
     const is35 = tierLabel.includes('35') || tierLabel.includes('마스터');
-    const directUrl = `https://momkok.co.kr?view=${is35 ? '35' : '20'}&code=5804`;
+    const directUrl = `https://www.momkok.co.kr?view=${is35 ? '35' : '20'}&code=5804`;
 
     const summaryText = d.mode === 'CAREER'
       ? `[맘콕 ${tierLabel} 직통 모바일 바인더]
@@ -2818,9 +2828,7 @@
 (※ 링크 터치 시 메인화면 없이 오직 자녀의 ${is35 ? '35장' : '20장'} 리포트 본문만 직통으로 열리며, 휴대폰 PDF 저장이 가능합니다.)`;
 
     try {
-      const endpoint = (window.location.protocol.startsWith('http'))
-        ? '/api/send-sms'
-        : 'https://momkok.co.kr/api/send-sms';
+      const endpoint = 'https://www.momkok.co.kr/api/send-sms';
 
       const res = await fetch(endpoint, {
         method: 'POST',
@@ -2834,7 +2842,7 @@
       });
       const resData = await res.json().catch(() => ({}));
       if (res.ok && resData.ok) {
-        alert(`🎉 [문자 발송 성공!]\n\n버튼에 표시된 휴대폰 [${rawPhone}] 번호로 '${tierLabel}' 직통 리포트 링크 문자가 1초 만에 정상 발송되었습니다!`);
+        alert(`🎉 [문자 발송 성공!]\n\n버튼에 표시된 휴대폰 [${rawPhone}] 번호로 '${tierLabel}' 직통 리포트 링크 문자가 정상 발송되었습니다!\n\n(※ 알림창 닫힌 후 수신함을 확인해 주시고, 혹시 통신사 스팸 필터링이 켜져 있는 경우 문자 앱의 '스팸 및 차단된 번호' 폴더도 확인해 주시기 바랍니다.)`);
       } else {
         throw new Error(resData.message || ('발송 실패 (코드 ' + res.status + ')'));
       }
