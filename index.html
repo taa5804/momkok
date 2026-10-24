@@ -1982,7 +1982,7 @@
             <button type="button" onclick="adminLogout()" style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; padding:4px 10px; border-radius:6px; font-size:11.5px; font-weight:700; cursor:pointer;">🔒 로그아웃</button>
           </div>
           <p style="font-size:12.5px; color:var(--gray-500); margin-top:3px;">
-            전국에서 들어오는 결제 승인 현황 및 카카오 알림톡 발송 모니터링
+            전국에서 들어오는 결제 승인 현황 및 클로옵스(ClawOps) 알림문자 실시간 발송 관제
           </p>
         </div>
         <div style="text-align:right;">
@@ -1991,6 +1991,25 @@
         </div>
       </div>
 
+      <div style="margin-top:18px; margin-bottom:18px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div>
+            <div style="font-size:13.5px; font-weight:800; color:#1e40af;">⚡ 클로옵스(ClawOps) 실시간 알림문자 발송기 (070-5276-7712 공식 회선)</div>
+            <div style="font-size:11.5px; color:#3b82f6; margin-top:2px;">학부모 연락처와 발급할 알림번호를 입력한 후 발송 버튼을 누르면 즉시 문자가 도착합니다.</div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <input type="text" id="quickSmsPhone" placeholder="휴대폰 번호 (예: 01012345678)" style="height:36px; border:1px solid #93c5fd; border-radius:6px; padding:0 10px; font-size:12.5px; width:180px;">
+            <input type="text" id="quickSmsCode" placeholder="알림번호 (예: 7894)" value="7894" style="height:36px; border:1px solid #93c5fd; border-radius:6px; padding:0 10px; font-size:12.5px; width:120px;">
+            <select id="quickSmsTier" style="height:36px; border:1px solid #93c5fd; border-radius:6px; padding:0 8px; font-size:12px;">
+              <option value="심화 마스터팩 (35장 방대)">심화 마스터팩 99,000원 (35장)</option>
+              <option value="기본형 정밀 (20장 전권)">기본형 정밀 49,000원 (20장)</option>
+            </select>
+            <button type="button" onclick="handleQuickSmsSend(this)" style="background:#1d4ed8; color:#fff; border:none; padding:0 14px; height:36px; border-radius:6px; font-size:12px; font-weight:800; cursor:pointer;">
+              🚀 문자 전송
+            </button>
+          </div>
+        </div>
+      </div>
       <div style="margin-top:20px;">
         <table class="db-table">
           <thead>
@@ -2001,7 +2020,7 @@
               <th>결제상품</th>
               <th>결제금액</th>
               <th>학부모 연락처</th>
-              <th>알림톡 전송</th>
+              <th>클로옵스(ClawOps) 문자 발송</th>
             </tr>
           </thead>
           <tbody id="adminOrderTable">
@@ -2011,8 +2030,8 @@
               <td>중학교 2학년</td>
               <td><strong>심화 마스터팩 (35장 방대)</strong></td>
               <td><span style="color:#ff4757; font-weight:800;">99,000원</span></td>
-              <td>010-5804-****</td>
-              <td><span class="status-badge badge-paid">시뮬레이션 발송완료</span></td>
+              <td>010-5804-5804 (송해석)</td>
+              <td><button type="button" onclick="sendClawOpsSms(this, '01058045804', '7894', '심화 마스터팩 (35장)')" style="background:#2563eb; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-size:11.5px; font-weight:700; cursor:pointer;">📲 클로옵스 즉시 발송 테스트</button></td>
             </tr>
           </tbody>
         </table>
