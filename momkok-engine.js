@@ -550,6 +550,12 @@
   };
 
   function detectInitialTier() {
+    try {
+      const sp = new URLSearchParams(window.location.search);
+      const v = sp.get('view');
+      if (v === '35' || v === 'master') return 'master';
+      if (v === '20' || v === 'basic') return 'basic';
+    } catch (e) {}
     const p = window.location.pathname.toLowerCase();
     if (p.includes('basic.html')) return 'basic';
     if (p.includes('master.html')) return 'master';
@@ -2799,33 +2805,14 @@
     const is35 = tierLabel.includes('35') || tierLabel.includes('마스터');
     const directUrl = `https://www.momkok.co.kr?view=${is35 ? '35' : '20'}&code=5804`;
 
-    const summaryText = d.mode === 'CAREER'
-      ? `[맘콕 ${tierLabel} 직통 모바일 바인더]
+    const reportName = is35 ? '35장 마스터 바이블' : '20장 정밀 바인더';
+    const summaryText = `[맘콕] 자녀 1:1 맞춤 ${reportName} 완성 안내
 
 학부모님의 진단 리포트가 준비되었습니다.
+아래 링크를 터치하시면 메인화면 없이 오직 자녀의 ${is35 ? '35장' : '20장'} 본문만 즉시 열리며, 스마트폰 PDF 저장이 가능합니다.
 
-▶대상: ${d.school}(${d.majorDetail}) ${d.gender}
-▶기질: ${d.blood}형·${d.energy}
-▶스펙점수: ${carEval.totalSpecScore}점
-▶1순위산업: ${carEval.topIndustries[0].name}
-
-▼ ${is35 ? '35장' : '20장'} 모바일 바이블 바로보기 (터치)
-👉 ${directUrl}
-
-(※ 링크 터치 시 메인화면 없이 오직 자녀의 ${is35 ? '35장' : '20장'} 리포트 본문만 직통으로 열리며, 휴대폰 PDF 저장이 가능합니다.)`
-      : `[맘콕 ${tierLabel} 직통 모바일 바인더]
-
-학부모님의 진단 리포트가 준비되었습니다.
-
-▶대상: ${d.sido} ${d.sigun} ${d.school} ${d.grade} (${d.gender})
-▶기질: ${d.blood}형·${d.energy}
-▶전국환산: 약 ${admEval.realGrade}등급 (${admEval.actualUnivTier})
-▶취약보완: ${d.hateSubj}
-
-▼ ${is35 ? '35장' : '20장'} 모바일 바이블 바로보기 (터치)
-👉 ${directUrl}
-
-(※ 링크 터치 시 메인화면 없이 오직 자녀의 ${is35 ? '35장' : '20장'} 리포트 본문만 직통으로 열리며, 휴대폰 PDF 저장이 가능합니다.)`;
+▶ 바로보기 (터치):
+${directUrl}`;
 
     try {
       const endpoint = 'https://www.momkok.co.kr/api/send-sms';
@@ -2842,7 +2829,7 @@
       });
       const resData = await res.json().catch(() => ({}));
       if (res.ok && resData.ok) {
-        alert(`🎉 [문자 발송 성공!]\n\n버튼에 표시된 휴대폰 [${rawPhone}] 번호로 '${tierLabel}' 직통 리포트 링크 문자가 정상 발송되었습니다!\n\n(※ 알림창 닫힌 후 수신함을 확인해 주시고, 혹시 통신사 스팸 필터링이 켜져 있는 경우 문자 앱의 '스팸 및 차단된 번호' 폴더도 확인해 주시기 바랍니다.)`);
+        alert(`🎉 [클로옵스 문자 발송 성공]\n\n버튼에 표시된 휴대폰 [${rawPhone}] 번호로 클로옵스(070-5276-7712) 직통 리포트 링크 문자가 정상 발송되었습니다!\n\n(※ 070 수신 문자함을 확인해 주시기 바랍니다.)`);
       } else {
         throw new Error(resData.message || ('발송 실패 (코드 ' + res.status + ')'));
       }
@@ -2914,6 +2901,30 @@
 
   function initMomkokEngine() {
     state.tier = detectInitialTier();
+
+    // [방법 1] URL에 ?view=35 또는 ?view=20 이 있을 때: 메인 입력창을 거치지 않고 즉시 리포트 렌더링!
+    const sp = new URLSearchParams(window.location.search);
+    const viewParam = sp.get('view');
+    if (viewParam === '35' || viewParam === 'master' || viewParam === '20' || viewParam === 'basic') {
+      window.isMasterKeyActive = true;
+      const d = collectUserData();
+      renderAllTierViews(d);
+
+      const is35 = (viewParam === '35' || viewParam === 'master');
+      const freeEl = document.getElementById('tierViewFree');
+      const basicEl = document.getElementById('tierViewBasic');
+      const masterEl = document.getElementById('tierViewMaster');
+      if (freeEl) freeEl.style.display = 'none';
+      if (is35) {
+        if (basicEl) basicEl.style.display = 'none';
+        if (masterEl) masterEl.style.display = 'block';
+      } else {
+        if (masterEl) masterEl.style.display = 'none';
+        if (basicEl) basicEl.style.display = 'block';
+      }
+      return;
+    }
+
     injectConsoleStepsHTML();
     bindTierButtonsAndSyncLabels();
     window.activateMomkokTier(state.tier, true);
