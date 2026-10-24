@@ -3016,7 +3016,7 @@
 
 <script src="univ-data.js"></script>
 <script src="univ-widget.js"></script>
-<script src="momkok-engine.js?v=20261024_02"></script>
+<script src="momkok-engine.js?v=20261024_03"></script>
 
   <!-- 관리자 전용 보안 로그인 모달 -->
   <div id="adminAuthModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.75); z-index:999999; backdrop-filter:blur(6px); align-items:center; justify-content:center;">
@@ -3259,6 +3259,53 @@
     setTimeout(function() {
       window.print();
     }, 200);
+  }
+
+  async function sendClawOpsSms(btn, phone, code, tierName) {
+    if (!phone) {
+      alert('⚠️ 전화번호를 입력하세요.');
+      return;
+    }
+    const origText = btn ? btn.innerText : '';
+    if (btn) {
+      btn.innerText = '발송 중...';
+      btn.disabled = true;
+    }
+    try {
+      const res = await fetch('https://www.momkok.co.kr/api/send-sms', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, code, tierName })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) {
+        alert('🎉 [문자 발송 성공]\n\n' + phone + ' 번호로 열람번호(' + code + ') 문자가 정상 발송되었습니다.\n\n(※ 발송 엔진: ' + (data.engine || '국내 통신사 게이트웨이') + ')');
+      } else {
+        alert('⚠️ 문자 발송 실패:\n' + (data.message || res.statusText));
+      }
+    } catch (e) {
+      alert('⚠️ 문자 발송 오류:\n' + e.message);
+    } finally {
+      if (btn) {
+        btn.innerText = origText;
+        btn.disabled = false;
+      }
+    }
+  }
+
+  function handleQuickSmsSend(btn) {
+    const phoneInput = document.getElementById('quickSmsPhone');
+    const codeInput = document.getElementById('quickSmsCode');
+    const tierSelect = document.getElementById('quickSmsTier');
+    const phone = phoneInput ? phoneInput.value.trim() : '';
+    const code = codeInput ? codeInput.value.trim() : '7894';
+    const tierName = tierSelect ? tierSelect.value : '심화 마스터팩 (35장 방대)';
+    if (!phone) {
+      alert('수신할 휴대폰 번호를 입력해 주세요.');
+      if (phoneInput) phoneInput.focus();
+      return;
+    }
+    sendClawOpsSms(btn, phone, code, tierName);
   }
 
   function submitBankDepositRequest() {
