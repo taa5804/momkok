@@ -2794,7 +2794,7 @@
     if (btnBasic) {
       btnBasic.onclick = function (e) {
         e.preventDefault();
-        if (typeof window.isTierUnlocked === 'function' && window.isTierUnlocked('basic')) {
+        if (window.isMasterKeyActive || (typeof window.isTierUnlocked === 'function' && window.isTierUnlocked('basic'))) {
           window.activateMomkokTier('basic', true);
         } else if (typeof window.openDepositModal === 'function') {
           window.openDepositModal('basic');
@@ -2806,7 +2806,7 @@
     if (btnMaster) {
       btnMaster.onclick = function (e) {
         e.preventDefault();
-        if (typeof window.isTierUnlocked === 'function' && window.isTierUnlocked('master')) {
+        if (window.isMasterKeyActive || (typeof window.isTierUnlocked === 'function' && window.isTierUnlocked('master'))) {
           window.activateMomkokTier('master', true);
         } else if (typeof window.openDepositModal === 'function') {
           window.openDepositModal('master');
