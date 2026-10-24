@@ -2085,6 +2085,32 @@
 </main>
 
 <script>
+  window.unlockedTier = 'free';
+  window.isTierUnlocked = function(tier) {
+    return (window.unlockedTier === tier || window.unlockedTier === 'master');
+  };
+
+  window.openDepositModal = function(tier) {
+    const modal = document.getElementById('paymentModal');
+    const title = document.getElementById('payModalTitle');
+    const price = document.getElementById('payItemPrice');
+    const badge = document.getElementById('payModalBadge');
+    const btn = document.getElementById('payConfirmBtn');
+
+    if (tier === 'basic') {
+      if (title) title.textContent = '49,000원 기본형(20장) 정밀 리포트 신청';
+      if (price) price.textContent = '49,000원 (VAT 포함)';
+      if (badge) badge.textContent = '공식 계좌 입금 안내 (기본형 20장)';
+      if (btn) btn.textContent = '49,000원 입금 신청 및 알림번호 요청 ➔';
+    } else if (tier === 'master') {
+      if (title) title.textContent = '99,000원 VIP 마스터팩(35장) 신청';
+      if (price) price.textContent = '99,000원 (VAT 포함)';
+      if (badge) badge.textContent = '공식 계좌 입금 안내 (마스터팩 35장)';
+      if (btn) btn.textContent = '99,000원 입금 신청 및 알림번호 요청 ➔';
+    }
+    if (modal) modal.style.display = 'flex';
+  };
+
   let consoleStep = 1;
   const consoleTotal = 4;
 
