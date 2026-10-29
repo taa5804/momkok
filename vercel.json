@@ -2,6 +2,30 @@
   "cleanUrls": true,
   "rewrites": [
     {
+      "source": "/landing",
+      "destination": "/momkok-landing.html"
+    },
+    {
+      "source": "/search",
+      "destination": "/momkok-search.html"
+    },
+    {
+      "source": "/job-search",
+      "destination": "/momkok-job-search.html"
+    },
+    {
+      "source": "/univ-info/:sido/:univ",
+      "destination": "/api/momkok-page?mode=univ&sido=:sido&univ=:univ"
+    },
+    {
+      "source": "/job-info/:category/:company",
+      "destination": "/api/momkok-page?mode=job&category=:category&company=:company"
+    },
+    {
+      "source": "/career-search/:region/:city/:place",
+      "destination": "/api/momkok-page?mode=career&region=:region&city=:city&place=:place"
+    },
+    {
       "source": "/api/send-sms",
       "destination": "/api/send-sms.js"
     },
@@ -12,6 +36,9 @@
   ],
   "functions": {
     "api/send-sms.js": {
+      "regions": ["icn1"]
+    },
+    "api/momkok-page.js": {
       "regions": ["icn1"]
     }
   }

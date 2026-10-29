@@ -798,6 +798,245 @@
     }
   }
 
+  /* =========================================
+     2. 대학교 총람 하단: 직장·기업(대기업·공기업·중견·금융·빅테크) 연봉·스펙 총람 위젯
+  ========================================= */
+  const jobState = {
+    cat: '전체',
+    sector: '전체',
+    selectedJob: null
+  };
+
+  const JOB_SECTORS = [
+    { key: '전체', label: '전국 전체 기업' },
+    { key: '반도체·전자', label: '반도체 · 전자 · 가전', match: /전자|반도체|신소재|배터리/ },
+    { key: '자동차·중공업', label: '자동차 · 방산 · 중공업', match: /자동차|모빌리티|철강|방산|조선/ },
+    { key: '에너지·공공', label: '에너지 · 인프라 공기업', match: /에너지|전력|교통|도시|항공|의료보건|금융복지/ },
+    { key: 'IT·빅테크', label: 'IT · AI · 빅테크 · 게임', match: /포털|AI|메신저|이커머스|핀테크/ },
+    { key: '금융·은행', label: '1금융 · 은행 · 증권', match: /은행|금융/ },
+    { key: '식품·바이오', label: '식품 · 제약 · K-뷰티', match: /식품|바이오|제약|의료기기|뷰티|인테리어/ }
+  ];
+
+  function getJobList() {
+    return Array.isArray(window.MOMKOK_JOB_DATA) ? window.MOMKOK_JOB_DATA : [];
+  }
+
+  function matchJobSector(item, sectorKey) {
+    if (!sectorKey || sectorKey === '전체') return true;
+    const found = JOB_SECTORS.find(s => s.key === sectorKey);
+    if (!found || !found.match) return true;
+    return found.match.test(`${item.subCategory || ''} ${item.name || ''} ${(item.jobs || []).join(' ')}`);
+  }
+
+  function getFilteredJobs() {
+    const all = getJobList();
+    return all.filter(j => {
+      if (jobState.cat !== '전체' && j.category !== jobState.cat) return false;
+      if (!matchJobSector(j, jobState.sector)) return false;
+      return true;
+    });
+  }
+
+  function renderJobWidget(container) {
+    if (!container) return;
+    injectStyles();
+
+    const allJobs = getJobList();
+    if (allJobs.length === 0) {
+      if (!document.getElementById('mkJobDataScript')) {
+        const s = document.createElement('script');
+        s.id = 'mkJobDataScript';
+        s.src = 'job-data.js?v=20261029';
+        s.onload = () => renderJobWidget(container);
+        document.head.appendChild(s);
+      }
+      return;
+    }
+
+    if (jobState.selectedJob) {
+      const j = jobState.selectedJob;
+      container.innerHTML = `
+        <div class="mk-univ-box" style="border-color:#059669;">
+          <div class="mk-univ-topbar" style="background:linear-gradient(135deg, #065f46 0%, #047857 100%);">
+            <div class="mk-univ-topbar-title">
+              <span>💼</span>
+              <span>${j.name} 연봉·합격스펙 상세정보</span>
+            </div>
+            <span class="mk-univ-topbar-badge">${j.category} · ${j.badge || j.group}</span>
+          </div>
+          <div class="mk-univ-body">
+            <div class="mk-detail-view">
+              <div class="mk-back-bar">
+                <button type="button" class="mk-back-btn" id="mkBackToJobListBtn">← 기업 목록으로 돌아가기</button>
+                <div>
+                  <span class="${j.category === '공기업' ? 'mk-tag-nat' : 'mk-tag-priv'}">${j.category}</span>
+                  <span class="mk-tag-schl">${j.subCategory || j.type}</span>
+                </div>
+              </div>
+
+              <div class="mk-detail-head">
+                <div class="mk-detail-name">${j.name} <span style="font-size:12px;color:#059669;font-weight:800;">(${j.group || j.category})</span></div>
+                <div class="mk-detail-sub">
+                  📍 주요 근무지: ${j.location || '-'}<br>
+                  👥 임직원 규모: <strong>${j.employees || '-'}</strong> · 🏢 형태: ${j.type || '-'}
+                </div>
+              </div>
+
+              <div class="mk-detail-kv" style="background:#ecfdf5; border-color:#a7f3d0;">
+                <div>💰 <strong>대졸 신입 초봉(공시 기준):</strong> <span style="color:#059669; font-weight:900;">${j.startPay}</span></div>
+                <div style="margin-top:4px;">📈 <strong>임직원 평균 연봉(DART/알리오):</strong> <span style="color:#dc2626; font-weight:900;">${j.avgPay}</span></div>
+                <div style="margin-top:4px;">🎯 <strong>합격자 핵심 스펙:</strong> <span style="color:#1e3a8a; font-weight:800;">${j.spec}</span></div>
+                <div style="margin-top:4px;">🌟 <strong>사주·적성 궁합 인재상:</strong> ${j.traitMatch}</div>
+              </div>
+
+              <div>
+                <div style="font-size:12px; font-weight:900; color:#0f172a; margin-bottom:5px;">
+                  📊 주요 채용 직무 및 준비 포인트
+                </div>
+                <table class="mk-detail-table">
+                  <thead>
+                    <tr>
+                      <th style="background:#065f46;">채용 직무 분야</th>
+                      <th style="background:#065f46;">초봉 / 평균연봉</th>
+                      <th style="background:#065f46;">핵심 평가 기준</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${(j.jobs || []).map(jobName => `
+                      <tr>
+                        <td><strong>${jobName}</strong></td>
+                        <td style="color:#059669; font-weight:800;">${j.startPay.split(' ')[0]} / ${j.avgPay}</td>
+                        <td style="font-size:10.5px; color:#475569;">직무역량 · ${j.category === '공기업' ? 'NCS/전공필기' : '실무면접/인턴'}</td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+                ${j.recruitUrl ? `
+                  <a href="${j.recruitUrl}" target="_blank" rel="noopener noreferrer" class="mk-go-home-btn" style="background:#059669;">
+                    🌐 공식 채용 홈페이지 ↗
+                  </a>
+                ` : ''}
+                <a href="./momkok-job-search.html?q=${encodeURIComponent(j.name)}" class="mk-go-home-btn" style="background:#0f172a;">
+                  🔍 전체 기업·연봉 포털 →
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const backBtn = container.querySelector('#mkBackToJobListBtn');
+      if (backBtn) {
+        backBtn.onclick = () => {
+          jobState.selectedJob = null;
+          renderJobWidget(container);
+        };
+      }
+      return;
+    }
+
+    const sectorCounts = {};
+    JOB_SECTORS.forEach(s => {
+      sectorCounts[s.key] = allJobs.filter(j => (jobState.cat === '전체' || j.category === jobState.cat) && matchJobSector(j, s.key)).length;
+    });
+    const filteredJobs = getFilteredJobs();
+
+    container.innerHTML = `
+      <div class="mk-univ-box" style="border-color:#059669;">
+        <div class="mk-univ-topbar" style="background:linear-gradient(135deg, #065f46 0%, #047857 100%);">
+          <div class="mk-univ-topbar-title">
+            <span>💼</span>
+            <span>대한민국 대기업·공기업·중견 연봉·스펙 총람</span>
+          </div>
+          <span class="mk-univ-topbar-badge">DART · 알리오 공시</span>
+        </div>
+
+        <div class="mk-univ-body">
+          <div class="mk-top-controls">
+            <div class="mk-filter-pills">
+              <button type="button" class="mk-pill ${jobState.cat === '전체' ? 'active' : ''}" data-jcat="전체">전체(${allJobs.length})</button>
+              <button type="button" class="mk-pill ${jobState.cat === '대기업' ? 'active' : ''}" data-jcat="대기업">🏢 대기업</button>
+              <button type="button" class="mk-pill ${jobState.cat === '공기업' ? 'active' : ''}" data-jcat="공기업">🏛️ 공기업</button>
+              <button type="button" class="mk-pill ${jobState.cat === '알짜중견' ? 'active' : ''}" data-jcat="알짜중견">💎 중견</button>
+              <button type="button" class="mk-pill ${jobState.cat === 'IT빅테크' ? 'active' : ''}" data-jcat="IT빅테크">🚀 빅테크</button>
+              <button type="button" class="mk-pill ${jobState.cat === '금융권' ? 'active' : ''}" data-jcat="금융권">🏦 금융</button>
+            </div>
+          </div>
+
+          <div class="mk-split-finder">
+            <div class="mk-region-col">
+              <div class="mk-col-head">
+                <span>📂 업종·분야</span>
+                <span>선택</span>
+              </div>
+              <div class="mk-region-scroll">
+                ${JOB_SECTORS.map(s => `
+                  <button type="button" class="mk-sido-item ${jobState.sector === s.key ? 'active' : ''}" data-jsector="${s.key}" style="${jobState.sector === s.key ? 'background:#059669;color:#fff;' : ''}">
+                    <span style="font-size:11.5px;">${s.label}</span>
+                    <span class="mk-sido-cnt">${sectorCounts[s.key] || 0}</span>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="mk-univ-list-col">
+              <div class="mk-col-head">
+                <span>💼 ${jobState.cat === '전체' ? '주요 기업' : jobState.cat} 목록</span>
+                <span style="color:#059669;">${filteredJobs.length}개사</span>
+              </div>
+              <div class="mk-univ-scroll">
+                ${filteredJobs.length === 0 ? `
+                  <div style="padding:30px 10px; text-align:center; font-size:12px; color:#64748b;">
+                    해당 조건의 기업이 없습니다.
+                  </div>
+                ` : filteredJobs.map((j, idx) => `
+                  <button type="button" class="mk-univ-row-btn" data-job-idx="${idx}">
+                    <div class="mk-row-top">
+                      <span class="mk-row-name">${j.name}</span>
+                      <span class="mk-row-arrow" style="color:#059669;">연봉·스펙 →</span>
+                    </div>
+                    <div class="mk-row-meta">
+                      <span class="${j.category === '공기업' ? 'mk-tag-nat' : 'mk-tag-priv'}">${j.category}</span>
+                      <span class="mk-tag-schl">초봉 ${j.startPay.split(' ')[0]}</span>
+                      <span style="color:#dc2626;font-weight:800;">평균 ${j.avgPay}</span>
+                    </div>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    container.querySelectorAll('[data-jcat]').forEach(btn => {
+      btn.onclick = () => {
+        jobState.cat = btn.getAttribute('data-jcat');
+        renderJobWidget(container);
+      };
+    });
+
+    container.querySelectorAll('[data-jsector]').forEach(btn => {
+      btn.onclick = () => {
+        jobState.sector = btn.getAttribute('data-jsector');
+        renderJobWidget(container);
+      };
+    });
+
+    container.querySelectorAll('[data-job-idx]').forEach(btn => {
+      btn.onclick = () => {
+        const idx = parseInt(btn.getAttribute('data-job-idx'), 10);
+        if (filteredJobs[idx]) {
+          jobState.selectedJob = filteredJobs[idx];
+          renderJobWidget(container);
+        }
+      };
+    });
+  }
+
   function mountCompactUnivBox() {
     if (window.location.search.includes('view=')) return;
     const phoneFrame = document.querySelector('#tab-service .phone-simulator-frame') || document.querySelector('.phone-simulator-frame');
@@ -822,6 +1061,15 @@
     }
 
     renderWidget(mountNode);
+
+    let jobMountNode = document.getElementById('momkokCompactJobMount');
+    if (!jobMountNode) {
+      jobMountNode = document.createElement('div');
+      jobMountNode.id = 'momkokCompactJobMount';
+      wrapper.appendChild(jobMountNode);
+    }
+
+    renderJobWidget(jobMountNode);
   }
 
   if (document.readyState === 'loading') {
