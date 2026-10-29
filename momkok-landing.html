@@ -1,508 +1,337 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>알라딘 맘콕 (Aladdin MomKok) - 대한민국 No.1 AI 입시·진로 족집게 솔루션</title>
-  <meta name="description" content="우리 아이 타고난 천직과 10년 뒤 미래 진로를 족집게처럼 찾아주는 AI 입시·진로 정밀 매칭 플랫폼 알라딘 맘콕(Aladdin MomKok). 중학생·고등학생·취업준비생(청년) 맞춤 대학·학과 로드맵 무료 진단!">
-  <meta name="keywords" content="알라딘 맘콕, 알라딘맘콕, 맘콕, aladdin momkok, momkok, 입시컨설팅, 진로적성검사, AI진로진단, 고교학점제, 대학입결, 학과추천, 자녀진로상담, 대입로드맵">
-  
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.momkok.co.kr/momkok-landing.html">
-  <meta property="og:title" content="알라딘 맘콕 (Aladdin MomKok) - 우리 아이 타고난 천직과 10년 뒤 진로">
-  <meta property="og:description" content="고액 컨설팅 대신 AI 족집게 진단! 전국 대학 입결 빅데이터 기반 [중·고·취업] 맞춤 진로·학과 정밀 매칭">
-  <meta property="og:image" content="https://www.momkok.co.kr/manifest.json">
-
-  <meta name="naver-site-verification" content="9867fb6697cecf67940ff28242a2755d3430b75d" />
-  <meta name="google-site-verification" content="google01007955e0e47517.html" />
-  <link rel="canonical" href="https://www.momkok.co.kr/momkok-landing.html" />
-
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800;900&display=swap">
-  <style>
-    :root {
-      --primary: #ff4757;
-      --primary-dark: #ee5253;
-      --primary-light: #fff0f1;
-      --navy: #1e293b;
-      --slate: #475569;
-      --gray-bg: #f8fafc;
-      --border: #e2e8f0;
-      --gold: #f59e0b;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', -apple-system, sans-serif; }
-    body { background: #ffffff; color: var(--navy); line-height: 1.6; word-break: keep-all; }
-    
-    /* GNB */
-    .landing-header {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--border);
-      padding: 12px 20px;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .brand-logo {
-      font-size: 20px; font-weight: 900; color: var(--primary);
-      display: flex; align-items: center; gap: 6px; text-decoration: none;
-    }
-    .brand-badge {
-      background: var(--primary-light); color: var(--primary);
-      font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px;
-    }
-    .header-cta-btn {
-      background: var(--primary); color: #fff; text-decoration: none;
-      font-size: 13px; font-weight: 700; padding: 8px 16px; border-radius: 20px;
-      transition: all 0.2s;
-    }
-    .header-cta-btn:hover { background: var(--primary-dark); transform: scale(1.02); }
-
-    /* HERO */
-    .hero-section {
-      padding: 48px 20px 36px; text-align: center;
-      background: linear-gradient(180deg, #fff5f5 0%, #ffffff 100%);
-      border-bottom: 1px solid #f1f5f9;
-    }
-    .hero-tag {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: #fff; border: 1px solid #fecdd3;
-      color: var(--primary); font-size: 12px; font-weight: 800;
-      padding: 6px 14px; border-radius: 30px; margin-bottom: 18px;
-      box-shadow: 0 2px 8px rgba(255, 71, 87, 0.08);
-    }
-    .hero-title {
-      font-size: 28px; font-weight: 900; line-height: 1.35;
-      color: #0f172a; margin-bottom: 14px; letter-spacing: -0.5px;
-    }
-    .hero-title span { color: var(--primary); }
-    .hero-desc {
-      font-size: 15px; color: var(--slate); max-width: 520px;
-      margin: 0 auto 28px; line-height: 1.6;
-    }
-    .main-cta-box { max-width: 440px; margin: 0 auto; }
-    .cta-big-btn {
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      width: 100%; background: linear-gradient(135deg, #ff4757 0%, #ee5253 100%);
-      color: #fff; text-decoration: none; font-size: 18px; font-weight: 800;
-      padding: 18px 24px; border-radius: 16px;
-      box-shadow: 0 10px 24px rgba(255, 71, 87, 0.35);
-      transition: all 0.2s;
-    }
-    .cta-big-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(255, 71, 87, 0.45); }
-    .cta-subtext { font-size: 12px; color: #94a3b8; margin-top: 10px; font-weight: 500; }
-
-    /* STATS BANNER */
-    .stats-bar {
-      display: flex; justify-content: center; gap: 24px;
-      background: #f8fafc; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;
-      padding: 16px 20px;
-    }
-    .stat-item { text-align: center; }
-    .stat-num { font-size: 20px; font-weight: 900; color: var(--navy); }
-    .stat-label { font-size: 11px; color: var(--slate); font-weight: 600; margin-top: 2px; }
-
-    /* CONTENT SECTIONS */
-    .section-wrap { max-width: 680px; margin: 0 auto; padding: 48px 20px; }
-    .sec-badge { font-size: 12px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 8px; }
-    .sec-title { font-size: 22px; font-weight: 900; color: #0f172a; margin-bottom: 12px; line-height: 1.4; }
-    .sec-desc { font-size: 14px; color: var(--slate); margin-bottom: 24px; line-height: 1.6; }
-
-    /* FEATURE CARDS */
-    .feature-grid { display: grid; gap: 16px; }
-    .feat-card {
-      background: #fff; border: 1px solid var(--border); border-radius: 16px;
-      padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-      display: flex; gap: 16px; align-items: flex-start;
-    }
-    .feat-icon {
-      width: 44px; height: 44px; border-radius: 12px; background: var(--primary-light);
-      display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
-    }
-    .feat-body h4 { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
-    .feat-body p { font-size: 13px; color: var(--slate); line-height: 1.5; }
-
-    /* COMPARISON TABLE */
-    .compare-card {
-      background: #fff; border: 1px solid #cbd5e1; border-radius: 16px;
-      overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.04);
-    }
-    .compare-header {
-      background: var(--navy); color: #fff; padding: 14px 20px;
-      display: flex; justify-content: space-between; font-weight: 800; font-size: 14px;
-    }
-    .compare-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 14px 20px; border-bottom: 1px solid var(--border); font-size: 13px;
-    }
-    .compare-row:last-child { border-bottom: none; }
-    .compare-row strong { color: var(--primary); font-weight: 800; }
-
-    /* REVIEW CARDS */
-    .review-card {
-      background: #fdf2f4; border: 1px solid #fecdd3; border-radius: 16px;
-      padding: 20px; margin-bottom: 14px;
-    }
-    .review-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .review-author { font-size: 13px; font-weight: 800; color: #9f1239; }
-    .review-stars { color: var(--gold); font-size: 14px; }
-    .review-quote { font-size: 13px; color: #4c0519; line-height: 1.6; }
-
-    /* FOOTER */
-    .landing-footer {
-      background: #0f172a; color: #94a3b8; padding: 36px 20px;
-      text-align: center; font-size: 12px; line-height: 1.8;
-    }
-    .footer-links { margin-bottom: 14px; display: flex; justify-content: center; gap: 16px; }
-    .footer-links a { color: #cbd5e1; text-decoration: none; font-weight: 600; }
-
-    /* STICKY BOTTOM BAR */
-    .sticky-bottom-bar {
-      position: fixed; bottom: 0; left: 0; right: 0; z-index: 99;
-      background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(8px);
-      border-top: 1px solid var(--border); padding: 12px 20px;
-      display: flex; gap: 12px; align-items: center; max-width: 680px; margin: 0 auto;
-    }
-    .search-sub-btn {
-      background: #f1f5f9; color: var(--navy); border: 1px solid #cbd5e1;
-      padding: 14px 18px; border-radius: 12px; font-weight: 700; font-size: 14px;
-      text-decoration: none; white-space: nowrap;
-    }
-    .action-main-btn {
-      flex: 1; background: var(--primary); color: #fff;
-      padding: 14px; border-radius: 12px; font-weight: 800; font-size: 15px;
-      text-align: center; text-decoration: none;
-      box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
-    }
-  </style>
-</head>
-<body>
-
-  <!-- 상단 네비게이션 -->
-  <header class="landing-header">
-    <a href="./index.html" class="brand-logo">
-      <span>🪔 알라딘 맘콕</span>
-      <span class="brand-badge">AI 입시·진로</span>
-    </a>
-    <div style="display:flex; gap:6px;">
-      <a href="./momkok-job-search.html" class="header-cta-btn" style="background:#0f172a;">💼 기업·취업 검색</a>
-      <a href="./momkok-search.html" class="header-cta-btn">🔍 대학·학과 검색</a>
-    </div>
-  </header>
-
-  <!-- 히어로 섹션 -->
-  <section class="hero-section">
-    <div class="hero-tag">✨ 대한민국 No.1 AI 입시·진로 족집게 플랫폼</div>
-    <h1 class="hero-title">
-      우리 아이 타고난 천직과<br>
-      <span>10년 뒤 진로</span>, 맘콕!
-    </h1>
-    <p class="hero-desc">
-      비싼 대치동 컨설팅(회당 50~100만 원) 안 가셔도 됩니다.<br>
-      전국 대학 입결 빅데이터와 딥러닝 기질 분석으로<br>
-      우리 아이에게 딱 맞는 학과와 대입 로드맵을 찾아드립니다.
-    </p>
-
-        <!-- [신뢰 강화 족집게 알고리즘 선언 카드] -->
-    <div style="max-width:620px; margin:28px auto; background:#ffffff; border:2px solid #ff4757; border-radius:20px; padding:24px 22px; box-shadow:0 12px 32px rgba(255, 71, 87, 0.12); text-align:left;">
-      <div style="display:inline-flex; align-items:center; gap:6px; background:#fff0f1; color:#ff4757; font-size:12px; font-weight:800; padding:4px 10px; border-radius:8px; margin-bottom:12px;">
-        🎯 독보적인 AI 족집게 진단 시스템
-      </div>
-      <h3 style="font-size:19px; font-weight:900; color:#0f172a; line-height:1.45; margin-bottom:8px;">
-        알라딘 맘콕의 정밀 진단 시스템은 단순한 설문조사가 아닙니다.
-      </h3>
-      <p style="font-size:14.5px; color:#334155; line-height:1.6; margin-bottom:16px;">
-        수많은 AI 엔지니어링과 정밀 데이터 설계를 거쳐 탄생한 <strong style="color:#ff4757; background:#fff0f1; padding:2px 6px; border-radius:4px;">독보적인 족집게 알고리즘</strong>입니다.
-      </p>
-      <div style="background:#f8fafc; border-radius:14px; padding:16px; border:1px solid #e2e8f0; display:flex; flex-direction:column; gap:12px;">
-        <div style="display:flex; align-items:flex-start; gap:10px;">
-          <span style="font-size:18px; flex-shrink:0; line-height:1.4;">📊</span>
-          <div style="font-size:13.5px; color:#1e293b; line-height:1.55;">
-            <strong>전국 400여 개 4년제 대학 및 전문대의 수십만 건 실제 대입 합격선(입결) 전수 데이터 분석</strong>
-            <div style="font-size:12px; color:#64748b; margin-top:2px;">대교협 '어디가' 70% 컷 및 최신 수시·정시 입결 빅데이터를 바탕으로 합격 라인을 정밀 매칭합니다.</div>
-          </div>
-        </div>
-        <div style="display:flex; align-items:flex-start; gap:10px;">
-          <span style="font-size:18px; flex-shrink:0; line-height:1.4;">🧬</span>
-          <div style="font-size:13.5px; color:#1e293b; line-height:1.55;">
-            <strong>타고난 성향과 역량을 과학적으로 매핑하여, 내 아이에게 100% 딱 들어맞는 전공 학과와 직업을 오차 없이 정밀 도출합니다.</strong>
-            <div style="font-size:12px; color:#64748b; margin-top:2px;">심층 인지 기질 분석과 10년 뒤 미래 유망 직무 데이터를 결합해 평생의 천직을 명쾌하게 제시합니다.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="main-cta-box">
-      <a href="./index.html" class="cta-big-btn">
-        <span>🚀 10초 만에 무료 AI 진단 시작하기</span>
-      </a>
-      <p class="cta-subtext">🔒 학생 이름 수집 ZERO · 100% 개인정보 안심 보장</p>
-    </div>
-  </section>
-
-  <!-- 실시간 통계 바 -->
-  <div class="stats-bar">
-    <div class="stat-item">
-      <div class="stat-num">48,219명</div>
-      <div class="stat-label">누적 진단 학생</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">98.4%</div>
-      <div class="stat-label">학부모 만족도</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">412개</div>
-      <div class="stat-label">전국 대학 입결 연동</div>
-    </div>
-  </div>
-
-  <!-- [중·고·취업 3대 집중 설계 & 대학 입결 검색 쇼케이스] -->
-  <div class="section-wrap" style="padding-top:36px; padding-bottom:24px;">
-    <div class="sec-badge">TARGET SPECIALIZATION</div>
-    <h2 class="sec-title">초등학생을 배제하고<br>[중·고·취업] 3단계에만 모든 기술을 집중한 이유</h2>
-    <p class="sec-desc">
-      유아·초등 시절의 막연한 설문은 실제 대입과 진로에 아무런 실효성이 없습니다.<br>
-      알라딘 맘콕은 <strong>진로와 입시의 결정적 골든타임인 3대 생애주기</strong>에만 AI 데이터 모델링을 집중하여 진단의 오차율을 0%에 가깝게 혁신했습니다.
-    </p>
-
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:14px; margin-top:20px;">
-      <!-- 중학생 -->
-      <div style="background:#fff; border:1.5px solid #e2e8f0; border-top:4px solid #3b82f6; border-radius:14px; padding:20px; box-shadow:0 4px 12px rgba(0,0,0,0.03);">
-        <div style="font-size:12px; font-weight:800; color:#2563eb; margin-bottom:4px;">STEP 1 · 중학생</div>
-        <h4 style="font-size:16px; font-weight:900; color:#0f172a; margin-bottom:8px;">고교학점제 & 계열 선택</h4>
-        <p style="font-size:13px; color:#475569; line-height:1.6;">
-          • 선천적 인지 기질과 학습 몰입도 진단<br>
-          • 일반고 vs 특목·자사고 적합도 판별<br>
-          • 2028 대입 개정안 맞춤 필수 이수과목 안내
-        </p>
-      </div>
-
-      <!-- 고등학생 -->
-      <div style="background:#fff; border:1.5px solid #e2e8f0; border-top:4px solid #ff4757; border-radius:14px; padding:20px; box-shadow:0 4px 12px rgba(255,71,87,0.06);">
-        <div style="font-size:12px; font-weight:800; color:#ff4757; margin-bottom:4px;">STEP 2 · 고등학생</div>
-        <h4 style="font-size:16px; font-weight:900; color:#0f172a; margin-bottom:8px;">목표 대학 입결 & 전공 매칭</h4>
-        <p style="font-size:13px; color:#475569; line-height:1.6;">
-          • 전국 400여 개 대학 실시간 70% 컷 연동<br>
-          • 수시/정시 안정·적정·소신 라인 정밀 도출<br>
-          • 학종 전공 적합성 1:1 맞춤 대입 로드맵
-        </p>
-      </div>
-
-      <!-- 취업준비생 -->
-      <div style="background:#fff; border:1.5px solid #e2e8f0; border-top:4px solid #10b981; border-radius:14px; padding:20px; box-shadow:0 4px 12px rgba(16,185,129,0.06);">
-        <div style="font-size:12px; font-weight:800; color:#059669; margin-bottom:4px;">STEP 3 · 취업준비생(청년)</div>
-        <h4 style="font-size:16px; font-weight:900; color:#0f172a; margin-bottom:8px;">미래 유망 직무 & 평생 천직</h4>
-        <p style="font-size:13px; color:#475569; line-height:1.6;">
-          • AI 시대 대체 불가 직업군 1:1 큐레이션<br>
-          • 타고난 강점과 산업계 채용 트렌드 매핑<br>
-          • 방황 없는 취업 전략 및 커리어 포트폴리오
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <!-- [전국 대학 및 학과 입결 검색 바로가기 배너] -->
-  <div class="section-wrap" style="padding-top:10px; padding-bottom:30px;">
-    <div style="background:linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color:#fff; border-radius:24px; padding:32px 24px; box-shadow:0 12px 32px rgba(15,23,42,0.18);">
-      <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.12); color:#38bdf8; font-size:12px; font-weight:800; padding:4px 12px; border-radius:20px; margin-bottom:12px;">
-        🏛️ 메인화면 전국 대학 빅데이터 연동
-      </div>
-      <h2 style="font-size:22px; font-weight:900; line-height:1.4; margin-bottom:10px;">
-        전국 400여 개 대학의<br>
-        <span style="color:#38bdf8;">실제 입결(대교협 70% 컷)</span>을 1초 만에 무료 검색!
-      </h2>
-      <p style="font-size:14px; color:#94a3b8; line-height:1.6; margin-bottom:20px;">
-        서울대·연고대부터 의약학, 지역거점국립대, 전문대까지!<br>
-        수시 내신 합격선, 정시 백분위, 연간 등록금, 전공 학과별 취업 경쟁력 전수 데이터를 지금 바로 확인하세요.
-      </p>
-
-      <!-- 검색창 미니 바 -->
-      <div style="background:#ffffff; border-radius:14px; padding:8px 12px; display:flex; align-items:center; gap:8px; box-shadow:0 4px 14px rgba(0,0,0,0.25);">
-        <span style="font-size:18px;">🔍</span>
-        <input type="text" id="landingUnivInput" placeholder="대학교 이름을 입력하세요 (예: 서울대, 고려대, 전남대)" style="flex:1; border:none; outline:none; font-size:14.5px; font-weight:600; color:#0f172a; padding:6px 4px;" onkeydown="if(event.key==='Enter') goToUnivSearch()">
-        <button type="button" onclick="goToUnivSearch()" style="background:#ff4757; color:#fff; border:none; padding:10px 18px; border-radius:10px; font-weight:800; font-size:13.5px; cursor:pointer; white-space:nowrap;">
-          입결 검색 ➔
-        </button>
-      </div>
-
-      <!-- 추천 검색어 -->
-      <div style="margin-top:14px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
-        <span style="font-size:12px; color:#94a3b8; font-weight:700;">빠른 검색:</span>
-        <a href="./momkok-search.html?q=서울대학교" style="background:rgba(255,255,255,0.08); color:#e2e8f0; font-size:12px; padding:4px 10px; border-radius:6px; text-decoration:none;">#서울대</a>
-        <a href="./momkok-search.html?q=연세대학교" style="background:rgba(255,255,255,0.08); color:#e2e8f0; font-size:12px; padding:4px 10px; border-radius:6px; text-decoration:none;">#연세대</a>
-        <a href="./momkok-search.html?q=고려대학교" style="background:rgba(255,255,255,0.08); color:#e2e8f0; font-size:12px; padding:4px 10px; border-radius:6px; text-decoration:none;">#고려대</a>
-        <a href="./momkok-search.html?q=성균관대학교" style="background:rgba(255,255,255,0.08); color:#e2e8f0; font-size:12px; padding:4px 10px; border-radius:6px; text-decoration:none;">#성균관대</a>
-        <a href="./momkok-search.html?q=의예과" style="background:rgba(255,255,255,0.12); color:#38bdf8; font-size:12px; padding:4px 10px; border-radius:6px; text-decoration:none; font-weight:800;">#의약학</a>
-        <a href="./momkok-search.html?q=전남대학교" style="background:rgba(255,255,255,0.08); color:#e2e8f0; font-size:12px; padding:4px 10px; border-radius:6px; text-decoration:none;">#전남대</a>
-      </div>
-      <script>
-        function goToUnivSearch() {
-          var val = document.getElementById('landingUnivInput').value.trim();
-          if (val) {
-            window.location.href = './momkok-search.html?q=' + encodeURIComponent(val);
-          } else {
-            window.location.href = './momkok-search.html';
-          }
-        }
-      </script>
-    </div>
-  </div>
-
-  <!-- [대한민국 1,000대 대기업·공기업·중견기업 취업/연봉 검색 바로가기 배너] -->
-  <div class="section-wrap" style="padding-top:6px; padding-bottom:30px;">
-    <div style="background:linear-gradient(135deg, #064e3b 0%, #022c22 100%); color:#fff; border-radius:24px; padding:32px 24px; box-shadow:0 12px 32px rgba(6,78,59,0.22); border:1.5px solid #059669;">
-      <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.15); color:#6ee7b7; font-size:12px; font-weight:800; padding:4px 12px; border-radius:20px; margin-bottom:12px;">
-        💼 청년 1,000대 일자리 빅데이터 연동
-      </div>
-      <h2 style="font-size:22px; font-weight:900; line-height:1.4; margin-bottom:10px;">
-        대한민국 1,000대 대기업 · 공기업 · 알짜 중견기업<br>
-        <span style="color:#6ee7b7;">초봉 · 평균연봉 · 합격스펙</span> 1초 무료 검색!
-      </h2>
-      <p style="font-size:14px; color:#a7f3d0; line-height:1.6; margin-bottom:20px;">
-        삼성·현대차·한전뿐 아니라 연봉 4,500만 원 이상 우량 중견기업까지 전수 수록!<br>
-        금감원 DART & 정부 알리오 공식 공시 기준 초봉, 채용 직무, 합격자 스펙을 지금 바로 확인하세요.
-      </p>
-
-      <!-- 검색창 미니 바 -->
-      <div style="background:#ffffff; border-radius:14px; padding:8px 12px; display:flex; align-items:center; gap:8px; box-shadow:0 4px 14px rgba(0,0,0,0.25);">
-        <span style="font-size:18px;">🔍</span>
-        <input type="text" id="landingJobInput" placeholder="기업명 또는 직무를 입력하세요 (예: 삼성전자, 한국전력, 오뚜기, 반도체)" style="flex:1; border:none; outline:none; font-size:14.5px; font-weight:600; color:#0f172a; padding:6px 4px;" onkeydown="if(event.key==='Enter') goToJobSearch()">
-        <button type="button" onclick="goToJobSearch()" style="background:#059669; color:#fff; border:none; padding:10px 18px; border-radius:10px; font-weight:800; font-size:13.5px; cursor:pointer; white-space:nowrap;">
-          연봉·스펙 검색 ➔
-        </button>
-      </div>
-
-      <!-- 추천 검색어 -->
-      <div style="margin-top:14px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
-        <span style="font-size:12px; color:#6ee7b7; font-weight:700;">빠른 검색:</span>
-        <a href="./momkok-job-search.html?q=삼성전자" style="background:rgba(255,255,255,0.1); color:#e2e8f0; font-size:12px; padding:4px 10px; border-radius:6px; text-decoration:none;">#삼성전자</a>
-        <a href="./momkok-job-search.html?q=현대자동차" style="background:rgba(255,255,255,0.1); color:#e2e8f0; font-size:12px; padding:4px 10px; border-radius:6px; text-decoration:none;">#현대차</a>
-        <a href="./momkok-job-search.html?q=한국전력" style="background:rgba(255,255,255,0.1); color:#e2e8f0; font-size:12px; padding:4px 10px; border-radius:6px; text-decoration:none;">#한국전력(한전)</a>
-        <a href="./momkok-job-search.html?q=네이버" style="background:rgba(255,255,255,0.1); color:#e2e8f0; font-size:12px; padding:4px 10px; border-radius:6px; text-decoration:none;">#네이버</a>
-        <a href="./momkok-job-search.html?q=오뚜기" style="background:rgba(255,255,255,0.15); color:#6ee7b7; font-size:12px; padding:4px 10px; border-radius:6px; text-decoration:none; font-weight:800;">#알짜중견 오뚜기</a>
-        <a href="./momkok-job-search.html?q=KB국민은행" style="background:rgba(255,255,255,0.1); color:#e2e8f0; font-size:12px; padding:4px 10px; border-radius:6px; text-decoration:none;">#국민은행</a>
-      </div>
-      <script>
-        function goToJobSearch() {
-          var val = document.getElementById('landingJobInput').value.trim();
-          if (val) {
-            window.location.href = './momkok-job-search.html?q=' + encodeURIComponent(val);
-          } else {
-            window.location.href = './momkok-job-search.html';
-          }
-        }
-      </script>
-    </div>
-  </div>
-
-  <!-- 핵심 기능 섹션 -->
-  <div class="section-wrap">
-    <div class="sec-badge">WHY MOMKOK</div>
-    <h2 class="sec-title">학교 적성검사로는 절대 알 수 없는<br>맘콕만의 족집게 솔루션</h2>
-    <p class="sec-desc">단순한 MBTI나 설문지가 아닙니다. 인지 기질 분석과 교육부 공시 대입 데이터가 결합된 정밀 보고서를 제공합니다.</p>
-
-    <div class="feature-grid">
-      <div class="feat-card">
-        <div class="feat-icon">🧬</div>
-        <div class="feat-body">
-          <h4>학습 기질 & 인지 집중도 정밀 분석</h4>
-          <p>아이가 어떤 환경에서 몰입하는지, 시험 스트레스를 받을 때 뇌가 어떻게 반응하는지 과학적 인지 기질을 진단합니다.</p>
-        </div>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">🎯</div>
-        <div class="feat-body">
-          <h4>10년 뒤 미래 유망 학과 1:1 매칭</h4>
-          <p>단순 인기 학과가 아니라, AI 시대에 대체되지 않는 유망 직업군과 아이의 적성이 정확히 교차하는 전공 3가지를 도출합니다.</p>
-        </div>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">🏛️</div>
-        <div class="feat-body">
-          <h4>전국 4년제 대학 입결 기반 대입 로드맵</h4>
-          <p>대교협 '어디가' 70% 컷 실시간 데이터를 바탕으로 목표 대학 라인(안정/적정/소신)과 합격 전략을 설계해 드립니다.</p>
-        </div>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">📚</div>
-        <div class="feat-body">
-          <h4>2028 대입 및 고교학점제 선택과목 가이드</h4>
-          <p>목표 학과에 진학하기 위해 고교 3년 동안 필수로 이수해야 할 일반선택/진로선택 과목을 완벽 큐레이션합니다.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 비교표 섹션 -->
-  <div class="section-wrap" style="background: #f8fafc; border-radius: 24px; padding: 36px 20px;">
-    <div class="sec-badge">COMPARE</div>
-    <h2 class="sec-title">오프라인 컨설팅 vs 알라딘 맘콕(Aladdin MomKok)</h2>
-    <div class="compare-card">
-      <div class="compare-header">
-        <span>비교 항목</span>
-        <span>오프라인 사설 컨설팅</span>
-        <span style="color:#ff6b81;">맘콕 (MomKok)</span>
-      </div>
-      <div class="compare-row">
-        <span>진단 비용</span>
-        <span>50 ~ 100만 원 (1회)</span>
-        <strong>무료 ~ 커피 몇 잔 가격</strong>
-      </div>
-      <div class="compare-row">
-        <span>소요 시간</span>
-        <span>예약 대기 1~2개월</span>
-        <strong>스마트폰으로 10분 즉시 완료</strong>
-      </div>
-      <div class="compare-row">
-        <span>분석 기준</span>
-        <span>상담사 주관적 판단</span>
-        <strong>전국 대학 공시 빅데이터 AI</strong>
-      </div>
-      <div class="compare-row">
-        <span>결과물</span>
-        <span>구두 상담 위주</span>
-        <strong>15~35p 모바일 정밀 리포트</strong>
-      </div>
-    </div>
-  </div>
-
-  <!-- 실제 학부모 후기 -->
-  <div class="section-wrap">
-    <div class="sec-badge">REAL REVIEWS</div>
-    <h2 class="sec-title">맘카페 학부모님들의 생생한 후기</h2>
-    
-    <div class="review-card">
-      <div class="review-meta">
-        <span class="review-author">중3 학부모 이OO님 (경기 수원)</span>
-        <span class="review-stars">★★★★★</span>
-      </div>
-      <p class="review-quote">"매달 학원비만 100 넘게 나가면서도 아이가 하고 싶은 게 없다고 해서 답답했는데, 맘콕 리포트 보고 아이 기질에 딱 맞는 학과랑 목표 대학을 잡았습니다. 애가 자기 분석서 보더니 스스로 공부 계획을 세우네요. 진짜 돈 굳었습니다!"</p>
-    </div>
-
-    <div class="review-card">
-      <div class="review-meta">
-        <span class="review-author">고1 학부모 박OO님 (서울 서초)</span>
-        <span class="review-stars">★★★★★</span>
-      </div>
-      <p class="review-quote">"고교학점제 선택과목 때문에 멘붕이었는데, 목표 학과에 맞춘 고교 3년 과목 로드맵을 한눈에 표로 정리해 줘서 입시 안개가 싹 걷혔습니다. 학교 진로 상담보다 10배는 실질적입니다."</p>
-    </div>
-  </div>
-
-  <!-- 푸터 -->
-  <footer class="landing-footer">
-    <div class="footer-links">
-      <a href="./index.html">무료 진단하기</a>
-      <a href="./momkok-search.html">전국 대학·학과 검색</a>
-      <a href="./report.html">리포트 열람</a>
-    </div>
-    <p>맘콕 (MomKok) · 대한민국 No.1 AI 입시·진로 정밀 매칭 플랫폼</p>
-    <p>공식 도메인: https://www.momkok.co.kr | Copyright © MomKok. All Rights Reserved.</p>
-  </footer>
-
-  <!-- 하단 고정 액션바 -->
-  <div class="sticky-bottom-bar">
-    <a href="./momkok-search.html" class="search-sub-btn">🔍 대학 검색</a>
-    <a href="./index.html" class="action-main-btn">🎯 무료 AI 진단 시작하기</a>
-  </div>
-
-  <div style="height: 60px;"></div>
-</body>
-</html>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>알라딘 맘콕 (Aladdin MomKok) - 대한민국 No.1 AI 입시·진로 족집게 솔루션</title>
+  <meta name="description" content="우리 아이 타고난 천직과 10년 뒤 미래 진로를 족집게처럼 찾아주는 AI 입시·진로 정밀 매칭 플랫폼 알라딘 맘콕(Aladdin MomKok). 초·중·고 학년별 맞춤 대학·학과 로드맵 무료 진단!">
+  <meta name="keywords" content="알라딘 맘콕, 알라딘맘콕, 맘콕, aladdin momkok, momkok, 입시컨설팅, 진로적성검사, AI진로진단, 고교학점제, 대학입결, 학과추천, 자녀진로상담, 대입로드맵">
+  
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.momkok.co.kr/momkok-landing.html">
+  <meta property="og:title" content="알라딘 맘콕 (Aladdin MomKok) - 우리 아이 타고난 천직과 10년 뒤 진로">
+  <meta property="og:description" content="고액 컨설팅 대신 AI 족집게 진단! 전국 대학 입결 빅데이터 기반 초·중·고 맞춤 진로·학과 정밀 매칭">
+  <meta property="og:image" content="https://www.momkok.co.kr/manifest.json">
+
+  <meta name="naver-site-verification" content="9867fb6697cecf67940ff28242a2755d3430b75d" />
+  <meta name="google-site-verification" content="google01007955e0e47517.html" />
+  <link rel="canonical" href="https://www.momkok.co.kr/momkok-landing.html" />
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800;900&display=swap">
+  <style>
+    :root {
+      --primary: #ff4757;
+      --primary-dark: #ee5253;
+      --primary-light: #fff0f1;
+      --navy: #1e293b;
+      --slate: #475569;
+      --gray-bg: #f8fafc;
+      --border: #e2e8f0;
+      --gold: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', -apple-system, sans-serif; }
+    body { background: #ffffff; color: var(--navy); line-height: 1.6; word-break: keep-all; }
+    
+    /* GNB */
+    .landing-header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .brand-logo {
+      font-size: 20px; font-weight: 900; color: var(--primary);
+      display: flex; align-items: center; gap: 6px; text-decoration: none;
+    }
+    .brand-badge {
+      background: var(--primary-light); color: var(--primary);
+      font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px;
+    }
+    .header-cta-btn {
+      background: var(--primary); color: #fff; text-decoration: none;
+      font-size: 13px; font-weight: 700; padding: 8px 16px; border-radius: 20px;
+      transition: all 0.2s;
+    }
+    .header-cta-btn:hover { background: var(--primary-dark); transform: scale(1.02); }
+
+    /* HERO */
+    .hero-section {
+      padding: 48px 20px 36px; text-align: center;
+      background: linear-gradient(180deg, #fff5f5 0%, #ffffff 100%);
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #fff; border: 1px solid #fecdd3;
+      color: var(--primary); font-size: 12px; font-weight: 800;
+      padding: 6px 14px; border-radius: 30px; margin-bottom: 18px;
+      box-shadow: 0 2px 8px rgba(255, 71, 87, 0.08);
+    }
+    .hero-title {
+      font-size: 28px; font-weight: 900; line-height: 1.35;
+      color: #0f172a; margin-bottom: 14px; letter-spacing: -0.5px;
+    }
+    .hero-title span { color: var(--primary); }
+    .hero-desc {
+      font-size: 15px; color: var(--slate); max-width: 520px;
+      margin: 0 auto 28px; line-height: 1.6;
+    }
+    .main-cta-box { max-width: 440px; margin: 0 auto; }
+    .cta-big-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; background: linear-gradient(135deg, #ff4757 0%, #ee5253 100%);
+      color: #fff; text-decoration: none; font-size: 18px; font-weight: 800;
+      padding: 18px 24px; border-radius: 16px;
+      box-shadow: 0 10px 24px rgba(255, 71, 87, 0.35);
+      transition: all 0.2s;
+    }
+    .cta-big-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(255, 71, 87, 0.45); }
+    .cta-subtext { font-size: 12px; color: #94a3b8; margin-top: 10px; font-weight: 500; }
+
+    /* STATS BANNER */
+    .stats-bar {
+      display: flex; justify-content: center; gap: 24px;
+      background: #f8fafc; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;
+      padding: 16px 20px;
+    }
+    .stat-item { text-align: center; }
+    .stat-num { font-size: 20px; font-weight: 900; color: var(--navy); }
+    .stat-label { font-size: 11px; color: var(--slate); font-weight: 600; margin-top: 2px; }
+
+    /* CONTENT SECTIONS */
+    .section-wrap { max-width: 680px; margin: 0 auto; padding: 48px 20px; }
+    .sec-badge { font-size: 12px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 8px; }
+    .sec-title { font-size: 22px; font-weight: 900; color: #0f172a; margin-bottom: 12px; line-height: 1.4; }
+    .sec-desc { font-size: 14px; color: var(--slate); margin-bottom: 24px; line-height: 1.6; }
+
+    /* FEATURE CARDS */
+    .feature-grid { display: grid; gap: 16px; }
+    .feat-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 16px;
+      padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      display: flex; gap: 16px; align-items: flex-start;
+    }
+    .feat-icon {
+      width: 44px; height: 44px; border-radius: 12px; background: var(--primary-light);
+      display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+    }
+    .feat-body h4 { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+    .feat-body p { font-size: 13px; color: var(--slate); line-height: 1.5; }
+
+    /* COMPARISON TABLE */
+    .compare-card {
+      background: #fff; border: 1px solid #cbd5e1; border-radius: 16px;
+      overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+    }
+    .compare-header {
+      background: var(--navy); color: #fff; padding: 14px 20px;
+      display: flex; justify-content: space-between; font-weight: 800; font-size: 14px;
+    }
+    .compare-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 20px; border-bottom: 1px solid var(--border); font-size: 13px;
+    }
+    .compare-row:last-child { border-bottom: none; }
+    .compare-row strong { color: var(--primary); font-weight: 800; }
+
+    /* REVIEW CARDS */
+    .review-card {
+      background: #fdf2f4; border: 1px solid #fecdd3; border-radius: 16px;
+      padding: 20px; margin-bottom: 14px;
+    }
+    .review-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .review-author { font-size: 13px; font-weight: 800; color: #9f1239; }
+    .review-stars { color: var(--gold); font-size: 14px; }
+    .review-quote { font-size: 13px; color: #4c0519; line-height: 1.6; }
+
+    /* FOOTER */
+    .landing-footer {
+      background: #0f172a; color: #94a3b8; padding: 36px 20px;
+      text-align: center; font-size: 12px; line-height: 1.8;
+    }
+    .footer-links { margin-bottom: 14px; display: flex; justify-content: center; gap: 16px; }
+    .footer-links a { color: #cbd5e1; text-decoration: none; font-weight: 600; }
+
+    /* STICKY BOTTOM BAR */
+    .sticky-bottom-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 99;
+      background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(8px);
+      border-top: 1px solid var(--border); padding: 12px 20px;
+      display: flex; gap: 12px; align-items: center; max-width: 680px; margin: 0 auto;
+    }
+    .search-sub-btn {
+      background: #f1f5f9; color: var(--navy); border: 1px solid #cbd5e1;
+      padding: 14px 18px; border-radius: 12px; font-weight: 700; font-size: 14px;
+      text-decoration: none; white-space: nowrap;
+    }
+    .action-main-btn {
+      flex: 1; background: var(--primary); color: #fff;
+      padding: 14px; border-radius: 12px; font-weight: 800; font-size: 15px;
+      text-align: center; text-decoration: none;
+      box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 상단 네비게이션 -->
+  <header class="landing-header">
+    <a href="./index.html" class="brand-logo">
+      <span>🪔 알라딘 맘콕</span>
+      <span class="brand-badge">AI 입시·진로</span>
+    </a>
+    <a href="./momkok-search.html" class="header-cta-btn">🔍 대학·학과 검색</a>
+  </header>
+
+  <!-- 히어로 섹션 -->
+  <section class="hero-section">
+    <div class="hero-tag">✨ 대한민국 No.1 AI 입시·진로 족집게 플랫폼</div>
+    <h1 class="hero-title">
+      우리 아이 타고난 천직과<br>
+      <span>10년 뒤 진로</span>, 맘콕!
+    </h1>
+    <p class="hero-desc">
+      비싼 대치동 컨설팅(회당 50~100만 원) 안 가셔도 됩니다.<br>
+      전국 대학 입결 빅데이터와 딥러닝 기질 분석으로<br>
+      우리 아이에게 딱 맞는 학과와 대입 로드맵을 찾아드립니다.
+    </p>
+
+    <div class="main-cta-box">
+      <a href="./index.html" class="cta-big-btn">
+        <span>🚀 10초 만에 무료 AI 진단 시작하기</span>
+      </a>
+      <p class="cta-subtext">🔒 학생 이름 수집 ZERO · 100% 개인정보 안심 보장</p>
+    </div>
+  </section>
+
+  <!-- 실시간 통계 바 -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-num">48,219명</div>
+      <div class="stat-label">누적 진단 학생</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">98.4%</div>
+      <div class="stat-label">학부모 만족도</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">412개</div>
+      <div class="stat-label">전국 대학 입결 연동</div>
+    </div>
+  </div>
+
+  <!-- 핵심 기능 섹션 -->
+  <div class="section-wrap">
+    <div class="sec-badge">WHY MOMKOK</div>
+    <h2 class="sec-title">학교 적성검사로는 절대 알 수 없는<br>맘콕만의 족집게 솔루션</h2>
+    <p class="sec-desc">단순한 MBTI나 설문지가 아닙니다. 인지 기질 분석과 교육부 공시 대입 데이터가 결합된 정밀 보고서를 제공합니다.</p>
+
+    <div class="feature-grid">
+      <div class="feat-card">
+        <div class="feat-icon">🧬</div>
+        <div class="feat-body">
+          <h4>학습 기질 & 인지 집중도 정밀 분석</h4>
+          <p>아이가 어떤 환경에서 몰입하는지, 시험 스트레스를 받을 때 뇌가 어떻게 반응하는지 과학적 인지 기질을 진단합니다.</p>
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🎯</div>
+        <div class="feat-body">
+          <h4>10년 뒤 미래 유망 학과 1:1 매칭</h4>
+          <p>단순 인기 학과가 아니라, AI 시대에 대체되지 않는 유망 직업군과 아이의 적성이 정확히 교차하는 전공 3가지를 도출합니다.</p>
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🏛️</div>
+        <div class="feat-body">
+          <h4>전국 4년제 대학 입결 기반 대입 로드맵</h4>
+          <p>대교협 '어디가' 70% 컷 실시간 데이터를 바탕으로 목표 대학 라인(안정/적정/소신)과 합격 전략을 설계해 드립니다.</p>
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📚</div>
+        <div class="feat-body">
+          <h4>2028 대입 및 고교학점제 선택과목 가이드</h4>
+          <p>목표 학과에 진학하기 위해 고교 3년 동안 필수로 이수해야 할 일반선택/진로선택 과목을 완벽 큐레이션합니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 비교표 섹션 -->
+  <div class="section-wrap" style="background: #f8fafc; border-radius: 24px; padding: 36px 20px;">
+    <div class="sec-badge">COMPARE</div>
+    <h2 class="sec-title">오프라인 컨설팅 vs 알라딘 맘콕(Aladdin MomKok)</h2>
+    <div class="compare-card">
+      <div class="compare-header">
+        <span>비교 항목</span>
+        <span>오프라인 사설 컨설팅</span>
+        <span style="color:#ff6b81;">맘콕 (MomKok)</span>
+      </div>
+      <div class="compare-row">
+        <span>진단 비용</span>
+        <span>50 ~ 100만 원 (1회)</span>
+        <strong>무료 ~ 커피 몇 잔 가격</strong>
+      </div>
+      <div class="compare-row">
+        <span>소요 시간</span>
+        <span>예약 대기 1~2개월</span>
+        <strong>스마트폰으로 10분 즉시 완료</strong>
+      </div>
+      <div class="compare-row">
+        <span>분석 기준</span>
+        <span>상담사 주관적 판단</span>
+        <strong>전국 대학 공시 빅데이터 AI</strong>
+      </div>
+      <div class="compare-row">
+        <span>결과물</span>
+        <span>구두 상담 위주</span>
+        <strong>15~35p 모바일 정밀 리포트</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- 실제 학부모 후기 -->
+  <div class="section-wrap">
+    <div class="sec-badge">REAL REVIEWS</div>
+    <h2 class="sec-title">맘카페 학부모님들의 생생한 후기</h2>
+    
+    <div class="review-card">
+      <div class="review-meta">
+        <span class="review-author">중3 학부모 이OO님 (경기 수원)</span>
+        <span class="review-stars">★★★★★</span>
+      </div>
+      <p class="review-quote">"매달 학원비만 100 넘게 나가면서도 아이가 하고 싶은 게 없다고 해서 답답했는데, 맘콕 리포트 보고 아이 기질에 딱 맞는 학과랑 목표 대학을 잡았습니다. 애가 자기 분석서 보더니 스스로 공부 계획을 세우네요. 진짜 돈 굳었습니다!"</p>
+    </div>
+
+    <div class="review-card">
+      <div class="review-meta">
+        <span class="review-author">고1 학부모 박OO님 (서울 서초)</span>
+        <span class="review-stars">★★★★★</span>
+      </div>
+      <p class="review-quote">"고교학점제 선택과목 때문에 멘붕이었는데, 목표 학과에 맞춘 고교 3년 과목 로드맵을 한눈에 표로 정리해 줘서 입시 안개가 싹 걷혔습니다. 학교 진로 상담보다 10배는 실질적입니다."</p>
+    </div>
+  </div>
+
+  <!-- 푸터 -->
+  <footer class="landing-footer">
+    <div class="footer-links">
+      <a href="./index.html">무료 진단하기</a>
+      <a href="./momkok-search.html">전국 대학·학과 검색</a>
+      <a href="./report.html">리포트 열람</a>
+    </div>
+    <p>맘콕 (MomKok) · 대한민국 No.1 AI 입시·진로 정밀 매칭 플랫폼</p>
+    <p>공식 도메인: https://www.momkok.co.kr | Copyright © MomKok. All Rights Reserved.</p>
+  </footer>
+
+  <!-- 하단 고정 액션바 -->
+  <div class="sticky-bottom-bar">
+    <a href="./momkok-search.html" class="search-sub-btn">🔍 대학 검색</a>
+    <a href="./index.html" class="action-main-btn">🎯 무료 AI 진단 시작하기</a>
+  </div>
+
+  <div style="height: 60px;"></div>
+</body>
+</html>
