@@ -3362,7 +3362,32 @@
     const isMaster = priceText.includes('99,000');
     const sampleCode = isMaster ? '99' + Math.floor(1000 + Math.random() * 9000) : '' + Math.floor(1000 + Math.random() * 9000);
 
-    closePayModal();
+    closePayModal();
+
+    // 대표님(010-2286-4150) 휴대폰으로 실시간 입금신청 알림 문자 발송
+    try {
+      const tierLabel = isMaster ? '심화 마스터팩 (35장)' : '기본형 정밀 (20장)';
+      const adminSmsContent = [
+        '[알라딘 맘콕 입금신청 알림]',
+        '학부모님의 유료 리포트 입금 신청이 접수되었습니다!',
+        '',
+        '• 입금자명: ' + name,
+        '• 연락처: ' + phone,
+        '• 신청상품: ' + tierLabel,
+        '• 결제금액: ' + priceText,
+        '• 발급코드: ' + sampleCode
+      ].join('\n');
+      fetch('https://www.wooriapt.app/api/send-sms', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone: '01022864150',
+          type: 'LMS',
+          subject: '[알라딘 맘콕 입금신청 알림]',
+          content: adminSmsContent
+        })
+      }).catch(function(e) { console.warn('Admin SMS error:', e); });
+    } catch (e) {}
 
     // 운영센터 테이블에 실시간 추가
     const table = document.getElementById('adminOrderTable');
