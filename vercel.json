@@ -18,12 +18,36 @@
       "destination": "/api/momkok-page?mode=univ&sido=:sido&univ=:univ"
     },
     {
+      "source": "/univ-major/:sido/:univ/:major",
+      "destination": "/api/momkok-page?mode=univ-major&sido=:sido&univ=:univ&major=:major"
+    },
+    {
+      "source": "/highschool-info/:sido/:school",
+      "destination": "/api/momkok-page?mode=highschool&sido=:sido&school=:school"
+    },
+    {
+      "source": "/major-info/:major",
+      "destination": "/api/momkok-page?mode=major&major=:major"
+    },
+    {
       "source": "/job-info/:category/:company",
       "destination": "/api/momkok-page?mode=job&category=:category&company=:company"
     },
     {
       "source": "/career-search/:region/:city/:place",
       "destination": "/api/momkok-page?mode=career&region=:region&city=:city&place=:place"
+    },
+    {
+      "source": "/sitemaps/core-univ-highschool.xml",
+      "destination": "/api/momkok-page?mode=sitemap&sub=core"
+    },
+    {
+      "source": "/sitemaps/univ-majors-:page.xml",
+      "destination": "/api/momkok-page?mode=sitemap&sub=majors&page=:page"
+    },
+    {
+      "source": "/dynamic-sitemap.xml",
+      "destination": "/api/momkok-page?mode=sitemap&sub=index"
     },
     {
       "source": "/api/send-sms",
