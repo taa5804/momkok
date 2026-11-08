@@ -60,10 +60,44 @@
   ],
   "functions": {
     "api/send-sms.js": {
-      "regions": ["icn1"]
+      "regions": [
+        "icn1"
+      ]
     },
     "api/momkok-page.js": {
-      "regions": ["icn1"]
+      "regions": [
+        "icn1"
+      ]
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "momkok.co.kr"
+        }
+      ],
+      "destination": "https://www.momkok.co.kr/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "momkok.co.kr"
+        }
+      ],
+      "destination": "https://www.momkok.co.kr/:path*",
+      "permanent": true
+    }
+  ],
+  "crons": [
+    {
+      "path": "/dynamic-sitemap.xml",
+      "schedule": "0 0 * * *"
+    }
+  ]
 }
