@@ -33,6 +33,7 @@
     /* [방법 1] 문자 링크 클릭 시 메인화면(질문지, 배너, 대학목록 등) 0.1초도 없이 100% 원천 차단 */
     html.direct-report-mode header,
     html.direct-report-mode .portal-nav,
+    html.direct-report-mode #aiTrustHeroBanner,
     html.direct-report-mode .stats-kpi-grid,
     html.direct-report-mode #accessCodeBanner,
     html.direct-report-mode .phone-simulator-frame,
@@ -636,7 +637,25 @@
 
 <main class="platform-container">
 
-  <section id="tab-service" class="tab-content active">
+  <section id="tab-service" class="tab-content active">
+    <!-- [시안 1] AI 엔지니어 & 빅데이터 분석 알고리즘 공식 신뢰 배너 -->
+    <div id="aiTrustHeroBanner" style="background:linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #1e3a8a 100%); color:#ffffff; border-radius:16px; padding:24px 28px; margin-bottom:18px; box-shadow:0 12px 28px -6px rgba(15,23,42,0.28); border:1.5px solid rgba(96,165,250,0.45); position:relative; overflow:hidden;">
+      <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(59,130,246,0.22); border:1px solid rgba(147,197,253,0.45); color:#93c5fd; font-size:12.5px; font-weight:800; padding:5px 14px; border-radius:999px; margin-bottom:12px; letter-spacing:-0.2px;">
+        🔬 수석 AI 엔지니어링 &amp; 대입 빅데이터 분석 알고리즘 공식 검증 시스템
+      </div>
+      <h1 style="font-size:22px; font-weight:900; line-height:1.4; color:#ffffff; margin:0 0 10px 0; letter-spacing:-0.4px; word-break:keep-all;">
+        &ldquo;대치동 100만 원 컨설팅의 직관을 넘어, <span style="color:#fbbf24;">AI 엔지니어의 빅데이터 정밀 알고리즘</span>으로 입시를 설계합니다.&rdquo;
+      </h1>
+      <p style="font-size:14px; line-height:1.65; color:#e2e8f0; margin:0 0 14px 0; font-weight:500; word-break:keep-all;">
+        알라딘 맘콕은 단순 설문이나 흥미 검사가 아닙니다. <strong style="color:#ffffff; font-weight:800;">전문 AI 엔지니어가 설계한 다차원 성향·역량 분석 알고리즘</strong>과 <strong style="color:#93c5fd; font-weight:800;">교육부·대교협(어디가) 전국 6,082개 중·고·대학교 입결 및 1,000대 기업 채용 빅데이터</strong>를 실시간 교차 연산하여, 오차 없는 1:1 고교 진학·전공·대입 합격 로드맵을 도출합니다.
+      </p>
+      <div style="display:flex; flex-wrap:wrap; gap:8px; padding-top:10px; border-top:1px solid rgba(148,163,184,0.22); font-size:12.5px; font-weight:700; color:#cbd5e1;">
+        <span style="background:rgba(255,255,255,0.08); padding:4px 11px; border-radius:8px; color:#f8fafc;">✔ 전문 AI 엔지니어 다변수 분석 알고리즘</span>
+        <span style="background:rgba(255,255,255,0.08); padding:4px 11px; border-radius:8px; color:#f8fafc;">✔ 전국 6,082개 중·고·대학 입결 빅데이터 연동</span>
+        <span style="background:rgba(255,255,255,0.08); padding:4px 11px; border-radius:8px; color:#f8fafc;">✔ 1,000대 대기업·공공기관 채용 빅데이터 매칭</span>
+      </div>
+    </div>
+
     <!-- 상단 KPI 지표 (과장 제거 및 팩트 최적화) -->
     <div class="stats-kpi-grid">
       <div class="kpi-card">
