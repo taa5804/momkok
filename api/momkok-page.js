@@ -317,6 +317,8 @@ p,li{line-height:1.7;color:#334155;font-size:14.5px;}
 
   ${CROSS_PLATFORM_FOOTER_HTML}
 </main>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>`);
 }
@@ -434,6 +436,8 @@ p,li{line-height:1.7;color:#334155;font-size:14.5px;}
 
   ${CROSS_PLATFORM_FOOTER_HTML}
 </main>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>`);
 }
@@ -536,6 +540,8 @@ p,li{line-height:1.7;color:#334155;font-size:14.5px;}
 
   ${CROSS_PLATFORM_FOOTER_HTML}
 </main>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>`);
 }
@@ -621,6 +627,8 @@ p,li{line-height:1.7;color:#334155;font-size:14.5px;}
 
   ${CROSS_PLATFORM_FOOTER_HTML}
 </main>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>`);
 }
@@ -715,6 +723,8 @@ p,li{line-height:1.7;color:#334155;font-size:14.5px;}
 
   ${CROSS_PLATFORM_FOOTER_HTML}
 </main>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>`);
 }
@@ -775,6 +785,8 @@ p{line-height:1.7;color:#334155;font-size:14.5px;}
   </section>
   ${CROSS_PLATFORM_FOOTER_HTML}
 </main>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>`);
 }
@@ -788,6 +800,23 @@ function handleDynamicSitemap(req, res) {
   const allJobs = loadJobs();
 
   if (sub === "index") {
+    try {
+      const pingPayload = JSON.stringify({
+        host: "www.momkok.co.kr",
+        key: "9867fb6697cecf67940ff28242a2755d",
+        keyLocation: "https://www.momkok.co.kr/9867fb6697cecf67940ff28242a2755d.txt",
+        urlList: [
+          "https://www.momkok.co.kr/",
+          "https://www.momkok.co.kr/momkok-landing.html",
+          "https://www.momkok.co.kr/momkok-search.html"
+        ]
+      });
+      fetch("https://searchadvisor.naver.com/indexnow", {
+        method: "POST",
+        headers: { "Content-Type": "application/json; charset=utf-8" },
+        body: pingPayload
+      }).catch(() => {});
+    } catch (_) {}
     const sitemaps = [
       `${SITE_ORIGIN}/sitemaps/core-univ-highschool.xml`,
       `${SITE_ORIGIN}/sitemaps/univ-majors-1.xml`,
