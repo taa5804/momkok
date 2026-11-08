@@ -1,4 +1,27 @@
 User-agent: *
 Allow: /
 
+User-agent: Yeti
+Allow: /highschool-info/
+Allow: /univ-major/
+Allow: /univ-info/
+Allow: /major-info/
+Allow: /job-info/
+Allow: /
+
+User-agent: Googlebot
+Allow: /highschool-info/
+Allow: /univ-major/
+Allow: /univ-info/
+Allow: /major-info/
+Allow: /job-info/
+Allow: /
+
+Sitemap: https://www.momkok.co.kr/dynamic-sitemap.xml
+Sitemap: https://www.momkok.co.kr/sitemaps/core-univ-highschool.xml
+Sitemap: https://www.momkok.co.kr/sitemaps/univ-majors-1.xml
+Sitemap: https://www.momkok.co.kr/sitemaps/univ-majors-2.xml
+Sitemap: https://www.momkok.co.kr/sitemaps/univ-majors-3.xml
+Sitemap: https://www.momkok.co.kr/sitemaps/univ-majors-4.xml
+Sitemap: https://www.momkok.co.kr/sitemaps/univ-majors-5.xml
 Sitemap: https://www.momkok.co.kr/sitemap.xml
