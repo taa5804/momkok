@@ -6526,9 +6526,25 @@
       </div>
 
 
+      <div style="margin-top:14px; margin-bottom:16px; background:#f0fdf4; border:1.5px solid #86efac; border-radius:10px; padding:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+          <div>
+            <div style="font-size:13.5px; font-weight:800; color:#166534;">🤖 KB국민은행 입금문자 자동승인 웹훅 & 불일치 알림 관제 (보안키 없음)</div>
+            <div style="font-size:11.5px; color:#15803d; margin-top:2px;">
+              • 안드로이드 문자 자동전달 앱 웹훅 URL: <code style="background:#dcfce7; padding:2px 6px; border-radius:4px; font-weight:800;">https://www.momkok.co.kr/api/bank-webhook</code>
+              <button type="button" onclick="navigator.clipboard.writeText('https://www.momkok.co.kr/api/bank-webhook'); alert('웹훅 주소가 복사되었습니다.');" style="background:#16a34a; color:#fff; border:none; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; margin-left:4px;">주소복사</button>
+              <br>• <strong>입금자명+금액 일치 시:</strong> 1초 자동 승인 & 학부모 휴대폰으로 알림번호·직통링크 자동 발송
+              <br>• <strong>입금자명 또는 금액 불일치 시:</strong> <strong style="color:#dc2626;">010-5110-5770</strong> 번호로 불일치 사유 및 [원클릭 승인 링크] 문자 즉시 발송
+            </div>
+          </div>
+          <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+            <input type="text" id="simBankSmsInput" placeholder="예: [KB]11/18 09:40 홍길동 입금 49,000" style="height:34px; border:1px solid #86efac; border-radius:6px; padding:0 10px; font-size:12px; width:240px;">
+            <button type="button" onclick="simulateIncomingBankSms()" style="background:#15803d; color:#fff; border:none; padding:0 12px; height:34px; border-radius:6px; font-size:12px; font-weight:800; cursor:pointer;">📩 입금문자 수신 테스트</button>
+            <button type="button" onclick="loadBankWebhookOrders()" style="background:#0f172a; color:#fff; border:none; padding:0 12px; height:34px; border-radius:6px; font-size:12px; font-weight:800; cursor:pointer;">🔄 장부 새로고침</button>
+          </div>
+        </div>
+      </div>
       <div style="margin-top:20px;">
-
-
         <table class="db-table">
 
 
@@ -9028,6 +9044,14 @@
 
 
 
+      <!-- 자동 입금확인 안내 배너 -->
+      <div style="background:#ecfdf5; border:1px solid #6ee7b7; border-radius:10px; padding:9px 12px; margin-bottom:12px; text-align:left; font-size:12px; color:#065f46; line-height:1.45;">
+        <strong>🤖 실시간 자동 입금승인 가동중:</strong> 아래에 <strong>실제 통장에 찍히는 입금자 성함</strong>을 정확히 입력해 주시면, 입금 즉시 시스템이 자동 확인하여 리포트를 열고 문자로 알림번호를 발송합니다.
+      </div>
+      <div id="autoDepositWaitBox" style="display:none; background:#eff6ff; border:1.5px solid #60a5fa; border-radius:10px; padding:12px; margin-bottom:12px; text-align:center;">
+        <div style="font-size:13px; font-weight:800; color:#1d4ed8; margin-bottom:4px;">⏳ KB국민은행 입금 내역 실시간 자동 감지 중...</div>
+        <div id="autoDepositWaitStatus" style="font-size:11.5px; color:#334155;">계좌 이체가 완료되면 이 창이 자동으로 닫히고 리포트가 즉시 열립니다.</div>
+      </div>
       <!-- 입금자 정보 입력 -->
 
 
@@ -10094,108 +10118,198 @@
 
 
 
-  function submitBankDepositRequest() {
+  let activeDepositPollTimer = null;
 
+  async function submitBankDepositRequest() {
+    const nameInput = document.getElementById('payDepositorName');
+    const phoneInput = document.getElementById('payDepositorPhone');
+    const name = nameInput ? nameInput.value.trim() : '';
+    const phone = phoneInput ? phoneInput.value.trim() : '';
 
-    const name = document.getElementById('payDepositorName').value.trim() || '학부모';
+    if (!name) {
+      alert('실제 통장에 찍히는 [입금자 성함]을 입력해 주세요.\n(입금자 성함과 금액이 일치해야 자동 승인됩니다.)');
+      if (nameInput) nameInput.focus();
+      return;
+    }
+    if (!phone || phone.replace(/\D/g, '').length < 10) {
+      alert('알림번호를 문자로 받으실 [휴대폰 번호]를 정확히 입력해 주세요.');
+      if (phoneInput) phoneInput.focus();
+      return;
+    }
 
-
-    const phone = document.getElementById('payDepositorPhone').value.trim() || '010-5804-9988';
-
-
-    const priceText = document.getElementById('payItemPrice').textContent;
-
-
+    const priceText = document.getElementById('payItemPrice').textContent || '49,000원';
     const isMaster = priceText.includes('99,000');
-
-
+    const amount = isMaster ? 99000 : 49000;
     const sampleCode = isMaster ? '99' + Math.floor(1000 + Math.random() * 9000) : '' + Math.floor(1000 + Math.random() * 9000);
 
+    const btn = document.getElementById('payConfirmBtn');
+    const origBtnText = btn ? btn.textContent : '';
+    if (btn) {
+      btn.textContent = '자동 입금확인 등록 중...';
+      btn.disabled = true;
+    }
 
+    const schoolEl = document.getElementById('schoolNameInput') || document.getElementById('regionSelect');
+    const gradeEl = document.getElementById('gradeSelect');
+    const schoolText = schoolEl ? schoolEl.value : '학교 미지정';
+    const gradeText = gradeEl ? gradeEl.value : '학년 미지정';
 
-
-
-    closePayModal();
-
-    // 대표님(010-2286-4150) 휴대폰으로 실시간 입금신청 알림 문자 발송
     try {
-      const tierLabel = isMaster ? '심화 마스터팩 (35장)' : '기본형 정밀 (20장)';
-      const adminSmsContent = [
-        '[알라딘 맘콕 입금신청 알림]',
-        '학부모님의 유료 리포트 입금 신청이 접수되었습니다!',
-        '',
-        '• 입금자명: ' + name,
-        '• 연락처: ' + phone,
-        '• 신청상품: ' + tierLabel,
-        '• 결제금액: ' + priceText,
-        '• 발급코드: ' + sampleCode
-      ].join('\n');
-      fetch('https://www.wooriapt.app/api/send-sms', {
+      const res = await fetch('/api/bank-webhook', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          phone: '01022864150',
-          type: 'LMS',
-          subject: '[알라딘 맘콕 입금신청 알림]',
-          content: adminSmsContent
+          action: 'register',
+          name: name,
+          phone: phone,
+          tier: isMaster ? 'master' : 'basic',
+          amount: amount,
+          code: sampleCode,
+          school: schoolText,
+          grade: gradeText
         })
-      }).catch(function(e) { console.warn('Admin SMS error:', e); });
-    } catch (e) {}
+      });
+      const data = await res.json().catch(() => ({}));
 
+      if (btn) {
+        btn.textContent = origBtnText;
+        btn.disabled = false;
+      }
 
+      if (data && data.status === 'approved') {
+        closePayModal();
+        const targetTier = isMaster ? 'master' : 'basic';
+        unlockedTier = targetTier;
+        showSpecificTierReport(targetTier);
+        alert('🎉 [자동 입금 확인 완료!]\n\n이미 입금하신 내역(' + amount.toLocaleString() + '원)이 확인되어 즉시 승인되었습니다!\n휴대폰(' + phone + ')으로도 전용 알림번호[' + sampleCode + '] 문자가 발송되었습니다.');
+        loadBankWebhookOrders();
+        return;
+      }
 
+      const orderId = (data && data.order && data.order.id) ? data.order.id : '';
+      const waitBox = document.getElementById('autoDepositWaitBox');
+      const waitStatus = document.getElementById('autoDepositWaitStatus');
+      if (waitBox) waitBox.style.display = 'block';
+      if (waitStatus) {
+        waitStatus.innerHTML = '입금자명 <strong>[' + name + ']</strong> / 금액 <strong>[' + amount.toLocaleString() + '원]</strong> 대기 등록 완료!<br>KB국민은행 계좌로 이체하시는 즉시 자동으로 리포트가 열리고 문자가 발송됩니다.';
+      }
 
+      loadBankWebhookOrders();
+      startAutoDepositPolling(orderId, sampleCode, isMaster, name, phone, amount);
 
-    // 운영센터 테이블에 실시간 추가
-
-
-    const table = document.getElementById('adminOrderTable');
-
-
-    if (table) {
-
-
-      const tr = document.createElement('tr');
-
-
-      tr.innerHTML = '<td>#MK-' + Math.floor(1000 + Math.random() * 9000) + '</td>' +
-
-
-        '<td>광주광역시 북구 양산중학교</td>' +
-
-
-        '<td>중학교 2학년</td>' +
-
-
-        '<td><strong>' + (isMaster ? '심화 마스터팩 (35장)' : '기본형 정밀 (20장)') + '</strong></td>' +
-
-
-        '<td><span style="color:#2563eb; font-weight:800;">' + priceText + '</span></td>' +
-
-
-        '<td>' + phone + ' (' + name + ')</td>' +
-
-
-        '<td><span class="status-badge badge-paid">입금확인 (알림번호:' + sampleCode + ')</span></td>';
-
-
-      table.prepend(tr);
-
-
+      alert('✅ [자동 입금대기 등록 완료]\n\n• 입금계좌: KB국민은행 626402-01-239069 (예금주: 송해석)\n• 입금자명: ' + name + '\n• 입금금액: ' + amount.toLocaleString() + '원\n\n지금 위 계좌로 이체해 주시면, 입금 문자가 도착하는 즉시 자동 승인되어 휴대폰(' + phone + ')으로 알림번호 문자가 발송되고 화면의 리포트도 자동으로 열립니다!\n(만약 입금자명이나 금액이 다를 경우 담당자 010-5110-5770으로 즉시 확인 알림이 전송됩니다.)');
+    } catch (e) {
+      if (btn) {
+        btn.textContent = origBtnText;
+        btn.disabled = false;
+      }
+      alert('입금 신청 등록 중 일시적 오류가 발생했습니다: ' + e.message);
     }
-
-
-
-
-
-    alert('🎉 [입금 신청이 접수되었습니다!]\n\n• 입금 계좌: KB국민은행 626402-01-239069 송해석\n• 입금 금액: ' + priceText + '\n\n입금 확인 즉시 등록하신 휴대폰(' + phone + ')으로 알림번호가 발송됩니다.\n\n※ 테스트용 즉시 발급 알림번호: [' + sampleCode + ']\n화면 상단의 알림번호 입력란에 위 번호를 넣으시면 바로 리포트가 열립니다.');
-
-
   }
 
+  function startAutoDepositPolling(orderId, code, isMaster, name, phone, amount) {
+    if (activeDepositPollTimer) clearInterval(activeDepositPollTimer);
+    let checks = 0;
+    activeDepositPollTimer = setInterval(async function() {
+      checks++;
+      if (checks > 200) {
+        clearInterval(activeDepositPollTimer);
+        return;
+      }
+      try {
+        const q = orderId ? ('id=' + encodeURIComponent(orderId)) : ('code=' + encodeURIComponent(code));
+        const res = await fetch('/api/bank-webhook?action=status&' + q);
+        const data = await res.json().catch(() => ({}));
+        if (data && data.ok && data.status === 'approved') {
+          clearInterval(activeDepositPollTimer);
+          const waitBox = document.getElementById('autoDepositWaitBox');
+          if (waitBox) waitBox.style.display = 'none';
+          closePayModal();
+          const targetTier = isMaster ? 'master' : 'basic';
+          unlockedTier = targetTier;
+          showSpecificTierReport(targetTier);
+          loadBankWebhookOrders();
+          alert('🎉 [KB국민은행 실시간 입금 확인 및 자동승인 완료!]\n\n' + name + ' 학부모님의 입금(' + Number(amount).toLocaleString() + '원)이 확인되어 리포트가 즉시 열렸습니다!\n휴대폰(' + phone + ')으로도 알림번호[' + code + '] 및 직통 링크 문자가 발송되었습니다.');
+        }
+      } catch (e) {}
+    }, 3000);
+  }
 
+  async function loadBankWebhookOrders() {
+    const table = document.getElementById('adminOrderTable');
+    if (!table) return;
+    try {
+      const res = await fetch('/api/bank-webhook?action=list');
+      const data = await res.json().catch(() => ({}));
+      if (!data || !data.ok || !Array.isArray(data.orders) || data.orders.length === 0) return;
+      table.innerHTML = data.orders.slice(0, 30).map(function(o) {
+        const isPaid = o.status === 'approved';
+        const badgeHtml = isPaid
+          ? '<span class="status-badge badge-paid" style="background:#dcfce7;color:#166534;padding:4px 8px;border-radius:6px;font-weight:800;font-size:11.5px;">✅ 자동승인완료 (코드:' + o.code + ')</span>'
+          : '<span style="background:#fef3c7;color:#92400e;padding:4px 8px;border-radius:6px;font-weight:800;font-size:11.5px;">⏳ 입금대기 (코드:' + o.code + ')</span> ' +
+            '<button type="button" onclick="manualApproveOrder(\'' + o.id + '\')" style="background:#16a34a;color:#fff;border:none;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;margin-left:4px;">수동승인·문자발송</button>';
+        return '<tr>' +
+          '<td>#' + o.id + '</td>' +
+          '<td>' + (o.school || '-') + '</td>' +
+          '<td>' + (o.grade || '-') + '</td>' +
+          '<td><strong>' + (o.tierLabel || '') + '</strong></td>' +
+          '<td><span style="color:#2563eb;font-weight:800;">' + Number(o.amount || 0).toLocaleString() + '원</span></td>' +
+          '<td>' + (o.phone || '') + ' (' + (o.name || '') + ')</td>' +
+          '<td>' + badgeHtml + '</td>' +
+        '</tr>';
+      }).join('');
+    } catch (e) {}
+  }
 
+  async function manualApproveOrder(orderId) {
+    if (!confirm('해당 신청 건(' + orderId + ')을 승인하고 학부모님께 알림번호 문자를 발송하시겠습니까?')) return;
+    try {
+      const res = await fetch('/api/bank-webhook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'quick_approve', id: orderId })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (data && data.ok) {
+        alert('✅ 승인 완료 및 학부모 알림번호 문자 발송이 완료되었습니다.');
+        loadBankWebhookOrders();
+      } else {
+        alert('승인 실패: ' + (data.message || '오류'));
+      }
+    } catch (e) {
+      alert('오류: ' + e.message);
+    }
+  }
 
+  async function simulateIncomingBankSms() {
+    const inp = document.getElementById('simBankSmsInput');
+    const txt = inp ? inp.value.trim() : '';
+    if (!txt) {
+      alert('테스트할 은행 입금문자 내용을 입력해 주세요.\n예: [KB]11/18 09:40 홍길동 입금 49,000');
+      if (inp) inp.focus();
+      return;
+    }
+    try {
+      const res = await fetch('/api/bank-webhook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: txt })
+      });
+      const data = await res.json().catch(() => ({}));
+      loadBankWebhookOrders();
+      if (data.matched) {
+        alert('🎉 [자동 매칭 & 자동 승인 성공!]\n\n• 매칭 신청자: ' + data.order.name + ' (' + data.order.phone + ')\n• 입금금액: ' + Number(data.order.amount).toLocaleString() + '원\n• 발급 알림번호: ' + data.order.code + '\n\n학부모님 휴대폰으로 리포트 열람 문자가 즉시 발송되었습니다.');
+      } else {
+        alert('⚠️ [입금자명/금액 불일치 감지 -> 010-5110-5770 알림 발송 완료]\n\n• 사유: ' + (data.reason || '불일치') + '\n• 파싱된 입금자: ' + (data.parsed && data.parsed.depositor || '미상') + '\n• 파싱된 금액: ' + (data.parsed && data.parsed.amount ? Number(data.parsed.amount).toLocaleString() + '원' : '미상') + '\n\n010-5110-5770 번호로 불일치 사유와 [원클릭 승인 링크] 문자가 발송되었습니다.');
+      }
+    } catch (e) {
+      alert('웹훅 호출 오류: ' + e.message);
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', function() {
+    setTimeout(loadBankWebhookOrders, 800);
+  });
 
   // [문자 링크 클릭 시 메인화면 완전 스킵 & 20장/35장 리포트 직통 뷰어]
 
