@@ -2,6 +2,22 @@
   "cleanUrls": true,
   "rewrites": [
     {
+      "source": "/sitemaps/univ-real-majors.xml",
+      "destination": "/api/momkok-page?mode=sitemap&sub=real-majors"
+    },
+    {
+      "source": "/momkok-landing",
+      "destination": "/momkok-landing.html"
+    },
+    {
+      "source": "/momkok-search",
+      "destination": "/momkok-search.html"
+    },
+    {
+      "source": "/momkok-job-search",
+      "destination": "/momkok-job-search.html"
+    },
+    {
       "source": "/landing",
       "destination": "/momkok-landing.html"
     },
