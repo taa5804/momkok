@@ -190,22 +190,18 @@ function getUnivAdmissionTier(u) {
 }
 
 function handleUnivPage(req, res) {
-  const sido = String(req.query.sido || "서울").trim();
-  const univName = String(req.query.univ || "서울대학교").trim();
+  const sido = String(req.query.sido || "").trim();
+  const univName = String(req.query.univ || "").trim();
+  if (!univName) {
+    return res.status(404).send("존재하지 않는 대학교입니다.");
+  }
   const allUnivs = loadUnivs();
   const u =
     allUnivs.find((x) => x.name === univName) ||
-    allUnivs.find((x) => x.name && x.name.includes(univName)) || {
-      name: univName,
-      sido: sido,
-      sigun: "",
-      fnd: "대학",
-      univSe: "대학",
-      addr: `${sido} 소재`,
-      phone: "입학처 홈페이지 참조",
-      url: "https://www.adiga.kr",
-      depts: []
-    };
+    allUnivs.find((x) => x.name && (x.name.includes(univName) || univName.includes(x.name)));
+  if (!u) {
+    return res.status(404).send("존재하지 않는 대학교입니다.");
+  }
 
   const tier = getUnivAdmissionTier(u);
   const depts = Array.isArray(u.depts) && u.depts.length > 0 ? u.depts : [
@@ -324,40 +320,52 @@ p,li{line-height:1.7;color:#334155;font-size:14.5px;}
 }
 
 function handleUnivMajorPage(req, res) {
-  const sido = String(req.query.sido || "서울").trim();
-  const univName = String(req.query.univ || "고려대학교").trim();
-  const majorName = String(req.query.major || "컴퓨터공학과").trim();
+  const sido = String(req.query.sido || "").trim();
+  const univName = String(req.query.univ || "").trim();
+  const majorName = String(req.query.major || "").trim();
+
+  if (!univName || !majorName) {
+    return res.status(404).send("존재하지 않는 페이지입니다.");
+  }
 
   const allUnivs = loadUnivs();
   const allJobs = loadJobs();
   const u =
     allUnivs.find((x) => x.name === univName) ||
-    allUnivs.find((x) => x.name && x.name.includes(univName)) || {
-      name: univName,
-      sido: sido,
-      sigun: "",
-      fnd: "사립",
-      univSe: "4년제 대학교",
-      addr: `${sido} 소재`,
-      depts: []
-    };
+    allUnivs.find((x) => x.name && (x.name.includes(univName) || univName.includes(x.name)));
+
+  if (!u) {
+    return res.status(404).send("존재하지 않는 대학교입니다.");
+  }
+
+  const mInfo =
+    CORE_MAJORS.find((m) => m.name === majorName) ||
+    CORE_MAJORS.find((m) => m.name.includes(majorName) || majorName.includes(m.name));
+
+  if (!mInfo) {
+    return res.status(404).send("존재하지 않는 전공입니다.");
+  }
 
   const tier = getUnivAdmissionTier(u);
-  const mInfo = CORE_MAJORS.find((m) => m.name === majorName || majorName.includes(m.name) || m.name.includes(majorName)) || {
-    name: majorName,
-    cat: "유망전공",
-    subjects: "미적분, 확률과 통계, 영어Ⅱ, 진로선택 심화과목",
-    seteuk: `${majorName} 핵심 이론을 활용한 실생활 데이터 모델링 및 심화 탐구 보고서`,
-    career: "대기업·공공기관 전공 직무, 전문 연구직, 글로벌 기업"
-  };
+  // Check if university has a truly matching department
+  const depts = Array.isArray(u.depts) ? u.depts : [];
+  const exactDept = depts.find((d) => d.name && (d.name.includes(mInfo.name) || mInfo.name.includes(d.name.split("/")[0].trim())));
+  const catDept = depts.find((d) => d.cat === mInfo.cat);
+  const matchedDept = exactDept || catDept || {};
 
-  const matchedDept = (Array.isArray(u.depts) ? u.depts : []).find((d) => d.name && (d.name.includes(majorName) || d.cat === mInfo.cat)) || {};
+  const hasRealDept = Boolean(exactDept);
   const susiCut = matchedDept.susi || tier.susiCut;
   const jungsiCut = matchedDept.jungsi || tier.jungsiCut;
 
-  const title = `${u.name} ${majorName} 수시 등급컷 · 정시 백분위 · 고교학점제 선택과목 · 세특 빅데이터 | 알라딘 맘콕`;
-  const desc = `🔬 [AI 엔지니어 입시 빅데이터 분석] ${u.name} ${majorName} 작년도 수시 70% 등급컷(${susiCut}), 정시 백분위(${jungsiCut}), 고교학점제 필수 선택과목(${mInfo.subjects}), 생기부 세특 탐구 주제 및 졸업 후 대기업 초봉 정보를 확인하세요.`;
-  const canonical = `${SITE_ORIGIN}/univ-major/${enc(u.sido || sido)}/${enc(u.name)}/${enc(majorName)}`;
+  const title = `${u.name} ${mInfo.name} 수시 등급컷 · 정시 백분위 · 고교학점제 선택과목 · 세특 빅데이터 | 알라딘 맘콕`;
+  const desc = `🔬 [AI 엔지니어 입시 빅데이터 분석] ${u.name} ${mInfo.name} 작년도 수시 70% 등급컷(${susiCut}), 정시 백분위(${jungsiCut}), 고교학점제 필수 선택과목(${mInfo.subjects}), 생기부 세특 탐구 주제 및 졸업 후 대기업 초봉 정보를 확인하세요.`;
+  const canonical = `${SITE_ORIGIN}/univ-major/${enc(u.sido || sido)}/${enc(u.name)}/${enc(mInfo.name)}`;
+
+  // If this university does NOT actually offer this major (e.g. cyber/polytech having dental/medical),
+  // serve it with noindex so it does not hurt site domain quality, but users can still see it.
+  const robotsMeta = hasRealDept
+    ? '<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">'
+    : '<meta name="robots" content="noindex,follow">';
 
   return res.status(200).send(`<!DOCTYPE html>
 <html lang="ko">
@@ -366,7 +374,7 @@ function handleUnivMajorPage(req, res) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
-<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+${robotsMeta}
 <link rel="canonical" href="${esc(canonical)}">
 <meta property="og:type" content="website">
 <meta property="og:title" content="${esc(title)}">
@@ -443,16 +451,22 @@ p,li{line-height:1.7;color:#334155;font-size:14.5px;}
 }
 
 function handleHighschoolPage(req, res) {
-  const sido = String(req.query.sido || "서울").trim();
-  const school = String(req.query.school || "휘문고등학교").trim();
+  const sido = String(req.query.sido || "").trim();
+  const school = String(req.query.school || "").trim();
+  if (!school) {
+    return res.status(404).send("존재하지 않는 고등학교입니다.");
+  }
+  const regObj = HIGHSCHOOL_REGIONS.find((r) => r.sido === sido) ||
+                 HIGHSCHOOL_REGIONS.find((r) => r.schools.includes(school));
+  if (!regObj || !regObj.schools.includes(school)) {
+    return res.status(404).send("존재하지 않는 고등학교입니다.");
+  }
   const isSpecial = /과학|외국어|국제|영재|하나고|상산고|민족사관|포항제철|광양제철|인천하늘|인천포스코|용인한국외|현대청운|북일고|충남삼성|김천고/.test(school);
   const schoolType = isSpecial ? "특목고·자사고·명문 선발고" : "일반계 고등학교 (고교학점제 중점)";
 
-  const title = `${school} (${sido}) 대입 수시·정시 진학 설계 · 내신 등급별 목표대학 · 고교학점제 선택과목 빅데이터 | 알라딘 맘콕`;
-  const desc = `🔬 [AI 엔지니어 입시 빅데이터 분석] ${sido} ${school}(${schoolType}) 재학생·예비고1 학부모를 위한 내신 등급대별 지원 가능 대학교 라인, 2028 고교학점제 필수 선택과목 설계, 학생부종합전형 세특 전략을 확인하세요.`;
-  const canonical = `${SITE_ORIGIN}/highschool-info/${enc(sido)}/${enc(school)}`;
-
-  const regObj = HIGHSCHOOL_REGIONS.find((r) => r.sido === sido) || HIGHSCHOOL_REGIONS[0];
+  const title = `${school} (${regObj.sido}) 대입 수시·정시 진학 설계 · 내신 등급별 목표대학 · 고교학점제 선택과목 빅데이터 | 알라딘 맘콕`;
+  const desc = `🔬 [AI 엔지니어 입시 빅데이터 분석] ${regObj.sido} ${school}(${schoolType}) 재학생·예비고1 학부모를 위한 내신 등급대별 지원 가능 대학교 라인, 2028 고교학점제 필수 선택과목 설계, 학생부종합전형 세특 전략을 확인하세요.`;
+  const canonical = `${SITE_ORIGIN}/highschool-info/${enc(regObj.sido)}/${enc(school)}`;
   const siblingSchools = regObj.schools.filter((s) => s !== school).slice(0, 16);
   const allUnivs = loadUnivs();
 
@@ -547,8 +561,16 @@ p,li{line-height:1.7;color:#334155;font-size:14.5px;}
 }
 
 function handleMajorPage(req, res) {
-  const majorName = String(req.query.major || "컴퓨터공학과").trim();
-  const mInfo = CORE_MAJORS.find((m) => m.name === majorName || majorName.includes(m.name)) || CORE_MAJORS[10];
+  const majorName = String(req.query.major || "").trim();
+  if (!majorName) {
+    return res.status(404).send("존재하지 않는 전공입니다.");
+  }
+  const mInfo =
+    CORE_MAJORS.find((m) => m.name === majorName) ||
+    CORE_MAJORS.find((m) => m.name.includes(majorName) || majorName.includes(m.name));
+  if (!mInfo) {
+    return res.status(404).send("존재하지 않는 전공입니다.");
+  }
   const allUnivs = loadUnivs();
 
   const title = `${mInfo.name} 대학 순위 · 수시 등급컷 · 고교학점제 선택과목 · 세특 · 취업 연봉 빅데이터 | 알라딘 맘콕`;
@@ -634,25 +656,18 @@ p,li{line-height:1.7;color:#334155;font-size:14.5px;}
 }
 
 function handleJobPage(req, res) {
-  const cat = String(req.query.category || "대기업").trim();
-  const compName = String(req.query.company || "삼성전자").trim();
+  const cat = String(req.query.category || "").trim();
+  const compName = String(req.query.company || "").trim();
+  if (!compName) {
+    return res.status(404).send("존재하지 않는 기업입니다.");
+  }
   const allJobs = loadJobs();
   const j =
     allJobs.find((x) => x.name === compName) ||
-    allJobs.find((x) => x.name && x.name.includes(compName)) || {
-      name: compName,
-      category: cat,
-      subCategory: "주요 기업",
-      location: "전국 주요 거점",
-      type: cat,
-      employees: "공시 기준",
-      startPay: "4,500만 ~ 5,500만 원",
-      avgPay: "8,500만 ~ 1억 1,000만 원",
-      jobs: ["연구개발(R&D)", "SW/IT 개발", "생산/품질", "경영지원", "영업마케팅"],
-      spec: "학점 3.5+ · 어학 오픽 IM2+ · 직무 인턴/자격증 우대",
-      traitMatch: "직무 전문성 및 협업 역량 우수 인재",
-      recruitUrl: "https://www.work.go.kr"
-    };
+    allJobs.find((x) => x.name && (x.name.includes(compName) || compName.includes(x.name)));
+  if (!j) {
+    return res.status(404).send("존재하지 않는 기업입니다.");
+  }
 
   const title = `${j.name} 초봉 · 평균연봉 · 채용 직무 · 합격 스펙 · 유망 대학학과 빅데이터 | 알라딘 맘콕`;
   const desc = `🔬 [AI 엔지니어 채용 빅데이터 분석] ${j.name}(${j.category} · ${j.subCategory || ""}) 대졸 신입 초봉(${j.startPay}), 평균 연봉(${j.avgPay}), 핵심 채용 직무(${(j.jobs || []).join(", ")}), 합격 스펙 커트라인 정보를 확인하세요.`;
@@ -800,30 +815,9 @@ function handleDynamicSitemap(req, res) {
   const allJobs = loadJobs();
 
   if (sub === "index") {
-    try {
-      const pingPayload = JSON.stringify({
-        host: "www.momkok.co.kr",
-        key: "9867fb6697cecf67940ff28242a2755d",
-        keyLocation: "https://www.momkok.co.kr/9867fb6697cecf67940ff28242a2755d.txt",
-        urlList: [
-          "https://www.momkok.co.kr/",
-          "https://www.momkok.co.kr/momkok-landing.html",
-          "https://www.momkok.co.kr/momkok-search.html"
-        ]
-      });
-      fetch("https://searchadvisor.naver.com/indexnow", {
-        method: "POST",
-        headers: { "Content-Type": "application/json; charset=utf-8" },
-        body: pingPayload
-      }).catch(() => {});
-    } catch (_) {}
     const sitemaps = [
       `${SITE_ORIGIN}/sitemaps/core-univ-highschool.xml`,
-      `${SITE_ORIGIN}/sitemaps/univ-majors-1.xml`,
-      `${SITE_ORIGIN}/sitemaps/univ-majors-2.xml`,
-      `${SITE_ORIGIN}/sitemaps/univ-majors-3.xml`,
-      `${SITE_ORIGIN}/sitemaps/univ-majors-4.xml`,
-      `${SITE_ORIGIN}/sitemaps/univ-majors-5.xml`
+      `${SITE_ORIGIN}/sitemaps/univ-real-majors.xml`
     ];
     return res.status(200).send(
       `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
@@ -834,45 +828,72 @@ function handleDynamicSitemap(req, res) {
 
   if (sub === "core") {
     const urls = [
-      `${SITE_ORIGIN}/`,
-      `${SITE_ORIGIN}/momkok-landing.html`,
-      `${SITE_ORIGIN}/momkok-search.html`,
-      `${SITE_ORIGIN}/momkok-job-search.html`
+      { loc: `${SITE_ORIGIN}/`, prio: "1.0", freq: "daily" },
+      { loc: `${SITE_ORIGIN}/momkok-landing`, prio: "1.0", freq: "weekly" },
+      { loc: `${SITE_ORIGIN}/momkok-search`, prio: "0.95", freq: "weekly" },
+      { loc: `${SITE_ORIGIN}/momkok-job-search`, prio: "0.95", freq: "weekly" }
     ];
     for (const m of CORE_MAJORS) {
-      urls.push(`${SITE_ORIGIN}/major-info/${enc(m.name)}`);
+      urls.push({ loc: `${SITE_ORIGIN}/major-info/${enc(m.name)}`, prio: "0.9", freq: "weekly" });
     }
     for (const reg of HIGHSCHOOL_REGIONS) {
       for (const s of reg.schools) {
-        urls.push(`${SITE_ORIGIN}/highschool-info/${enc(reg.sido)}/${enc(s)}`);
+        urls.push({ loc: `${SITE_ORIGIN}/highschool-info/${enc(reg.sido)}/${enc(s)}`, prio: "0.85", freq: "monthly" });
       }
     }
     for (const u of allUnivs) {
-      urls.push(`${SITE_ORIGIN}/univ-info/${enc(u.sido)}/${enc(u.name)}`);
+      urls.push({ loc: `${SITE_ORIGIN}/univ-info/${enc(u.sido)}/${enc(u.name)}`, prio: "0.9", freq: "weekly" });
     }
     for (const j of allJobs) {
-      urls.push(`${SITE_ORIGIN}/job-info/${enc(j.category)}/${enc(j.name)}`);
+      urls.push({ loc: `${SITE_ORIGIN}/job-info/${enc(j.category)}/${enc(j.name)}`, prio: "0.85", freq: "monthly" });
     }
     return res.status(200).send(
       `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
-      urls.map((u) => `  <url><loc>${xmlEsc(u)}</loc><lastmod>${lastmod}</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>`).join("\n") +
+      urls.map((item) => `  <url><loc>${xmlEsc(item.loc)}</loc><lastmod>${lastmod}</lastmod><changefreq>${item.freq}</changefreq><priority>${item.prio}</priority></url>`).join("\n") +
       `\n</urlset>`
     );
   }
 
-  // Univ x Major pages (split into 5 chunks of ~90 univs x 35 majors = ~3,150 URLs each -> 15,470 total)
+  if (sub === "real-majors") {
+    // Only output universities with real existing department matches
+    const urls = [];
+    for (const u of allUnivs) {
+      const depts = Array.isArray(u.depts) ? u.depts : [];
+      for (const d of depts) {
+        const dName = (d.name || "").split("/")[0].trim();
+        const mMatch = CORE_MAJORS.find((m) => m.name === dName || dName.includes(m.name) || m.name.includes(dName));
+        if (mMatch) {
+          urls.push(`${SITE_ORIGIN}/univ-major/${enc(u.sido)}/${enc(u.name)}/${enc(mMatch.name)}`);
+        }
+      }
+    }
+    const uniqueUrls = Array.from(new Set(urls));
+    return res.status(200).send(
+      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+      uniqueUrls.map((u) => `  <url><loc>${xmlEsc(u)}</loc><lastmod>${lastmod}</lastmod><changefreq>weekly</changefreq><priority>0.85</priority></url>`).join("\n") +
+      `\n</urlset>`
+    );
+  }
+
+  // Backward compatibility for old univ-majors-:page requests
   const page = Math.max(1, Math.min(5, parseInt(req.query.page || "1", 10)));
   const chunkSize = Math.ceil(allUnivs.length / 5);
   const sliceUnivs = allUnivs.slice((page - 1) * chunkSize, page * chunkSize);
   const urls = [];
   for (const u of sliceUnivs) {
-    for (const m of CORE_MAJORS) {
-      urls.push(`${SITE_ORIGIN}/univ-major/${enc(u.sido)}/${enc(u.name)}/${enc(m.name)}`);
+    const depts = Array.isArray(u.depts) ? u.depts : [];
+    for (const d of depts) {
+      const dName = (d.name || "").split("/")[0].trim();
+      const mMatch = CORE_MAJORS.find((m) => m.name === dName || dName.includes(m.name) || m.name.includes(dName));
+      if (mMatch) {
+        urls.push(`${SITE_ORIGIN}/univ-major/${enc(u.sido)}/${enc(u.name)}/${enc(mMatch.name)}`);
+      }
     }
   }
+  const uniqueUrls = Array.from(new Set(urls));
   return res.status(200).send(
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
-    urls.map((u) => `  <url><loc>${xmlEsc(u)}</loc><lastmod>${lastmod}</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url>`).join("\n") +
+    uniqueUrls.map((u) => `  <url><loc>${xmlEsc(u)}</loc><lastmod>${lastmod}</lastmod><changefreq>weekly</changefreq><priority>0.85</priority></url>`).join("\n") +
     `\n</urlset>`
   );
 }
