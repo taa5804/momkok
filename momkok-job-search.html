@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>1,000대 기업 연봉·채용 직무·합격 스펙 실시간 검색기 | 알라딘 맘콕</title>
+  <meta name="description" content="삼성전자, 현대차, LG, SK, 네이버, 카카오 등 1,000대 대기업·공기업의 대졸 신입 초봉, 평균 연봉, 핵심 채용 직무 및 합격 스펙 빅데이터 실시간 검색.">
+  <meta name="keywords" content="대기업연봉, 신입초봉, 대기업채용, 취업스펙, 삼성전자연봉, 현대차초봉, 알라딘맘콕, 맘콕, 취업빅데이터">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.momkok.co.kr/momkok-job-search">
+  <meta property="og:title" content="1,000대 기업 연봉·채용 직무·합격 스펙 실시간 검색기 | 알라딘 맘콕">
+  <meta property="og:description" content="1,000대 대기업·공기업 신입 초봉, 평균 연봉, 합격 스펙 빅데이터 실시간 검색">
+
+  <link rel="canonical" href="https://www.momkok.co.kr/momkok-job-search" />
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800;900&display=swap">
+  <style>
+    :root {
+      --primary: #059669;
+      --primary-dark: #047857;
+      --navy: #0f172a;
+      --slate: #475569;
+      --border: #e2e8f0;
+      --bg: #f8fafc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
+    body { background: var(--bg); color: var(--navy); line-height: 1.5; padding-bottom: 80px; }
+
+    .search-header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border); padding: 12px 16px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .brand-link { font-size: 18px; font-weight: 900; color: #ff4757; text-decoration: none; }
+    .diag-btn {
+      background: var(--primary); color: #fff; font-size: 13px; font-weight: 700;
+      padding: 6px 14px; border-radius: 20px; text-decoration: none;
+    }
+
+    .search-hero {
+      background: linear-gradient(135deg, #064e3b 0%, #0f172a 100%);
+      color: #fff; padding: 32px 16px 24px; text-align: center;
+    }
+    .search-hero h1 { font-size: 22px; font-weight: 900; margin-bottom: 6px; }
+    .search-hero p { font-size: 13px; color: #a7f3d0; margin-bottom: 20px; }
+
+    .search-box-wrap { max-width: 600px; margin: 0 auto; position: relative; }
+    .search-input {
+      width: 100%; padding: 16px 20px 16px 48px; border-radius: 16px;
+      border: 2px solid #10b981; font-size: 16px; font-weight: 600;
+      outline: none; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .search-icon {
+      position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+      font-size: 20px; color: #94a3b8;
+    }
+
+    .filter-container { max-width: 680px; margin: 16px auto 0; padding: 0 16px; }
+    .filter-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; }
+    .filter-chip {
+      padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;
+      background: #fff; border: 1px solid var(--border); color: var(--slate);
+      cursor: pointer; white-space: nowrap;
+    }
+    .filter-chip.active { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 800; }
+
+    .results-container { max-width: 680px; margin: 16px auto 0; padding: 0 16px; }
+    .result-count-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 13px; color: var(--slate); margin-bottom: 12px; font-weight: 600;
+    }
+
+    .job-card {
+      background: #fff; border-radius: 16px; border: 1px solid var(--border);
+      padding: 18px; margin-bottom: 12px; transition: transform 0.15s, box-shadow 0.15s;
+      cursor: pointer; text-decoration: none; color: inherit; display: block;
+    }
+    .job-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+    .job-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+    .job-name { font-size: 17px; font-weight: 900; color: #065f46; }
+    .job-badge { background: #ecfdf5; color: #047857; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px; }
+    .job-pay-row { display: flex; gap: 16px; margin: 10px 0; font-size: 13.5px; }
+    .pay-item { background: #f8fafc; padding: 8px 12px; border-radius: 10px; flex: 1; border: 1px solid #f1f5f9; }
+    .pay-lbl { font-size: 11px; color: #64748b; font-weight: 700; margin-bottom: 2px; }
+    .pay-val { font-size: 14px; font-weight: 900; color: #dc2626; }
+    .job-desc { font-size: 12.5px; color: #475569; line-height: 1.5; }
+
+    .bottom-cta-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+      background: #fff; border-top: 1px solid var(--border); padding: 12px 16px;
+      display: flex; justify-content: center;
+    }
+    .cta-full-btn {
+      width: 100%; max-width: 600px; background: #2563eb; color: #fff; text-align: center;
+      padding: 14px; border-radius: 14px; font-size: 15px; font-weight: 800; text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header class="search-header">
+    <a href="/momkok-landing" class="brand-link">🪔 알라딘 맘콕</a>
+    <div style="display:flex; gap:8px;">
+      <a href="/momkok-search" style="font-size:12.5px; color:#475569; font-weight:700; text-decoration:none; padding:6px 10px;">🔍 대학 검색</a>
+      <a href="/" class="diag-btn">AI 진단 시작</a>
+    </div>
+  </header>
+
+  <section class="search-hero">
+    <h1>💼 1,000대 기업 연봉 · 합격 스펙 검색</h1>
+    <p>주요 대기업·공기업의 신입 초봉, 평균 연봉, 채용 직무 및 합격 스펙 빅데이터</p>
+    <div class="search-box-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" class="search-input" placeholder="기업명 검색 (예: 삼성전자, 현대차, 네이버...)" oninput="onSearch(this.value)">
+    </div>
+  </section>
+
+  <div class="filter-container">
+    <div class="filter-row" id="catFilter">
+      <div class="filter-chip active" onclick="setCategory('전체')">전체</div>
+      <div class="filter-chip" onclick="setCategory('대기업')">30대 대기업</div>
+      <div class="filter-chip" onclick="setCategory('IT빅테크')">IT·빅테크</div>
+      <div class="filter-chip" onclick="setCategory('공기업')">주요 공기업</div>
+      <div class="filter-chip" onclick="setCategory('금융권')">금융·증권</div>
+    </div>
+  </div>
+
+  <main class="results-container">
+    <div class="result-count-bar">
+      <span>검색 기업: <strong id="resultCount" style="color:var(--primary);">0</strong>개사</span>
+      <span>DART·ALIO 공시 빅데이터 기준</span>
+    </div>
+    <div id="jobList"></div>
+  </main>
+
+  <div class="bottom-cta-bar">
+    <a href="/" class="cta-full-btn">🎯 우리 아이 성향 맞춤 대학·유망 직무 AI 진단받기</a>
+  </div>
+
+  <script src="./job-data.js"></script>
+  <script>
+    let currentCat = '전체';
+    let keyword = '';
+    const jobListEl = document.getElementById('jobList');
+    const resultCountEl = document.getElementById('resultCount');
+
+    function setCategory(cat) {
+      currentCat = cat;
+      document.querySelectorAll('#catFilter .filter-chip').forEach(c => {
+        c.classList.toggle('active', c.textContent.includes(cat) || (cat === '전체' && c.textContent === '전체'));
+      });
+      render();
+    }
+
+    function onSearch(val) {
+      keyword = (val || '').trim().toLowerCase();
+      render();
+    }
+
+    function render() {
+      const all = window.MOMKOK_JOB_DATA || [];
+      const filtered = all.filter(j => {
+        const matchCat = (currentCat === '전체') || (j.category && j.category.includes(currentCat)) || (j.badge && j.badge.includes(currentCat));
+        const matchKey = !keyword ||
+          (j.name && j.name.toLowerCase().includes(keyword)) ||
+          (j.group && j.group.toLowerCase().includes(keyword)) ||
+          (j.subCategory && j.subCategory.toLowerCase().includes(keyword)) ||
+          ((j.jobs || []).some(jb => jb.toLowerCase().includes(keyword)));
+        return matchCat && matchKey;
+      });
+
+      resultCountEl.textContent = filtered.length;
+      if (filtered.length === 0) {
+        jobListEl.innerHTML = '<div style="text-align:center; padding:40px 20px; background:#fff; border-radius:16px;">일치하는 기업이 없습니다.</div>';
+        return;
+      }
+
+      jobListEl.innerHTML = filtered.map(j => `
+        <a class="job-card" href="/job-info/${encodeURIComponent(j.category || '대기업')}/${encodeURIComponent(j.name)}">
+          <div class="job-top">
+            <div>
+              <div class="job-name">${j.name}</div>
+              <div style="font-size:12px; color:#64748b; margin-top:2px;">${j.category} · ${j.subCategory || ''} · ${j.location || ''}</div>
+            </div>
+            <span class="job-badge">${j.badge || j.type || '주요기업'}</span>
+          </div>
+          <div class="job-pay-row">
+            <div class="pay-item">
+              <div class="pay-lbl">대졸 신입 초봉</div>
+              <div class="pay-val">${j.startPay || '-'}</div>
+            </div>
+            <div class="pay-item">
+              <div class="pay-lbl">임직원 평균 연봉</div>
+              <div class="pay-val" style="color:#2563eb;">${j.avgPay || '-'}</div>
+            </div>
+          </div>
+          <div class="job-desc">
+            <strong>채용 직무:</strong> ${(j.jobs || []).join(' · ')}<br>
+            <strong>합격 스펙:</strong> ${j.spec || '-'}
+          </div>
+        </a>
+      `).join('');
+    }
+
+    render();
+  </script>
+</body>
+</html>
